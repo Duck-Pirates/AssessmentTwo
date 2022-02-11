@@ -1,0 +1,4 @@
+textures as of 09/12/2021:
+https://opengameart.org/content/noisy-tile-set-lava-mountain-water-sand-dirt-grass
+(if we ever replace these textures feel free to delete this document)
+Hector
