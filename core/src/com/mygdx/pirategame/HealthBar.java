@@ -68,4 +68,8 @@ class HealthBar {
         //Changes bar size when damaged
         healthBar.setSize(healthBar.getWidth() - value, healthBar.getHeight());
     }
+
+    /**
+     * test
+     */
 }
