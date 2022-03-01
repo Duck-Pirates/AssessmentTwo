@@ -108,7 +108,7 @@ public class Hud implements Disposable {
                 healthLabel.setText(String.format("%02d", health));
             }
             //Gain point every second
-            score += 1;
+            score += 5;
             scoreLabel.setText(String.format("%03d", score));
             timeCount = 0;
 
