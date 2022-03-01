@@ -63,7 +63,7 @@ public class EnemyShip extends Enemy{
             world.destroyBody(b2body);
             destroyed = true;
             //Change player coins and points
-            Hud.changePoints(20);
+            Hud.changePoints(30);
             Hud.changeCoins(10);
         }
         else if(!destroyed) {
