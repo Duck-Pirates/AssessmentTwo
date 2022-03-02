@@ -154,7 +154,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        Skin skin = new Skin(Gdx.files.internal("skin\\uiskin.json"));
+        Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
         //GAME BUTTONS
         final TextButton pauseButton = new TextButton("Pause",skin);
