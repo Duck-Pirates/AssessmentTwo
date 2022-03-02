@@ -134,13 +134,9 @@ public class Hud implements Disposable {
      */
     public static void changeCoins(int value) {
         if (value > 0) {
-            coins += getRandomNumber(5, 10) * coinMulti;
+            coins += value * coinMulti;
             coinLabel.setText(String.format("%03d", coins));
         }
-    }
-
-    public static int getRandomNumber(int min, int max) {
-        return (int) ((Math.random() * (max - min)) + min);
     }
 
     /**
