@@ -268,7 +268,7 @@ public class GameScreen implements Screen {
                 player.b2body.applyLinearImpulse(new Vector2(0, -accel), player.b2body.getWorldCenter(), true);
             }
             // Cannon fire on 'E'
-            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 player.fire();
             }
             // Checking if player at max velocity, and keeping them below max
