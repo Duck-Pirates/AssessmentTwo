@@ -6,6 +6,7 @@ import com.mygdx.pirategame.PirateGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
+		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(new PirateGame(), config);
 	}

@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
  * The start of the program. Sets up the main back bone of the game.
- * This includes most constants used throught for collision and changing screens
- * Provides access for screens to interact with eachother and the options interface
+ * This includes most constants used through out for collision and changing screens
+ * Provides access for screens to interact with each other and the options interface
  * @author Sam Pearson
  * @version 1.0
  */
@@ -49,7 +49,7 @@ public class PirateGame extends Game {
 
 	/**
 	 * Creates the main body of the game.
-	 * Establises the batch for the whole game as well as sets the first screen
+	 * Establishes the batch for the whole game as well as sets the first screen
 	 * Also sets up audio interface
 	 */
 	@Override
