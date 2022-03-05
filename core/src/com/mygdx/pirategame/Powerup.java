@@ -3,6 +3,7 @@ package com.mygdx.pirategame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -26,8 +27,9 @@ public abstract class Powerup extends Entity{
      * @param screen the screen its going onto
      * @param x      the x value to be placed at
      * @param y      the y value to be placed at
+     * @param type   the powerup's type, that changes the texture and sound of it
      */
-    public Powerup(GameScreen screen, float x, float y, String name) {
+    public Powerup(GameScreen screen, float x, float y, String type) {
         super(screen, x, y);
 
         //TODO We need to add some texture and sound for the powerups
@@ -59,7 +61,7 @@ public abstract class Powerup extends Entity{
     }
 
     /**
-     * Defines all the parts of the coins physical model. Sets it up for collisons
+     * Defines all the parts of the powerup physical model. Sets it up for collisions
      */
     @Override
     protected void defineEntity() {
@@ -80,5 +82,16 @@ public abstract class Powerup extends Entity{
         fdef.shape = shape;
         fdef.isSensor = true;
         b2body.createFixture(fdef).setUserData(this);
+    }
+
+    /**
+     * Draws the powerup using batch
+     *
+     * @param batch The batch of the program
+     */
+    public void draw(Batch batch) {
+        if(!destroyed) {
+            super.draw(batch);
+        }
     }
 }
