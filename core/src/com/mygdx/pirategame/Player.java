@@ -22,7 +22,7 @@ public class Player extends Sprite {
     private Sound breakSound;
     private Array<CannonFire> cannonBalls;
     protected float velocity = 0;
-    protected float maxVelocity = 4;
+    protected float maxVelocity = 3;
 
     /**
      * Instantiates a new Player. Constructor only called once per game
@@ -56,6 +56,7 @@ public class Player extends Sprite {
     public void update(float dt) {
         setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight()/2f);
         setRotation((float) (b2body.getAngle() * 180 / Math.PI));
+
         // Updates cannonball data
         for(CannonFire ball : cannonBalls) {
             ball.update(dt);
@@ -101,18 +102,51 @@ public class Player extends Sprite {
     public void updateVelocity(int linearAcceleration, float delta){
 
         velocity = velocity +  (linearAcceleration * delta) * (1 - velocity / maxVelocity);
-        if (velocity < -0.5f){
+        if (velocity < -0.5f) {
             velocity = -0.5f;
         }
         float horizontalVelocity = -velocity * MathUtils.sin(b2body.getAngle());
         float verticalVelocity = velocity * MathUtils.cos(b2body.getAngle());
+
+
+
+
+
+        Gdx.app.log("HorizontalVelocity", String.valueOf(horizontalVelocity));
+        Gdx.app.log("verticalVelocity", String.valueOf(verticalVelocity));
         b2body.setLinearVelocity(horizontalVelocity, verticalVelocity);
     }
 
     public void updateRotation(int angularAcceleration, float delta){
+
         float angularVelocity = b2body.getAngularVelocity() + (angularAcceleration * delta) * (velocity / maxVelocity);
+        Gdx.app.log("angularVelocity", String.valueOf(angularVelocity));
+        if (angularVelocity < -maxVelocity){
+            angularVelocity = -maxVelocity;
+        }
+        if (angularVelocity > maxVelocity){
+            angularVelocity = maxVelocity;
+        }
+
+        if (angularVelocity > 0) {
+            angularVelocity -=  (angularVelocity/20);
+        } else if (angularVelocity < 0) {
+            angularVelocity -=  (angularVelocity/20);
+        }
+
+
         b2body.setAngularVelocity(angularVelocity);
     }
+
+
+
+
+
+
+
+
+
+
     /**
      * Called when E is pushed. Causes 1 cannon ball to spawn on both sides of the ships wih their relative velocity
      */

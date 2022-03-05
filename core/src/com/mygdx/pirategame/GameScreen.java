@@ -257,19 +257,19 @@ public class GameScreen implements Screen {
 
             // Left physics impulse on 'A'
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                angularAcceleration += 3;
+                angularAcceleration += 10;
             }
             // Right physics impulse on 'D'
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                angularAcceleration -= 3;
+                angularAcceleration -= 10;
             }
             // Up physics impulse on 'W'
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                linearAcceleration += 1;
+                linearAcceleration += 4;
             }
             // Down physics impulse on 'S'
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                linearAcceleration -= 5;
+                linearAcceleration -= 20;
             }
             // Cannon fire on 'E'
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
@@ -339,6 +339,7 @@ public class GameScreen implements Screen {
 
         hud.update(dt);
 
+
         // Centre camera on player boat
         camera.position.x = player.b2body.getPosition().x;
         camera.position.y = player.b2body.getPosition().y;
@@ -376,6 +377,7 @@ public class GameScreen implements Screen {
 
         //Renders colleges
         player.draw(game.batch);
+
         colleges.get("Alcuin").draw(game.batch);
         colleges.get("Anne Lister").draw(game.batch);
         colleges.get("Constantine").draw(game.batch);
@@ -393,6 +395,7 @@ public class GameScreen implements Screen {
             ships.get(i).draw(game.batch);
         }
         game.batch.end();
+        //player.SlowDownBoat();
         Hud.stage.draw();
         stage.act();
         stage.draw();
