@@ -22,7 +22,8 @@ public class Player extends Sprite {
     private Sound breakSound;
     private Array<CannonFire> cannonBalls;
     protected float velocity = 0;
-    protected float maxVelocity = 3;
+    protected float maxVelocity = 10;
+    protected float maxAngularVelocity = 5;
 
     /**
      * Instantiates a new Player. Constructor only called once per game
@@ -102,15 +103,14 @@ public class Player extends Sprite {
     public void updateVelocity(int linearAcceleration, float delta){
 
         velocity = velocity +  (linearAcceleration * delta) * (1 - velocity / maxVelocity);
-        if (velocity < -0.5f) {
-            velocity = -0.5f;
+        if (velocity < -1.5f) {
+            velocity = -1.5f;
+        }
+        else if (velocity > 2f){
+            velocity = 2f;
         }
         float horizontalVelocity = -velocity * MathUtils.sin(b2body.getAngle());
         float verticalVelocity = velocity * MathUtils.cos(b2body.getAngle());
-
-
-
-
 
         Gdx.app.log("HorizontalVelocity", String.valueOf(horizontalVelocity));
         Gdx.app.log("verticalVelocity", String.valueOf(verticalVelocity));
@@ -119,13 +119,13 @@ public class Player extends Sprite {
 
     public void updateRotation(int angularAcceleration, float delta){
 
-        float angularVelocity = b2body.getAngularVelocity() + (angularAcceleration * delta) * (velocity / maxVelocity);
+        float angularVelocity = b2body.getAngularVelocity() + (angularAcceleration * delta) * (velocity / maxAngularVelocity);
         Gdx.app.log("angularVelocity", String.valueOf(angularVelocity));
-        if (angularVelocity < -maxVelocity){
-            angularVelocity = -maxVelocity;
+        if (angularVelocity < -5f){
+            angularVelocity = -5f;
         }
-        if (angularVelocity > maxVelocity){
-            angularVelocity = maxVelocity;
+        if (angularVelocity > 5f){
+            angularVelocity = 5f;
         }
 
         if (angularVelocity > 0) {

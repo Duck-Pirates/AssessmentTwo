@@ -257,19 +257,19 @@ public class GameScreen implements Screen {
 
             // Left physics impulse on 'A'
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                angularAcceleration += 10;
+                angularAcceleration += 3;
             }
             // Right physics impulse on 'D'
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                angularAcceleration -= 10;
+                angularAcceleration -= 3;
             }
             // Up physics impulse on 'W'
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                linearAcceleration += 4;
+                linearAcceleration += 1;
             }
             // Down physics impulse on 'S'
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                linearAcceleration -= 20;
+                linearAcceleration -= 1;
             }
             // Cannon fire on 'E'
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
