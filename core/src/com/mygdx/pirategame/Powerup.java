@@ -94,4 +94,10 @@ public abstract class Powerup extends Entity{
             super.draw(batch);
         }
     }
+
+    /**
+     * Makes the Powerup update some of the variables in the game
+     *
+     */
+    public abstract void updateValues();
 }
