@@ -109,36 +109,40 @@ public class Player extends Sprite {
         else if (velocity > 2f){
             velocity = 2f;
         }
-        float horizontalVelocity = -velocity * MathUtils.sin(b2body.getAngle());
-        float verticalVelocity = velocity * MathUtils.cos(b2body.getAngle());
-
-        Gdx.app.log("HorizontalVelocity", String.valueOf(horizontalVelocity));
-        Gdx.app.log("verticalVelocity", String.valueOf(verticalVelocity));
-        b2body.setLinearVelocity(horizontalVelocity, verticalVelocity);
+        setLinearVelocity(velocity);
     }
 
-    public void updateRotation(int angularAcceleration, float delta){
+    public void slowDown(float delta){
+        velocity *= Math.pow(0.95f, delta * 20.0f);
+        Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
+        setLinearVelocity(velocity);
+    }
+
+    public void updateRotation(int angularAcceleration, float delta) {
 
         float angularVelocity = b2body.getAngularVelocity() + (angularAcceleration * delta) * (velocity / maxAngularVelocity);
-        Gdx.app.log("angularVelocity", String.valueOf(angularVelocity));
-        if (angularVelocity < -5f){
+        if (angularVelocity < -5f) {
             angularVelocity = -5f;
         }
-        if (angularVelocity > 5f){
+        if (angularVelocity > 5f) {
             angularVelocity = 5f;
         }
 
         if (angularVelocity > 0) {
-            angularVelocity -=  (angularVelocity/20);
+            angularVelocity -= (angularVelocity / 20);
         } else if (angularVelocity < 0) {
-            angularVelocity -=  (angularVelocity/20);
+            angularVelocity -= (angularVelocity / 20);
         }
 
 
         b2body.setAngularVelocity(angularVelocity);
     }
 
-
+    public void setLinearVelocity(float newVelocity){
+        float horizontalVelocity = -newVelocity * MathUtils.sin(b2body.getAngle());
+        float verticalVelocity = newVelocity * MathUtils.cos(b2body.getAngle());
+        b2body.setLinearVelocity(horizontalVelocity, verticalVelocity);
+    }
 
 
 

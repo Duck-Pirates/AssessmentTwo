@@ -276,8 +276,18 @@ public class GameScreen implements Screen {
                 player.fire();
             }
 
+            if (!(Gdx.input.isKeyPressed(Input.Keys.W) | Gdx.input.isKeyPressed(Input.Keys.S))){
+                if(player.velocity < 0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
+                    player.setLinearVelocity(0);
+                }
+                else {
+                    player.slowDown(dt);
+                }
+            }
+            else {
+                player.updateVelocity(linearAcceleration, dt);
+            }
             player.updateRotation(angularAcceleration, dt);
-            player.updateVelocity(linearAcceleration, dt);
 
             // Checking if player at max velocity, and keeping them below max
 
