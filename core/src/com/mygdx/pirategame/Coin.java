@@ -90,10 +90,9 @@ public class Coin extends Entity {
     @Override
     public void entityContact() {
         //Add a coin
-        Hud.changeCoins(rand.nextInt(5));
+        Hud.changeCoins(rand.nextInt(3) + 1);
         //Set to destroy
         setToDestroyed = true;
-        Gdx.app.log("coin", "collision");
         //Play pickup sound
         if (screen.game.getPreferences().isEffectsEnabled()) {
             coinPickup.play(screen.game.getPreferences().getEffectsVolume());
