@@ -277,7 +277,7 @@ public class GameScreen implements Screen {
             }
 
             if (!(Gdx.input.isKeyPressed(Input.Keys.W) | Gdx.input.isKeyPressed(Input.Keys.S))){
-                if(player.velocity < 0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
+                if(player.velocity < 0.1f & player.velocity > -0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
                     player.setLinearVelocity(0);
                 }
                 else {
