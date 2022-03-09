@@ -22,8 +22,8 @@ public class Player extends Sprite {
     private Sound breakSound;
     private Array<CannonFire> cannonBalls;
     protected float velocity = 0;
-    protected float maxVelocity = 10;
-    protected float maxAngularVelocity = 5;
+    protected float maxVelocity = 50;
+    protected float maxAngularVelocity = 2;
 
     /**
      * Instantiates a new Player. Constructor only called once per game
@@ -106,8 +106,9 @@ public class Player extends Sprite {
         if (velocity < -1.5f) {
             velocity = -1.5f;
         }
-        else if (velocity > 2f){
-            velocity = 2f;
+        //  Increase Speed
+        else if (velocity > 3.5f){
+            velocity = 3.5f;
         }
         setLinearVelocity(velocity);
     }
@@ -116,6 +117,14 @@ public class Player extends Sprite {
         velocity *= Math.pow(0.95f, delta * 20.0f);
         Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
         setLinearVelocity(velocity);
+        //TODO slow down reverse
+    }
+    public void slowDownRev(float delta){
+        if (velocity < -0.1f) {
+            velocity *= Math.pow(0.95f, delta * 20.0f);
+            Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
+            setLinearVelocity(velocity);
+        }
     }
 
     public void updateRotation(int angularAcceleration, float delta) {
@@ -124,6 +133,7 @@ public class Player extends Sprite {
         if (angularVelocity < -5f) {
             angularVelocity = -5f;
         }
+        // Increase rotation
         if (angularVelocity > 5f) {
             angularVelocity = 5f;
         }
