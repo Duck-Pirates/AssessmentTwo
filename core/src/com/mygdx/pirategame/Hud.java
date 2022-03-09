@@ -58,6 +58,7 @@ public class Hud implements Disposable {
         box = new Image(boxBackground);
         coin = new Image(coinPic);
 
+
         viewport = new ScreenViewport();
         stage = new Stage(viewport, sb);
 

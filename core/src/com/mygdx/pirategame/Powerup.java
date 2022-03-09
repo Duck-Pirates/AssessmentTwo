@@ -15,11 +15,13 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
  * @version 1.0
  */
 
-public abstract class Powerup extends Entity{
+public class Powerup extends Entity{
     private Texture powerup;
     private boolean setToDestroyed;
     private boolean destroyed;
     private Sound powerupPickup;
+    private Integer powerupType;
+    private Boolean Visible;
 
     /**
      * Instantiates a new Powerup.
@@ -29,20 +31,36 @@ public abstract class Powerup extends Entity{
      * @param y      the y value to be placed at
      * @param type   the powerup's type, that changes the texture and sound of it
      */
-    public Powerup(GameScreen screen, float x, float y, String type) {
+    public Powerup(GameScreen screen, float x, float y, Integer type) {
         super(screen, x, y);
 
         //TODO We need to add some texture and sound for the powerups
 
         //Set powerup image
-        powerup = new Texture("coin.png");
+
+        powerupType = type;
+        if (powerupType == 0) {
+            powerup = new Texture("Ammo.png");
+        } else if (powerupType == 1){
+            powerup = new Texture("Lightning.png");
+        } else if (powerupType == 2){
+            powerup = new Texture("Money.png");
+        } else if (powerupType == 3){
+            powerup = new Texture("Repair.png");
+        } else if (powerupType == 4){
+            powerup = new Texture("Star.png");
+        }
+
+
+        Gdx.app.log("x", String.valueOf(x));
+        Gdx.app.log("y", String.valueOf(y));
         //Set the position and size of the powerup
-        setBounds(0,0,48 / PirateGame.PPM, 48 / PirateGame.PPM);
+        setBounds(0,0,100 / PirateGame.PPM, 100 / PirateGame.PPM);
         //Set the texture
         setRegion(powerup);
         //Sets origin of the powerup
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
-        powerupPickup = Gdx.audio.newSound(Gdx.files.internal("coin-pickup.mp3"));
+        powerupPickup = Gdx.audio.newSound(Gdx.files.internal("powerup-pickup.mp3"));
     }
 
     /**
@@ -83,7 +101,34 @@ public abstract class Powerup extends Entity{
         fdef.isSensor = true;
         b2body.createFixture(fdef).setUserData(this);
     }
+    @Override
+    public void entityContact() {
+        //Add powerup ability
 
+        //Set to destroy
+        setToDestroyed = true;
+        Gdx.app.log("powerup", "collision");
+        //Play pickup sound
+        if (screen.game.getPreferences().isEffectsEnabled()) {
+            powerupPickup.play(screen.game.getPreferences().getEffectsVolume());
+        }
+
+
+        //Select case
+
+        // Timer... Each powerup lasts 30 seconds
+
+        //Ammo - Increase
+        //Lightning - Increase Speed by 10% + Increase rotation 10%
+        //Money - Increase earnings by 50%
+        //Repair - Increase regain HP speed
+        //Star - Take no damage
+
+
+
+
+
+    }
     /**
      * Draws the powerup using batch
      *
@@ -99,5 +144,5 @@ public abstract class Powerup extends Entity{
      * Makes the Powerup update some of the variables in the game
      *
      */
-    public abstract void updateValues();
+
 }
