@@ -12,7 +12,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
  * This class implements methods and variables for every powerup in game, that will have their own class and methods too
  *
  * @author Davide Bressani
- * @version 1.0
+ * @author Benjamin Withnell
+ * @version 2.0
  */
 
 public class Powerup extends Entity{
