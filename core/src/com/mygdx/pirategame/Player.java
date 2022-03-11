@@ -114,30 +114,17 @@ public class Player extends Sprite {
     }
 
     public void slowDown(float delta){
-        if (velocity > 0.1f) {
-            velocity *= Math.pow(0.95f, delta * 20.0f);
-            //Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
-            setLinearVelocity(velocity);
-        } else {
-            velocity = 0f;
-            setLinearVelocity(velocity);
-            //Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
-        }
+        velocity *= Math.pow(0.95f, delta * 20.0f);
+        Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
+        setLinearVelocity(velocity);
+        //TODO slow down reverse
     }
-
     public void slowDownRev(float delta){
         if (velocity < -0.1f) {
             velocity *= Math.pow(0.95f, delta * 20.0f);
             Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
             setLinearVelocity(velocity);
-        } else{
-            velocity = 0f;
-            setLinearVelocity(velocity);
-            Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
         }
-
-
-
     }
 
     public void updateRotation(int angularAcceleration, float delta) {
