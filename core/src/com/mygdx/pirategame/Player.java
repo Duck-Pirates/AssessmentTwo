@@ -22,8 +22,8 @@ public class Player extends Sprite {
     private Sound breakSound;
     private Array<CannonFire> cannonBalls;
     protected float velocity = 0;
-    protected float maxVelocity = 10;
-    protected float maxAngularVelocity = 5;
+    protected float maxVelocity = 50;
+    protected float maxAngularVelocity = 2;
 
     /**
      * Instantiates a new Player. Constructor only called once per game
@@ -95,7 +95,7 @@ public class Player extends Sprite {
         fdef.filter.categoryBits = PirateGame.PLAYER_BIT;
 
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.COIN_BIT | PirateGame.ENEMY_BIT | PirateGame.COLLEGE_BIT | PirateGame.COLLEGESENSOR_BIT | PirateGame.COLLEGEFIRE_BIT;
+        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.COIN_BIT | PirateGame.ENEMY_BIT | PirateGame.COLLEGE_BIT | PirateGame.COLLEGESENSOR_BIT | PirateGame.COLLEGEFIRE_BIT | PirateGame.POWERUP_BIT;
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
     }
@@ -106,17 +106,20 @@ public class Player extends Sprite {
         if (velocity < -1.5f) {
             velocity = -1.5f;
         }
-        else if (velocity > 2f){
-            velocity = 2f;
+        //  Increase Speed
+        else if (velocity > 3.5f){
+            velocity = 3.5f;
         }
         setLinearVelocity(velocity);
     }
 
     public void slowDown(float delta){
         velocity *= Math.pow(0.95f, delta * 20.0f);
-        Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
+        //Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
         setLinearVelocity(velocity);
+        //TODO slow down reverse
     }
+
 
     public void updateRotation(int angularAcceleration, float delta) {
 
@@ -124,6 +127,7 @@ public class Player extends Sprite {
         if (angularVelocity < -5f) {
             angularVelocity = -5f;
         }
+        // Increase rotation
         if (angularVelocity > 5f) {
             angularVelocity = 5f;
         }
