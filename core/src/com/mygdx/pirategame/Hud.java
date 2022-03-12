@@ -38,7 +38,7 @@ public class Hud implements Disposable {
     private Image hpImg;
     private Image box;
     private Image coin;
-    private GameScreen screen;
+    private static Image powerUp;
 
     /**
      * Retrieves information and displays it in the hud
