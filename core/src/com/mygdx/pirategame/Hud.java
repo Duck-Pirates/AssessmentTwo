@@ -26,7 +26,7 @@ public class Hud implements Disposable {
 
     private Viewport viewport;
 
-
+    private GameScreen screen;
 
     private float timeCount;
     private float Constant_timeCount;
