@@ -90,7 +90,7 @@ public class Coin extends Entity {
     @Override
     public void entityContact() {
         //Add a coin
-        Hud.changeCoins(rand.nextInt(3) + 1);
+        Hud.changeCoins(rand.nextInt(screen.difficulty.getMaxGoldXCoin()) + 1);
         //Set to destroy
         setToDestroyed = true;
         //Play pickup sound

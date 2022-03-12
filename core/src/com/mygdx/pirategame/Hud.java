@@ -38,6 +38,7 @@ public class Hud implements Disposable {
     private Image hpImg;
     private Image box;
     private Image coin;
+    private GameScreen screen;
 
     /**
      * Retrieves information and displays it in the hud
@@ -45,8 +46,9 @@ public class Hud implements Disposable {
      *
      * @param sb Batch of images used in the hud
      */
-    public Hud(SpriteBatch sb) {
-        health = 100;
+    public Hud(SpriteBatch sb, GameScreen screen) {
+        this.screen = screen;
+        health = screen.difficulty.getHP();
         score = 0;
         coins = 0;
         coinMulti = 1;
@@ -104,7 +106,7 @@ public class Hud implements Disposable {
         timeCount += dt;
         if(timeCount >= 1) {
             //Regen health every second
-            if(health != 100) {
+            if(health != this.screen.difficulty.getHP()) {
                 health += 1;
                 healthLabel.setText(String.format("%02d", health));
             }

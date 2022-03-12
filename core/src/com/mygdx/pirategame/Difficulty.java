@@ -1,9 +1,9 @@
 package com.mygdx.pirategame;
 
 public enum Difficulty {
-    EASY(1, 5, 100, 5, 10),
-    MEDIUM(0.85f, 5, 80, 3, 12),
-    HARD(0.7f, 10, 80, 2, 15);
+    EASY(1, 5, 100, 5, 8),
+    MEDIUM(0.95f, 5, 80, 3, 10),
+    HARD(0.90f, 10, 80, 2, 12);
 
     private float speedReduction;
     private int damage, HP, maxGoldXCoin, maxCollegeShips;
