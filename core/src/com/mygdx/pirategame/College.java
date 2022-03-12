@@ -118,6 +118,7 @@ public class College extends Enemy{
             setToDestroy = true;
         }
         bar.update();
+
         if(health <= 0) {
             setToDestroy = true;
         }
@@ -137,6 +138,7 @@ public class College extends Enemy{
             super.draw(batch);
             //Render health bar
             bar.render(batch);
+
             //Render balls
             for(CollegeFire ball : cannonBalls)
                 ball.draw(batch);

@@ -23,6 +23,7 @@ public class Powerup extends Entity{
     private Sound powerupPickup;
     private Integer powerupType;
     private Boolean Visible;
+    private Integer StartTime;
 
     /**
      * Instantiates a new Powerup.
@@ -126,10 +127,68 @@ public class Powerup extends Entity{
         //Star - Take no damage
 
 
-
-
+        if (powerupType == 0) {
+            Hud.ChangePowerUpImage(0);
+            Ammo();
+        } else if (powerupType == 1){
+            Hud.ChangePowerUpImage(1);
+            Lightning();
+        } else if (powerupType == 2){
+            Hud.ChangePowerUpImage(2);
+            Money();
+        } else if (powerupType == 3){
+            Hud.ChangePowerUpImage(3);
+            Repair();
+        } else if (powerupType == 4){
+            Hud.ChangePowerUpImage(4);
+            Star();
+        }
 
     }
+
+    private void DisplayCurrentPowerup(){
+        //  Start Timer
+        //  Display Powerup
+
+        if (powerupType == 0) {
+            powerup = new Texture("Ammo.png");
+        } else if (powerupType == 1){
+            powerup = new Texture("Lightning.png");
+        } else if (powerupType == 2){
+            powerup = new Texture("Money.png");
+        } else if (powerupType == 3){
+            powerup = new Texture("Repair.png");
+        } else if (powerupType == 4){
+            powerup = new Texture("Star.png");
+        }
+    }
+
+    private void HideCurrentPower(){
+
+    }
+
+
+
+    public void Ammo(){
+        // Increase damage or shots per second
+    }
+    public void Lightning(){
+        // Increase Speed
+    }
+    public void Money(){
+        // Increase money earnt
+    }
+    public void Repair(){
+        // Recovers ship
+    }
+    public void Star(){
+
+    }
+
+
+
+
+
     /**
      * Draws the powerup using batch
      *
@@ -141,9 +200,6 @@ public class Powerup extends Entity{
         }
     }
 
-    /**
-     * Makes the Powerup update some of the variables in the game
-     *
-     */
+
 
 }

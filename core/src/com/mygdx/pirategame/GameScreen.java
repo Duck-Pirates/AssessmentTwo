@@ -289,7 +289,7 @@ public class GameScreen implements Screen {
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                 linearAcceleration -= 5;
             }
-            // Cannon fire on 'E'
+            // Cannon fire on 'Spacce'
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 player.fire();
             }
@@ -298,16 +298,17 @@ public class GameScreen implements Screen {
                 if (player.velocity > 0.1f) {
                     player.slowDown(dt);
                 } else if (player.velocity < -0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
-                    player.slowDownRev(dt);
+                    player.slowDown(dt);
                 } else{
                     player.velocity = 0f;
+                    player.updateVelocity(0, dt);
                 }
             }
             else {
                 player.updateVelocity(linearAcceleration, dt);
             }
             player.updateRotation(angularAcceleration, dt);
-            Gdx.app.log("vel", String.valueOf(player.velocity));
+            //Gdx.app.log("vel", String.valueOf(player.velocity));
             // Checking if player at max velocity, and keeping them below max
 
         }
