@@ -106,7 +106,7 @@ public class College extends Enemy{
             //Award the player coins and points for destroying a college
             if (!currentCollege.equals("alcuin_flag.png")){
                 Hud.changePoints(100);
-                Hud.changeCoins(rand.nextInt(10));
+                Hud.changeCoins(rand.nextInt(10 - 1) + 1);
             }
         }
         //If not destroyed, update the college position
