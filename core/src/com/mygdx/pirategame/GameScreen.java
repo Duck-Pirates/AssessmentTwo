@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -54,6 +55,7 @@ public class GameScreen implements Screen {
     private static ArrayList<Coin> Coins = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
     private Hud hud;
+    private static ArrayList<Powerup> Powerups = new ArrayList<>();
 
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
@@ -144,8 +146,24 @@ public class GameScreen implements Screen {
             Coins.add(new Coin(this, a, b));
         }
 
+        //Spawn Powerups
+        Powerups = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            validLoc = false;
+            while (!validLoc) {
+                //Get random x and y coords
+                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                validLoc = checkGenPos(a, b);
+            }
+            Powerups.add(new Powerup(this, a, b, i));
+        }
+
+
         //Setting stage
         stage = new Stage(new ScreenViewport());
+
+
     }
 
     /**
@@ -267,30 +285,32 @@ public class GameScreen implements Screen {
             }
             // Up physics impulse on 'W'
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                linearAcceleration += 1;
+                linearAcceleration += 5;
             }
             // Down physics impulse on 'S'
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                linearAcceleration -= 1;
+                linearAcceleration -= 5;
             }
-            // Cannon fire on 'E'
+            // Cannon fire on 'Spacce'
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 player.fire();
             }
 
             if (!(Gdx.input.isKeyPressed(Input.Keys.W) | Gdx.input.isKeyPressed(Input.Keys.S))){
-                if(player.velocity < 0.1f & player.velocity > -0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
-                    player.setLinearVelocity(0);
-                }
-                else {
+
+                if(player.velocity > 0.1f || player.velocity < -0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
                     player.slowDown(dt);
+                   
+                } else{
+                    player.velocity = 0f;
+                    player.updateVelocity(0, dt);
                 }
             }
             else {
                 player.updateVelocity(linearAcceleration, dt);
             }
             player.updateRotation(angularAcceleration, dt);
-
+            //Gdx.app.log("vel", String.valueOf(player.velocity));
             // Checking if player at max velocity, and keeping them below max
 
         }
@@ -334,6 +354,11 @@ public class GameScreen implements Screen {
         //Updates coin
         for (int i = 0; i < Coins.size(); i++) {
             Coins.get(i).update();
+        }
+
+        //Updates powerups
+        for (int i = 0; i < Powerups.size(); i++) {
+            Powerups.get(i).update();
         }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
@@ -386,6 +411,12 @@ public class GameScreen implements Screen {
         for(int i=0;i<Coins.size();i++) {
             Coins.get(i).draw(game.batch);
         }
+
+        //Renders powerups
+        for(int i=0;i<Powerups.size();i++) {
+            Powerups.get(i).draw(game.batch);
+        }
+
 
         //Renders colleges
         player.draw(game.batch);

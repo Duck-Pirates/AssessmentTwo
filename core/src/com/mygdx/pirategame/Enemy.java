@@ -22,6 +22,7 @@ public abstract class Enemy extends Sprite {
     public int damage;
     protected HealthBar bar;
 
+
     /**
      * Instantiates an enemy
      *
@@ -39,6 +40,7 @@ public abstract class Enemy extends Sprite {
 
         defineEnemy();
         bar = new HealthBar(this);
+
     }
 
     /**

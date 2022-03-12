@@ -74,6 +74,7 @@ public class EnemyShip extends Enemy{
             setRotation((float) (b2body.getAngle() * 180 / Math.PI));
             //Update health bar
             bar.update();
+
         }
         if(health <= 0) {
             setToDestroy = true;
@@ -97,6 +98,8 @@ public class EnemyShip extends Enemy{
             super.draw(batch);
             //Render health bar
             bar.render(batch);
+            //Render health bar
+
         }
     }
 
