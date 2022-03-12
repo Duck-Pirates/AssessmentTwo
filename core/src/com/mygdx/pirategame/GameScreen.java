@@ -46,8 +46,8 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
 
     private World world;
+    public Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
-
     private Player player;
     private static HashMap<String, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
@@ -72,6 +72,8 @@ public class GameScreen implements Screen {
     public GameScreen(PirateGame game){
         gameStatus = GAME_RUNNING;
         this.game = game;
+        // Setting the difficulty, that will be changed based on the player's choice at the start of the game
+        this.difficulty = Difficulty.MEDIUM;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;
