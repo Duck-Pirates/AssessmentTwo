@@ -101,7 +101,12 @@ public class Hud implements Disposable {
 
 
         scoreLabel = new Label(String.format("%03d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        healthLabel = new Label(String.format("%03d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        if (screen.difficulty == Difficulty.EASY){
+            healthLabel = new Label(String.format("%03d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        }
+        else{
+            healthLabel = new Label(String.format("%02d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        }
         coinLabel = new Label(String.format("%03d", coins), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         pointsText = new Label("Points:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
