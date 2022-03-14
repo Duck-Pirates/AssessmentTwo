@@ -14,7 +14,7 @@ public class Cloud extends Entity{
         //Set cloud image
         cloud = new Texture("clouds.png");
         //Set the position and size of the cloud
-        setBounds(0,0,200 / PirateGame.PPM, 200 / PirateGame.PPM);
+        setBounds(0,0,200 / PirateGame.PPM, 150 / PirateGame.PPM);
         //Set the texture
         setRegion(cloud);
         //Sets origin of the cloud

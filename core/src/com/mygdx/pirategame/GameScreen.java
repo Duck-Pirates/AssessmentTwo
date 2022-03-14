@@ -434,10 +434,6 @@ public class GameScreen implements Screen {
             Powerups.get(i).draw(game.batch);
         }
 
-        for(int i = 0; i <15; i++){
-            clouds.get(i).draw(game.batch);
-        }
-
         //Renders colleges
         player.draw(game.batch);
 
@@ -457,6 +453,12 @@ public class GameScreen implements Screen {
             }
             ships.get(i).draw(game.batch);
         }
+
+        // Renders all the clouds on top of eerything else
+        for(int i = 0; i <15; i++){
+            clouds.get(i).draw(game.batch);
+        }
+
         game.batch.end();
         //player.SlowDownBoat();
         Hud.stage.draw();
