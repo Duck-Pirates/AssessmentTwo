@@ -5,6 +5,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
+
+/**
+ * Coin
+ * Creates an object for each coin
+ * Extends the entity class to define coin as an entity
+ *
+ * @author Davide Bressani
+ * @version 1.0
+ */
 public class Cloud extends Entity{
 
     private Texture cloud;
@@ -21,12 +30,11 @@ public class Cloud extends Entity{
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
     }
 
-    public void update(){
-        setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
-    }
-
+    /**
+     * Defines an entity
+     */
     @Override
-    public void defineEntity(){
+    protected void defineEntity() {
         //sets the body definitions
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());
@@ -34,7 +42,17 @@ public class Cloud extends Entity{
         b2body = world.createBody(bdef);
     }
 
-    public void entityContact(){}
+    /**
+     * Defines contact
+     */
+    @Override
+    public void entityContact() {}
+
+    public void update(){
+        setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
+    }
+
+
 
     public void draw(Batch batch) {
         super.setAlpha(0.7f);
