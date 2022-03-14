@@ -18,6 +18,14 @@ public class Cloud extends Entity{
 
     private Texture cloud;
 
+    /**
+     * Instantiates a new Cloud.
+     *
+     * @param screen the screen its going onto
+     * @param x      the x value to be placed at
+     * @param y      the y value to be placed at
+     */
+
     public Cloud(GameScreen screen, float x, float y) {
         super(screen, x, y);
         //Set cloud image
