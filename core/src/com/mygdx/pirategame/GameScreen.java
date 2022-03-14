@@ -161,14 +161,10 @@ public class GameScreen implements Screen {
         }
 
         clouds = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            validLoc = false;
-            while (!validLoc) {
-                //Get random x and y coords
-                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                validLoc = checkGenPos(a, b);
-            }
+        for (int i = 0; i < rand.nextInt(31-15)+15; i++) {
+            //Get random x and y coords
+            a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+            b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
             clouds.add(new Cloud(this, a, b));
         }
 
