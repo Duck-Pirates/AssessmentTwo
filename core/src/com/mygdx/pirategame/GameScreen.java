@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -56,6 +55,7 @@ public class GameScreen implements Screen {
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
     private Hud hud;
     private static ArrayList<Powerup> Powerups = new ArrayList<>();
+    private static ArrayList<Tornado> Tornadoes = new ArrayList<>();
 
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
@@ -155,6 +155,19 @@ public class GameScreen implements Screen {
                 validLoc = checkGenPos(a, b);
             }
             Powerups.add(new Powerup(this, a, b, i));
+        }
+
+        Tornadoes = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            validLoc = false;
+            while (!validLoc) {
+                //Get random x and y coords
+                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                validLoc = checkGenPos(a, b);
+            }
+            //Add a coins at the random coords
+            Tornadoes.add(new Tornado(this, a, b));
         }
 
 
@@ -358,6 +371,10 @@ public class GameScreen implements Screen {
         for (int i = 0; i < Powerups.size(); i++) {
             Powerups.get(i).update();
         }
+
+        for (int i = 0; i < Tornadoes.size(); i++) {
+            Tornadoes.get(i).update(dt);
+        }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             if (!colleges.get("Anne Lister").destroyed) {
@@ -423,6 +440,10 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").draw(game.batch);
         colleges.get("Constantine").draw(game.batch);
         colleges.get("Goodricke").draw(game.batch);
+
+        for(int i = 0; i< Tornadoes.size(); i++) {
+            Tornadoes.get(i).draw(game.batch);
+        }
 
         //Updates all ships
         for (int i = 0; i < ships.size(); i++){
