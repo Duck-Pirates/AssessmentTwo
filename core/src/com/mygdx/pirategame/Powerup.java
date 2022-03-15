@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import java.util.Random;
 
 /**
  * This class implements methods and variables for every powerup in game, that will have their own class and methods too
@@ -24,6 +25,8 @@ public class Powerup extends Entity{
     private Integer powerupType;
     private Boolean Visible;
     private Integer StartTime;
+
+    public Random rand = new Random();
 
     /**
      * Instantiates a new Powerup.
@@ -199,7 +202,5 @@ public class Powerup extends Entity{
             super.draw(batch);
         }
     }
-
-
 
 }

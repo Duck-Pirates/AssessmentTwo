@@ -65,6 +65,7 @@ public class GameScreen implements Screen {
     private Table table;
 
     public Random rand = new Random();
+    private Float TempTime;
 
     /**
      * Initialises the Game Screen,
@@ -129,7 +130,7 @@ public class GameScreen implements Screen {
             //Add a ship at the random coords
             ships.add(new EnemyShip(this, a, b, "unaligned_ship.png", "Unaligned"));
         }
-
+        TempTime = 0f;
         //Random coins
         Coins = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
@@ -333,6 +334,8 @@ public class GameScreen implements Screen {
      */
     public void update(float dt) {
         stateTime += dt;
+        TempTime += dt;
+
         handleInput(dt);
         // Stepping the physics engine by time of 1 frame
         world.step(1 / 60f, 6, 2);
@@ -358,6 +361,31 @@ public class GameScreen implements Screen {
         for (int i = 0; i < Powerups.size(); i++) {
             Powerups.get(i).update();
         }
+
+        //Gdx.app.log("powerup", String.valueOf(ConstantTime));
+        //Add new powerup
+        Gdx.app.log("x", String.valueOf(TempTime));
+
+        if (TempTime >= 29f){
+            Boolean validLoc;
+            int a = 0;
+            int b = 0;
+            for (int i = 0; i < 5; i++) {
+                validLoc = false;
+                while (!validLoc) {
+                    //Get random x and y coords
+                    a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                    b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                    validLoc = checkGenPos(a, b);
+                }
+                Powerups.add(new Powerup(this, a, b, i));
+            }
+            TempTime = 0f;
+        }
+
+
+
+
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             if (!colleges.get("Anne Lister").destroyed) {
@@ -562,6 +590,7 @@ public class GameScreen implements Screen {
         }
         return true;
     }
+
 
     /**
      * Pauses game
