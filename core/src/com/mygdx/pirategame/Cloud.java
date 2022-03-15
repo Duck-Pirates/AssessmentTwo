@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
+import java.util.Random;
+
 
 /**
  * Coin
@@ -18,6 +20,7 @@ public class Cloud extends Entity{
 
     private Texture cloud;
     private float alpha;
+    Random rand = new Random();
 
     /**
      * Instantiates a new Cloud.
@@ -32,7 +35,9 @@ public class Cloud extends Entity{
         //Set cloud image
         cloud = new Texture("clouds.png");
         //Set the position and size of the cloud
-        setBounds(0,0,200 / PirateGame.PPM, 150 / PirateGame.PPM);
+        int dimension = 0;
+        dimension = rand.nextInt(301-200)+200;
+        setBounds(0,0,dimension / PirateGame.PPM, dimension * (3/4f) / PirateGame.PPM);
         //Set the texture
         setRegion(cloud);
         //Sets origin of the cloud
