@@ -374,6 +374,9 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < Tornadoes.size(); i++) {
             Tornadoes.get(i).update(dt);
+            if(Tornadoes.get(i).checkPosition(player)){
+                Tornadoes.get(i).tornadoInpulse(player);
+            }
         }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {

@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.Array;
 
@@ -87,6 +89,26 @@ public class Tornado extends Entity {
     }
 
     /**
+     * Creates a vector force to apply on the player if it's close to a tornado
+     * @param player
+     */
+
+    public void tornadoInpulse(Player player){
+        Vector2 vec = new Vector2((player.getY() -this.getY())*PirateGame.PPM, (- (player.getX() - this.getX()) * PirateGame.PPM));
+        if(player.getX() - this.getX() < 0){
+            vec = new Vector2(-(player.getY() -this.getY())*PirateGame.PPM, ( (player.getX() - this.getX()) * PirateGame.PPM));
+        }
+        if(player.getX() - this.getX() < 0.1 & player.getX() - this.getX() > -0.1f){
+            if(player.getY() - this.getY() < 0.1 & player.getY() - this.getY() > -0.1f){
+                player.b2body.applyAngularImpulse(100f, true);
+            }
+        }
+        else {
+            player.b2body.applyForce(vec, player.b2body.getWorldCenter(), false);
+        }
+    }
+
+    /**
      * Checks which frame the animation should be in and returns it
      * @param dt time elapsed
      * @return The current animation frame
@@ -99,8 +121,12 @@ public class Tornado extends Entity {
         return region;
     }
 
+    /**
+     * Checks if the player is close to the tornado
+     * @param player
+     */
     public boolean checkPosition(Player player){
-        if ((player.getX() >= (this.getX() - 2) && player.getX() <= (this.getX() + 2)) && (player.getY() >= (this.getY() - 2) && player.getY() <= (this.getY() + 2))){
+        if ((player.getX() >= (this.getX() - 1) && player.getX() <= (this.getX() + 1)) && (player.getY() >= (this.getY() - 1) && player.getY() <= (this.getY() + 1))){
             return true;
         }
         return false;
