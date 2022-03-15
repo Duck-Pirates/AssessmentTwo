@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 public class EnemyShip extends Enemy{
     private Texture enemyShip;
     public String college;
+    private String objective = "DEFENCE";
     private Sound destroy;
     private Sound hit;
 
@@ -155,5 +156,13 @@ public class EnemyShip extends Enemy{
         college = alignment;
         enemyShip = new Texture(path);
         setRegion(enemyShip);
+    }
+    
+    public String getObjective() {
+    	return objective;
+    }
+    
+    public void setObjective(String objective) {
+    	this.objective = objective;
     }
 }

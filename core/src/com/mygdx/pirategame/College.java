@@ -26,6 +26,9 @@ public class College extends Enemy{
     private Array<CollegeFire> cannonBalls;
     private AvailableSpawn noSpawn;
     public ArrayList<EnemyShip> fleet = new ArrayList<>();
+    private String objective;
+    private float timeLastAttacked;
+    private float timer = 0;
 
     /**
      *
@@ -47,9 +50,10 @@ public class College extends Enemy{
         //Set the position and size of the college
         setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
         setRegion(enemyCollege);
-        setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
+        setOrigin(32 / PirateGame.PPM, 55 / PirateGame.PPM);
         damage = 10;
         cannonBalls = new Array<>();
+        objective = "MONEY";
         int ranX = 0;
         int ranY = 0;
         boolean spawnIsValid;
@@ -94,6 +98,9 @@ public class College extends Enemy{
      * @param dt Delta time (elapsed time since last game tick)
      */
     public void update(float dt) {
+    	
+    	timer += dt;
+    	
         //If college is set to destroy and isnt, destroy it
         if(setToDestroy && !destroyed) {
             world.destroyBody(b2body);
@@ -119,9 +126,9 @@ public class College extends Enemy{
         }
         bar.update();
 
-        if(health <= 0) {
-            setToDestroy = true;
-        }
+        decideObjective();
+        setFleetObjective();
+        
         //Update cannon balls
         for(CollegeFire ball : cannonBalls) {
             ball.update(dt);
@@ -178,6 +185,7 @@ public class College extends Enemy{
         Gdx.app.log("enemy", "collision");
         health -= damage;
         bar.changeHealth(damage);
+        timeLastAttacked = timer;
     }
 
     /**
@@ -185,6 +193,31 @@ public class College extends Enemy{
      */
     public void fire() {
         cannonBalls.add(new CollegeFire(screen, b2body.getPosition().x, b2body.getPosition().y));
+    }
+    
+    
+    /**
+     * sets the current objective of the college
+     * there are 3 objectives:
+     * MONEY - collect coins
+     * DEFEND - defend the college
+     * COLLEGE_NAME - a college to be attacked
+     */
+    public void decideObjective() {
+    	if(timer - timeLastAttacked < 1000) {
+    		objective = "DEFENCE";
+    	} 
+    	else
+    	{
+    		objective = "MONEY";
+    	}
+    }
+    
+    public void setFleetObjective() {
+    	
+    	for(EnemyShip ship : fleet) {
+    		ship.setObjective(objective);
+    	}
     }
 }
 
