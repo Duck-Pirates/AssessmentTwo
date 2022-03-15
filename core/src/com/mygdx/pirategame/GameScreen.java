@@ -17,7 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
+
+import java.util.Arrays;
 import java.util.Random;
 
 import java.util.ArrayList;
@@ -54,6 +57,7 @@ public class GameScreen implements Screen {
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
+    private HashMap<Integer, ArrayList<Integer>> invalidSpawnClouds = new HashMap<>();
     private Hud hud;
     private static ArrayList<Powerup> Powerups = new ArrayList<>();
     private static ArrayList<Cloud> clouds = new ArrayList<>();
@@ -162,9 +166,13 @@ public class GameScreen implements Screen {
 
         clouds = new ArrayList<>();
         for (int i = 0; i < rand.nextInt(51-30)+30; i++) {
-            //Get random x and y coords
-            a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-            b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+            validLoc = false;
+            while (!validLoc) {
+                //Get random x and y coords
+                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                validLoc = checkGenPosClouds(a, b);
+            }
             clouds.add(new Cloud(this, a, b));
         }
 
@@ -584,6 +592,29 @@ public class GameScreen implements Screen {
             ArrayList<Integer> yTest = invalidSpawn.tileBlocked.get(x);
             if (yTest.contains(y)) {
                 return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Test if a cloud has already been spawned near these coordinates
+     * @param x random x value
+     * @param y random y value
+     */
+    private Boolean checkGenPosClouds(int x, int y){
+        if (invalidSpawnClouds.containsKey(x)){
+            ArrayList<Integer> yTest = invalidSpawnClouds.get(x);
+            if (yTest.contains(y)){
+                return false;
+            }
+        }
+        for (int i = -1; i < 2; i++){
+            if(invalidSpawnClouds.containsKey(x+i)){
+                invalidSpawnClouds.get(x+i).addAll(new ArrayList<>(Arrays.asList(y-1, y, y+1)));
+            }
+            else{
+                invalidSpawnClouds.put(x+i, new ArrayList<>(Arrays.asList(y-1, y, y+1)));
             }
         }
         return true;
