@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 public class Cloud extends Entity{
 
     private Texture cloud;
+    private float alpha;
 
     /**
      * Instantiates a new Cloud.
@@ -36,6 +37,7 @@ public class Cloud extends Entity{
         setRegion(cloud);
         //Sets origin of the cloud
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
+        alpha = 0.7f;
     }
 
     /**
@@ -60,10 +62,22 @@ public class Cloud extends Entity{
         setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
     }
 
+    public void changeAlpha() {
+        this.alpha = this.alpha*0.99f;
+        if (this.alpha < 0.5f){
+            this.alpha = 0.5f;
+        }
+    }
 
+    public void resetAlpha(){
+        this.alpha = this.alpha*1.005f;
+        if (this.alpha > 0.9f){
+            this.alpha = 0.9f;
+        }
+    }
 
     public void draw(Batch batch) {
-        super.setAlpha(0.7f);
+        super.setAlpha(alpha);
         super.draw(batch);
     }
 }

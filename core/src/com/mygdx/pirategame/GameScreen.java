@@ -161,7 +161,7 @@ public class GameScreen implements Screen {
         }
 
         clouds = new ArrayList<>();
-        for (int i = 0; i < rand.nextInt(31-15)+15; i++) {
+        for (int i = 0; i < rand.nextInt(51-30)+30; i++) {
             //Get random x and y coords
             a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
             b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
@@ -372,6 +372,12 @@ public class GameScreen implements Screen {
         //Updates clouds
         for (int i = 0; i < clouds.size(); i++) {
             clouds.get(i).update();
+            if ((player.getX() >= clouds.get(i).getX() - 2 && player.getX() <= clouds.get(i).getX() + 2) && (player.getY() >= clouds.get(i).getY() - 2 && player.getY() <= clouds.get(i).getY() + 2)){
+                clouds.get(i).changeAlpha();
+            }
+            else{
+                clouds.get(i).resetAlpha();
+            }
         }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
@@ -451,7 +457,7 @@ public class GameScreen implements Screen {
         }
 
         // Renders all the clouds on top of eerything else
-        for(int i = 0; i <15; i++){
+        for(int i = 0; i <clouds.size(); i++){
             clouds.get(i).draw(game.batch);
         }
 
