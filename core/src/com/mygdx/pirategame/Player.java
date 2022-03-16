@@ -133,9 +133,9 @@ public class Player extends Sprite {
         }
 
         if (angularVelocity > 0) {
-            angularVelocity -= (angularVelocity / 20);
+            angularVelocity -= (angularVelocity / 20); // change to update rotation
         } else if (angularVelocity < 0) {
-            angularVelocity -= (angularVelocity / 20);
+            angularVelocity -= (angularVelocity / 20); // change to update rotation
         }
 
 

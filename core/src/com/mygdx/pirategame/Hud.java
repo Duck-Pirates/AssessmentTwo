@@ -248,8 +248,8 @@ public class Hud implements Disposable {
         //powerUp.toFront();
         //powerUp.setFillParent(false);
         powerUp.setFillParent(false);
-        //powerUp.sizeBy(1, 1);
-        powerUp.setScale(0.3f,0.3f );
+        powerUp.sizeBy(0.005f, 0.005f);
+        //powerUp.setScale(0.5f,0.0005f );
         stage.addActor(powerUp);
         PowerupTimerBool = Boolean.TRUE;
 
