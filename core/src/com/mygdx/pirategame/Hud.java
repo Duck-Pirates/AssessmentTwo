@@ -54,15 +54,15 @@ public class Hud implements Disposable {
     private Image coin;
     private static Image powerUp;
 
-
     /**
      * Retrieves information and displays it in the hud
      * Adjusts hud with viewport
      *
      * @param sb Batch of images used in the hud
      */
-    public Hud(SpriteBatch sb) {
-        health = 100;
+    public Hud(SpriteBatch sb, GameScreen screen) {
+        this.screen = screen;
+        health = screen.difficulty.getHP();
         score = 0;
         coins = 0;
         coinMulti = 1;
@@ -101,7 +101,12 @@ public class Hud implements Disposable {
 
 
         scoreLabel = new Label(String.format("%03d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        healthLabel = new Label(String.format("%03d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        if (screen.difficulty == Difficulty.EASY){
+            healthLabel = new Label(String.format("%03d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        }
+        else{
+            healthLabel = new Label(String.format("%02d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        }
         coinLabel = new Label(String.format("%03d", coins), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         pointsText = new Label("Points:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
@@ -145,7 +150,7 @@ public class Hud implements Disposable {
         //Gdx.app.log("time", String.valueOf(Constant_timeCount));
         if(timeCount >= 1) {
             //Regen health every second
-            if(health != 100) {
+            if(health != this.screen.difficulty.getHP()) {
                 health += 1;
                 healthLabel.setText(String.format("%02d", health));
             }
@@ -194,8 +199,6 @@ public class Hud implements Disposable {
         health += value;
         healthLabel.setText(String.format("%02d", health));
     }
-
-
 
     /**
      * Changes coins by value increase
@@ -269,7 +272,6 @@ public class Hud implements Disposable {
      */
     public static void resize(int width, int height){
         stage.getViewport().update(width, height, true);
-
     }
 
     /**
@@ -297,7 +299,6 @@ public class Hud implements Disposable {
     @Override
     public void dispose() {
         stage.dispose();
-
     }
 }
 

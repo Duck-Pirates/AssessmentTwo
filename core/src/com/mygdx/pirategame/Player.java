@@ -102,7 +102,7 @@ public class Player extends Sprite {
 
     public void updateVelocity(int linearAcceleration, float delta){
 
-        velocity = velocity +  (linearAcceleration * delta) * (1 - velocity / maxVelocity);
+        velocity = (velocity +  (linearAcceleration * delta) * (1 - velocity / maxVelocity)) * screen.difficulty.getSpeedReduction();
         if (velocity < -1.5f) {
             velocity = -1.5f;
         }
