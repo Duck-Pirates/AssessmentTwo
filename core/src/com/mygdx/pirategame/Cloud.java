@@ -20,6 +20,7 @@ import java.util.Random;
  * @author Davide Bressani
  * @version 1.0
  */
+
 public class Cloud extends Entity{
 
     private float state;
@@ -56,8 +57,9 @@ public class Cloud extends Entity{
     }
 
     /**
-     * Defines an entity
+     * Defines an entity for the cloud
      */
+
     @Override
     protected void defineEntity() {
         //sets the body definitions
@@ -68,15 +70,27 @@ public class Cloud extends Entity{
     }
 
     /**
+     * (Not Used)
+     *
      * Defines contact
      */
+
     @Override
     public void entityContact() {}
+
+    /**
+     * Updates the position and the animation frame of the cloud
+     * @param dt time elapsed from last game frame
+     */
 
     public void update(float dt){
         setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
         setRegion(getFrame(dt));
     }
+
+    /**
+     * Changes the alpha value (transparency) of the cloud if the player is getting closer
+     */
 
     public void changeAlpha() {
         this.alpha = this.alpha*0.99f;
@@ -85,6 +99,10 @@ public class Cloud extends Entity{
         }
     }
 
+    /**
+     * Slowly resets the alpha value of the cloud when the player is leaving the cloud behind
+     */
+
     public void resetAlpha(){
         this.alpha = this.alpha*1.005f;
         if (this.alpha > 0.9f){
@@ -92,11 +110,19 @@ public class Cloud extends Entity{
         }
     }
 
+    /**
+     * Draws the cloud onto the screen
+     * @param batch The game's sprite batch
+     */
     public void draw(Batch batch) {
         super.setAlpha(alpha);
         super.draw(batch);
     }
 
+    /**
+     * Getter for the Cloud's animation frame
+     * @param dt time elapsed from last game frame
+     */
     public TextureRegion getFrame(float dt){
         TextureRegion region;
         state += dt;
