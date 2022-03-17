@@ -2,9 +2,15 @@ package com.mygdx.pirategame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.sun.tools.javac.util.ArrayUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 
@@ -18,7 +24,9 @@ import java.util.Random;
  */
 public class Cloud extends Entity{
 
+    private int stage;
     private Texture cloud;
+    private Animation cloudAnimation;
     private float alpha;
     Random rand = new Random();
 
@@ -32,14 +40,20 @@ public class Cloud extends Entity{
 
     public Cloud(GameScreen screen, float x, float y) {
         super(screen, x, y);
-        //Set cloud image
+        //Set cloud image and animation
+        stage = 0;
         cloud = new Texture("clouds.png");
+        TextureRegion[][] tmp = new TextureRegion(cloud).split(2048, 1256);
+        setRegion(tmp[0][0]);
+        List list = new ArrayList(Arrays.asList(tmp[0]));
+        list.addAll(Arrays.asList(tmp[1]));
+        cloudAnimation = new Animation(0.25f,  list.toArray());
         //Set the position and size of the cloud
         int dimension = 0;
         dimension = rand.nextInt(301-200)+200;
         setBounds(0,0,dimension / PirateGame.PPM, dimension * (3/4f) / PirateGame.PPM);
         //Set the texture
-        setRegion(cloud);
+        setRegion(tmp[0][0]);
         //Sets origin of the cloud
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
         alpha = 0.7f;
@@ -65,6 +79,7 @@ public class Cloud extends Entity{
 
     public void update(){
         setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
+        setRegion(getFrame(stage));
     }
 
     public void changeAlpha() {
@@ -84,5 +99,11 @@ public class Cloud extends Entity{
     public void draw(Batch batch) {
         super.setAlpha(alpha);
         super.draw(batch);
+    }
+
+    public TextureRegion getFrame(float dt){
+        stage += dt;
+        TextureRegion region = (TextureRegion) cloudAnimation.getKeyFrame(stage);
+        return region;
     }
 }
