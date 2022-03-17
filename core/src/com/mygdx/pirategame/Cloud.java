@@ -1,12 +1,10 @@
 package com.mygdx.pirategame;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.sun.tools.javac.util.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +22,7 @@ import java.util.Random;
  */
 public class Cloud extends Entity{
 
-    private int stage;
+    private float state;
     private Texture cloud;
     private Animation cloudAnimation;
     private float alpha;
@@ -41,7 +39,7 @@ public class Cloud extends Entity{
     public Cloud(GameScreen screen, float x, float y) {
         super(screen, x, y);
         //Set cloud image and animation
-        stage = 0;
+        state = 0;
         cloud = new Texture("clouds.png");
         TextureRegion[][] tmp = new TextureRegion(cloud).split(2048, 1256);
         setRegion(tmp[0][0]);
@@ -51,9 +49,7 @@ public class Cloud extends Entity{
         //Set the position and size of the cloud
         int dimension = 0;
         dimension = rand.nextInt(301-200)+200;
-        setBounds(0,0,dimension / PirateGame.PPM, dimension * (3/4f) / PirateGame.PPM);
-        //Set the texture
-        setRegion(tmp[0][0]);
+        setBounds(0,0,dimension / PirateGame.PPM, dimension * (0.61328125f) / PirateGame.PPM);
         //Sets origin of the cloud
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
         alpha = 0.7f;
@@ -77,9 +73,9 @@ public class Cloud extends Entity{
     @Override
     public void entityContact() {}
 
-    public void update(){
+    public void update(float dt){
         setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
-        setRegion(getFrame(stage));
+        setRegion(getFrame(dt));
     }
 
     public void changeAlpha() {
@@ -102,8 +98,9 @@ public class Cloud extends Entity{
     }
 
     public TextureRegion getFrame(float dt){
-        stage += dt;
-        TextureRegion region = (TextureRegion) cloudAnimation.getKeyFrame(stage);
+        TextureRegion region;
+        state += dt;
+        region = (TextureRegion) cloudAnimation.getKeyFrame(state, true);
         return region;
     }
 }
