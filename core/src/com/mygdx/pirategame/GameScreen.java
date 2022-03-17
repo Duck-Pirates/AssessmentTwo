@@ -366,7 +366,7 @@ public class GameScreen implements Screen {
 
         //Gdx.app.log("powerup", String.valueOf(ConstantTime));
         //Add new powerup
-        Gdx.app.log("x", String.valueOf(TempTime));
+        //Gdx.app.log("x", String.valueOf(TempTime));
 
         if (TempTime >= 29f){
             Boolean validLoc;

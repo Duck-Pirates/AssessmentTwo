@@ -160,7 +160,7 @@ public class Hud implements Disposable {
             timeCount = 0;
 
             //Check if a points boundary is met
-            SkillTree.pointsCheck(score);
+            SkillTree.pointsCheck(score, coins);
 
 
             //Gdx.app.log("dt", String.valueOf(dt));
@@ -221,7 +221,7 @@ public class Hud implements Disposable {
         score += value;
         scoreLabel.setText(String.format("%03d", score));
         //Check if a points boundary is met
-        SkillTree.pointsCheck(score);
+        SkillTree.pointsCheck(score, coins);
     }
 
     /**
@@ -301,4 +301,3 @@ public class Hud implements Disposable {
         stage.dispose();
     }
 }
-
