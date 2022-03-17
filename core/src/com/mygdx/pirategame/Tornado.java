@@ -41,11 +41,13 @@ public class Tornado extends Entity {
     public Tornado(GameScreen screen, float x, float y) {
         super(screen, x, y);
         // Set posistion and size of the tornado
-        setBounds(0,0, (rand.nextInt(128-84)+84) / PirateGame.PPM, (rand.nextInt(128-84)+84) / PirateGame.PPM);
+        int dimension = rand.nextInt(257-128)+128;
+        // The float number used for the height is to keep the ration of the texture image intact
+        setBounds(0,0, dimension / PirateGame.PPM, dimension * 1.473333333f / PirateGame.PPM);
         //Sets origin of the tornado
         setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
-        tornado =new Texture(Gdx.files.internal("tornado.png"));
-        TextureRegion[][] tmp = new TextureRegion(tornado).split(64, 64);
+        tornado =new Texture(Gdx.files.internal("TornadoSwirls.png"));
+        TextureRegion[][] tmp = new TextureRegion(tornado).split(150, 221);
         setRegion(tmp[0][0]);
         swirl = new Animation(0.25f, tmp[0]);
     }
