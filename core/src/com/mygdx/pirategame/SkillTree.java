@@ -167,20 +167,20 @@ public class SkillTree implements Screen {
         //TODO Made seperate labels for points and cost
 
 
-        final Label unlockmovement1 = new Label("Required: 100 points \n Costs: 50 gold",skin);
-        final Label unlockmovement2 = new Label("Required: 100 points \n Costs: 400 gold",skin);
-        final Label unlockmovement3 = new Label("Required: 100 points \n Costs: 1000 gold",skin);
-        final Label unlocktraverse1 = new Label("Required: 100 points \n Costs: 50 gold",skin);
-        final Label unlocktraverse2 = new Label("Required: 100 points \n Costs: 250 gold",skin);
-        final Label unlockdamage1 = new Label("Required: 100 points \n Costs: 100 gold",skin);
-        final Label unlockdamage2 = new Label("Required: 100 points \n Costs: 350 gold",skin);
-        final Label unlockdamage3 = new Label("Required: 100 points \n Costs: 800 gold",skin);
-        final Label unlockgoldmulti1 = new Label("Required: 100 points \n Costs: 500 gold",skin);
-        final Label unlockgoldmulti2 = new Label("Required: 100 points \n Costs: 1000 gold",skin);
-        final Label unlockarmour1 = new Label("Required: 100 points \n Costs: 50 gold",skin);
-        final Label unlockarmour2 = new Label("Required: 100 points \n Costs: 300 gold",skin);
-        final Label unlockarmour3 = new Label("Required: 100 points \n Costs: 700 gold",skin);
-        final Label unlockcone = new Label("Required: 1000 points \n Costs: 1000 gold",skin);
+        final Label unlockmovement1 = new Label("Required: 300 points \n Costs: 10 gold",skin);
+        final Label unlockmovement2 = new Label("Required: 650 points \n Costs: 25 gold",skin);
+        final Label unlockmovement3 = new Label("Required: 1000 points \n Costs: 50 gold",skin);
+        final Label unlocktraverse1 = new Label("Required: 400 points \n Costs: 20 gold",skin);
+        final Label unlocktraverse2 = new Label("Required: 900 points \n Costs: 50 gold",skin);
+        final Label unlockdamage1 = new Label("Required: 300 points \n Costs: 10 gold",skin);
+        final Label unlockdamage2 = new Label("Required: 650 points \n Costs: 25 gold",skin);
+        final Label unlockdamage3 = new Label("Required: 1000 points \n Costs: 50 gold",skin);
+        final Label unlockgoldmulti1 = new Label("Required: 700 points \n Costs: 50 gold",skin);
+        final Label unlockgoldmulti2 = new Label("Required: 1500 points \n Costs: 100 gold",skin);
+        final Label unlockarmour1 = new Label("Required: 300 points \n Costs: 10 gold",skin);
+        final Label unlockarmour2 = new Label("Required: 650 points \n Costs: 25 gold",skin);
+        final Label unlockarmour3 = new Label("Required: 1000 points \n Costs: 50 gold",skin);
+        final Label unlockcone = new Label("Required: 1000 points \n Costs: 100 gold",skin);
 
 
 
