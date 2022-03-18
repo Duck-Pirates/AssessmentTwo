@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 /**
  * Main menu is the first screen the player sees. Allows them to navigate where they want to go to
  * @author Sam Pearson
- * @version 1.0
+ * @version 1.1
  */
 public class MainMenu implements Screen {
 
@@ -43,6 +43,7 @@ public class MainMenu implements Screen {
         //Set the input processor
         Gdx.input.setInputProcessor(stage);
         // Create a table for the buttons
+
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
@@ -109,6 +110,9 @@ public class MainMenu implements Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.getBatch().begin();
+        stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth()+100, Gdx.graphics.getHeight()+100);
+        stage.getBatch().end();
         stage.draw();
     }
 
