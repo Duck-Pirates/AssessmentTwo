@@ -97,13 +97,13 @@ public class GameScreen implements Screen {
 
         // Spawning enemy ship and coin. x and y is spawn location
         colleges = new HashMap<>();
-        colleges.put("Alcuin", new College(this, "Alcuin", 1900 / PirateGame.PPM, 2100 / PirateGame.PPM,
+        colleges.put("Alcuin", new College(this, "Alcuin", 1950 / PirateGame.PPM, 2100 / PirateGame.PPM,
                 "alcuin_flag.png", "alcuin_ship.png", 0, invalidSpawn));
-        colleges.put("Anne Lister", new College(this, "Anne Lister", 6304 / PirateGame.PPM, 1199 / PirateGame.PPM,
+        colleges.put("Anne Lister", new College(this, "Anne Lister", 2945 / PirateGame.PPM, 3270 / PirateGame.PPM,
                 "anne_lister_flag.png", "anne_lister_ship.png", 8, invalidSpawn));
-        colleges.put("Constantine", new College(this, "Constantine", 6240 / PirateGame.PPM, 6703 / PirateGame.PPM,
+        colleges.put("Constantine", new College(this, "Constantine", 6401 / PirateGame.PPM, 7240 / PirateGame.PPM,
                 "constantine_flag.png", "constantine_ship.png", 8, invalidSpawn));
-        colleges.put("Goodricke", new College(this, "Goodricke", 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
+        colleges.put("Goodricke", new College(this, "Goodricke", 2081 / PirateGame.PPM, 6504 / PirateGame.PPM,
                 "goodricke_flag.png", "goodricke_ship.png", 8, invalidSpawn));
         ships = new ArrayList<>();
         ships.addAll(colleges.get("Alcuin").fleet);
