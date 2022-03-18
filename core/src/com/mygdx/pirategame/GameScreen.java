@@ -105,11 +105,21 @@ public class GameScreen implements Screen {
                 "constantine_flag.png", "constantine_ship.png", 8, invalidSpawn));
         colleges.put("Goodricke", new College(this, "Goodricke", 2081 / PirateGame.PPM, 6504 / PirateGame.PPM,
                 "goodricke_flag.png", "goodricke_ship.png", 8, invalidSpawn));
+        colleges.put("Halifax", new College(this, "Halifax", 4032 / PirateGame.PPM, 4648 / PirateGame.PPM,
+                "halifax_flag.png", "halifax_ship.png", 8, invalidSpawn));
+        colleges.put("Langwith", new College(this, "Langwith", 6305 / PirateGame.PPM, 3495 / PirateGame.PPM,
+                "langwith_flag.png", "langwith_ship.png", 8, invalidSpawn));
+        colleges.put("Vanbrugh", new College(this, "Vanbrugh", 6465 / PirateGame.PPM, 1928 / PirateGame.PPM,
+                "vanbrugh_flag.png", "vanbrugh_ship.png", 8, invalidSpawn));
+
         ships = new ArrayList<>();
         ships.addAll(colleges.get("Alcuin").fleet);
         ships.addAll(colleges.get("Anne Lister").fleet);
         ships.addAll(colleges.get("Constantine").fleet);
         ships.addAll(colleges.get("Goodricke").fleet);
+        ships.addAll(colleges.get("Halifax").fleet);
+        ships.addAll(colleges.get("Langwith").fleet);
+        ships.addAll(colleges.get("Vanbrugh").fleet);
 
         //Random ships
         Boolean validLoc;
@@ -323,6 +333,9 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").update(dt);
         colleges.get("Constantine").update(dt);
         colleges.get("Goodricke").update(dt);
+        colleges.get("Halifax").update(dt);
+        colleges.get("Langwith").update(dt);
+        colleges.get("Vanbrugh").update(dt);
 
         //Update ships
         for (int i = 0; i < ships.size(); i++) {
@@ -343,7 +356,17 @@ public class GameScreen implements Screen {
             }
             if (!colleges.get("Goodricke").destroyed) {
                 colleges.get("Goodricke").fire();
-        }
+            }
+            if (!colleges.get("Halifax").destroyed) {
+                colleges.get("Halifax").fire();
+            }
+            if (!colleges.get("Langwith").destroyed) {
+                colleges.get("Langwith").fire();
+            }
+            if (!colleges.get("Vanbrugh").destroyed) {
+                colleges.get("Vanbrugh").fire();
+            }
+
         stateTime = 0;
     }
 
@@ -392,6 +415,9 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").draw(game.batch);
         colleges.get("Constantine").draw(game.batch);
         colleges.get("Goodricke").draw(game.batch);
+        colleges.get("Halifax").draw(game.batch);
+        colleges.get("Langwith").draw(game.batch);
+        colleges.get("Vanbrugh").draw(game.batch);
 
         //Updates all ships
         for (int i = 0; i < ships.size(); i++){
@@ -467,7 +493,7 @@ public class GameScreen implements Screen {
             game.killGame();
         }
         //Win game if all colleges destroyed
-        else if (colleges.get("Anne Lister").destroyed && colleges.get("Constantine").destroyed && colleges.get("Goodricke").destroyed){
+        else if (colleges.get("Anne Lister").destroyed && colleges.get("Constantine").destroyed && colleges.get("Goodricke").destroyed && colleges.get("Halifax").destroyed && colleges.get("Langwith").destroyed && colleges.get("Vanbrugh").destroyed){
             game.changeScreen(PirateGame.VICTORY);
             game.killGame();
         }
@@ -513,6 +539,9 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").changeDamageReceived(value);
         colleges.get("Constantine").changeDamageReceived(value);
         colleges.get("Goodricke").changeDamageReceived(value);
+        colleges.get("Halifax").changeDamageReceived(value);
+        colleges.get("Langwith").changeDamageReceived(value);
+        colleges.get("Vanbrugh").changeDamageReceived(value);
 
     }
 
