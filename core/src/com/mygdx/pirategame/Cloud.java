@@ -41,12 +41,13 @@ public class Cloud extends Entity{
     public Cloud(GameScreen screen, float x, float y) {
         super(screen, x, y);
         //Set cloud image and animation
-        state = 0;
         cloud = new Texture("clouds.png");
         TextureRegion[][] tmp = new TextureRegion(cloud).split(2048, 1256);
-        setRegion(tmp[0][0]);
-        List list = new ArrayList(Arrays.asList(tmp[0]));
+        List<TextureRegion> list = new ArrayList<TextureRegion>(Arrays.asList(tmp[0]));
         list.addAll(Arrays.asList(tmp[1]));
+        int startIndex = rand.nextInt(4); // This is to randomize the cloud animation
+        setRegion(list.get(startIndex));
+        state = (startIndex * 0.25f) + 0.1f;
         cloudAnimation = new Animation(0.25f,  list.toArray());
         //Set the position and size of the cloud
         int dimension = 0;
