@@ -158,7 +158,7 @@ public class GameScreen implements Screen {
         }
 
         Tornadoes = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 20; i++) {
             validLoc = false;
             while (!validLoc) {
                 //Get random x and y coords
@@ -373,10 +373,9 @@ public class GameScreen implements Screen {
         }
 
         for (int i = 0; i < Tornadoes.size(); i++) {
-            Tornadoes.get(i).update(dt);
-            if(Tornadoes.get(i).checkPosition(player)){
-                Tornadoes.get(i).tornadoInpulse(player);
-            }
+            Tornado tornado = Tornadoes.get(i);
+            tornado.update(dt);
+            tornado.tornadoImpulse(player, dt);
         }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
