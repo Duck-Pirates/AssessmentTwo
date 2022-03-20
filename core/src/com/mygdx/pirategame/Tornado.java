@@ -60,7 +60,7 @@ public class Tornado extends Entity {
         //sets the body definitions
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());
-        bdef.type = BodyDef.BodyType.DynamicBody;
+        bdef.type = BodyDef.BodyType.StaticBody;
         b2body = world.createBody(bdef);
     }
 
@@ -91,23 +91,23 @@ public class Tornado extends Entity {
     }
 
     /**
-     * Creates a vector force to apply on the player if it's close to a tornado
-     * @param player
+     * Creates a vector force applied on the player if it's close to a tornado. This method also makes the boat turn
+     * @param player The player's instance
      */
 
-    public void tornadoInpulse(Player player){
-        Vector2 vec = new Vector2((player.getY() -this.getY())*PirateGame.PPM, (- (player.getX() - this.getX()) * PirateGame.PPM));
-        if(player.getX() - this.getX() < 0){
-            vec = new Vector2(-(player.getY() -this.getY())*PirateGame.PPM, ( (player.getX() - this.getX()) * PirateGame.PPM));
+    public void tornadoImpulse(Player player, float dt){
+        Vector2 pos = player.b2body.getWorldCenter();
+        Vector2 moverPos = b2body.getWorldCenter();
+        Vector2 fr = pos.sub(moverPos);
+        float d = fr.len();
+        float strength = 50f / (d*d);
+        if(strength > 10){
+            strength = Math.min(5*strength, 125);
+            player.updateRotation(-strength/12, dt);
         }
-        if(player.getX() - this.getX() < 0.1 & player.getX() - this.getX() > -0.1f){
-            if(player.getY() - this.getY() < 0.1 & player.getY() - this.getY() > -0.1f){
-                player.b2body.applyAngularImpulse(100f, true);
-            }
-        }
-        else {
-            player.b2body.applyForce(vec, player.b2body.getWorldCenter(), false);
-        }
+        fr = fr.nor();
+        fr = fr.scl(-strength);
+        player.b2body.applyForce(fr, player.b2body.getPosition(), true);
     }
 
     /**
