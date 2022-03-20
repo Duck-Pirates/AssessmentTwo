@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,9 +13,9 @@ import java.util.Random;
 
 
 /**
- * Coin
- * Creates an object for each coin
- * Extends the entity class to define coin as an entity
+ * Cloud
+ * Creates an object for each cloud
+ * Extends the entity class to define cloud as an entity
  *
  * @author Davide Bressani
  * @version 1.0
