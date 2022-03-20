@@ -122,15 +122,4 @@ public class Tornado extends Entity {
         region = (TextureRegion) swirl.getKeyFrame(state, true);
         return region;
     }
-
-    /**
-     * Checks if the player is close to the tornado
-     * @param player
-     */
-    public boolean checkPosition(Player player){
-        if ((player.getX() >= (this.getX() - 1) && player.getX() <= (this.getX() + 1)) && (player.getY() >= (this.getY() - 1) && player.getY() <= (this.getY() + 1))){
-            return true;
-        }
-        return false;
-    }
 }
