@@ -121,7 +121,7 @@ public class Player extends Sprite {
     }
 
 
-    public void updateRotation(int angularAcceleration, float delta) {
+    public void updateRotation(float angularAcceleration, float delta) {
 
         float angularVelocity = b2body.getAngularVelocity() + (angularAcceleration * delta) * (velocity / maxAngularVelocity);
         if (angularVelocity < -5f) {
@@ -140,6 +140,10 @@ public class Player extends Sprite {
 
 
         b2body.setAngularVelocity(angularVelocity);
+    }
+
+    public void updateRotation(int angularAcceleration, float delta) {
+        updateRotation((float) angularAcceleration, delta);
     }
 
     public void setLinearVelocity(float newVelocity){
