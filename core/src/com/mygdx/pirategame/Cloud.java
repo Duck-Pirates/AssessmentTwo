@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
 import java.util.ArrayList;
@@ -85,6 +86,9 @@ public class Cloud extends Entity{
 
     public void update(float dt){
         setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
+        if(state % 0.15f < 0.10f){
+            this.b2body.applyForce(new Vector2(-0.03f,-0.03f), this.b2body.getWorldCenter(), false);
+        }
         setRegion(getFrame(dt));
     }
 
