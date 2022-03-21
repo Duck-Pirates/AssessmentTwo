@@ -5,13 +5,11 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.utils.Array;
-
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import java.util.Random;
 
 /**
@@ -24,12 +22,14 @@ import java.util.Random;
  */
 public class Tornado extends Entity {
 
-    float state = 0;
+    private float state = 0;
     private Animation swirl;
     private Texture tornado;
     private Sound windSound;
     public SpriteBatch batch;
     private Random rand = new Random();
+    protected boolean inContact;
+    private float damage = 1, timeElapsed = 0f;
 
     /**
      * Instantiates a new Tornado.
@@ -62,6 +62,20 @@ public class Tornado extends Entity {
         bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.StaticBody;
         b2body = world.createBody(bdef);
+
+        // Defines a player's shape and contact borders
+        FixtureDef fdef = new FixtureDef();
+        CircleShape shape = new CircleShape();
+        shape.setRadius(150 / PirateGame.PPM);
+
+        // setting BIT identifier
+        fdef.filter.categoryBits = PirateGame.TORNADO_BIT;
+
+        // determining what this BIT can collide with
+        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT;
+        fdef.shape = shape;
+        fdef.isSensor = true;
+        b2body.createFixture(fdef).setUserData(this);
     }
 
     /**
@@ -69,7 +83,7 @@ public class Tornado extends Entity {
      */
     @Override
     public void entityContact () {
-
+        inContact = true;
     }
 
     /**
@@ -88,6 +102,7 @@ public class Tornado extends Entity {
     public void update(float dt){
         setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
         setRegion(getFrame(dt));
+        tornadoDamage(dt);
     }
 
     /**
@@ -110,6 +125,22 @@ public class Tornado extends Entity {
         player.b2body.applyForce(fr, player.b2body.getPosition(), true);
     }
 
+    public void tornadoDamage(float dt){
+        if(inContact){
+            timeElapsed += dt;
+            if(timeElapsed > 1){
+                timeElapsed -= 1;
+                damage*=1.1f;
+                Hud.changeHealth( (int) - Math.floor(damage));
+            }
+        }
+    }
+
+    public void reset(){
+        damage = 1;
+        inContact = false;
+        timeElapsed = 0;
+    }
     /**
      * Checks which frame the animation should be in and returns it
      * @param dt time elapsed
