@@ -44,6 +44,7 @@ public class Hud implements Disposable {
     private static Label powerupLabel;
     private static Integer coins;
     private static Integer coinMulti;
+    private static Integer previousHealth = 100;
 
     private static Boolean PowerupTimerBool = Boolean.FALSE;
     private static float PowerupTimer;
@@ -144,11 +145,13 @@ public class Hud implements Disposable {
         //Gdx.app.log("dt", String.valueOf(dt));
         //Gdx.app.log("time", String.valueOf(Constant_timeCount));
         if(timeCount >= 1) {
-            //Regen health every second
-            if(health != 100) {
+            //Regen health every second if the player hasn't received any damage in the meanwhile
+            if(health != 100 & health >= previousHealth) {
                 health += 1;
                 healthLabel.setText(String.format("%02d", health));
             }
+            previousHealth = health;
+
             //Gain point every second
             score += 5;
             scoreLabel.setText(String.format("%03d", score));
@@ -162,6 +165,11 @@ public class Hud implements Disposable {
             //Gdx.app.log("time", String.valueOf(timeCount));
             // PowerUp
 
+        }
+        if(health == 100 | health < previousHealth){
+            // This is to reset the timer to zero when it's not used, so we actually have one second for each iteration of the next health regeneration cycle
+            previousHealth = health;
+            timeCount = 0;
         }
         if (PowerupTimerBool == Boolean.TRUE){
             if (PowerupTimer == 0f){
@@ -191,6 +199,7 @@ public class Hud implements Disposable {
      * @param value Increase to health
      */
     public static void changeHealth(int value) {
+        previousHealth = health;
         health += value;
         healthLabel.setText(String.format("%02d", health));
     }
