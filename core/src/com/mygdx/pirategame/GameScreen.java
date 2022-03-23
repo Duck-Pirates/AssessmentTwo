@@ -129,7 +129,7 @@ public class GameScreen implements Screen {
                 //Check if valid
                 validLoc = checkGenPos(a, b);
             }
-            //Add a ship at the random coords
+            //Add a sh ip at the random coords
             ships.add(new EnemyShip(this, a, b, "unaligned_ship.png", "Unaligned"));
         }
         TempTime = 0f;

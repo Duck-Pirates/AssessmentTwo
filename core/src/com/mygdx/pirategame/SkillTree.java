@@ -3,6 +3,8 @@ package com.mygdx.pirategame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -46,6 +48,9 @@ public class SkillTree implements Screen {
     private static TextButton armour2;
     private static TextButton armour3;
     private static TextButton cone;
+
+    private final TextureRegion background = new TextureRegion(new Texture("hudBG.png"));;
+
 
     /**
      * Instantiates a new Skill tree.
@@ -359,7 +364,14 @@ public class SkillTree implements Screen {
 
         // tell our stage to do actions and draw itself
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.getBatch().begin();
+        stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        stage.getBatch().end();
         stage.draw();
+
+
+
+
     }
 
     /**
