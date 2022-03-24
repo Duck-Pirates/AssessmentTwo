@@ -47,7 +47,7 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
 
     private World world;
-    public Difficulty difficulty;
+    public static Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
     private Player player;
     private static HashMap<String, College> colleges = new HashMap<>();
@@ -286,11 +286,11 @@ public class GameScreen implements Screen {
             }
             // Up physics impulse on 'W'
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                linearAcceleration += 5;
+                linearAcceleration += 20;
             }
             // Down physics impulse on 'S'
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                linearAcceleration -= 5;
+                linearAcceleration -= 20;
             }
             // Cannon fire on 'Spacce'
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
@@ -372,6 +372,7 @@ public class GameScreen implements Screen {
             Boolean validLoc;
             int a = 0;
             int b = 0;
+            Gdx.app.log("PowerUps", "Spawn More PowerUps");
             for (int i = 0; i < 5; i++) {
                 validLoc = false;
                 while (!validLoc) {
@@ -383,6 +384,7 @@ public class GameScreen implements Screen {
                 Powerups.add(new Powerup(this, a, b, i));
             }
             TempTime = 0f;
+
         }
 
 
@@ -534,6 +536,19 @@ public class GameScreen implements Screen {
         }
     }
 
+
+
+    //public void IncreaseMaxSpeedPercent(int num){difficulty.IncreaseMaxSpeedPercent(num); } // num increase
+    //public void IncreaseTraversePercent(int num){difficulty.IncreaseTraversePercent(num); }
+    //public void IncreaseDamageDealtPercent(int num){difficulty.IncreaseDamageDealtPercent(num);}
+    // SetGoldCoinMulti
+    //public void DecreaseDamageRecievedPercent(int num){difficulty.DecreaseDamageRecievedPercent(num);}
+
+
+
+
+    // TODO delete
+    // ------------------------------------------------------------------------
     /**
      * Fetches the player's current position
      *
@@ -576,6 +591,14 @@ public class GameScreen implements Screen {
         colleges.get("Goodricke").changeDamageReceived(value);
 
     }
+
+    public void SetGoldCoinMulti(int num){
+        this.difficulty.SetGoldCoinMulti(num);
+    }
+
+    // ----------------------------------
+
+
 
     /**
      * Tests validity of randomly generated position

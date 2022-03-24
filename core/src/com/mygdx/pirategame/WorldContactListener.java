@@ -94,11 +94,11 @@ public class WorldContactListener implements ContactListener {
                 break;
             case PirateGame.COLLEGEFIRE_BIT | PirateGame.PLAYER_BIT:
                 if(fixA.getFilterData().categoryBits == PirateGame.COLLEGEFIRE_BIT) {
-                    Hud.changeHealth(-screen.difficulty.getDamage());
+                    Hud.changeHealth(-screen.difficulty.getDamageReceived());
                     ((CollegeFire) fixA.getUserData()).setToDestroy();
                 }
                 else {
-                    Hud.changeHealth(-screen.difficulty.getDamage());
+                    Hud.changeHealth(-screen.difficulty.getDamageReceived());
                     ((CollegeFire) fixB.getUserData()).setToDestroy();
                 }
                 break;

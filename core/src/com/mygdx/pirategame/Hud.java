@@ -161,12 +161,9 @@ public class Hud implements Disposable {
 
             //Check if a points boundary is met
             SkillTree.pointsCheck(score, coins);
-
-
             //Gdx.app.log("dt", String.valueOf(dt));
             //Gdx.app.log("time", String.valueOf(timeCount));
             // PowerUp
-
         }
         if (PowerupTimerBool == Boolean.TRUE){
             if (PowerupTimer == 0f){
@@ -176,7 +173,7 @@ public class Hud implements Disposable {
             if (Constant_timeCount > PowerupTimer + PowerupTime){
                 // Remove powerup abilities
                 // Respawn that powerup
-
+                screen.difficulty.PreviousPowerupStats();
                 PowerupPic = new Texture("blank.png");
                 powerUp = new Image(PowerupPic);
                 powerUp.setFillParent(false);
@@ -184,11 +181,14 @@ public class Hud implements Disposable {
                 stage.addActor(powerUp);
                 PowerupTimer = 0f;
                 PowerupTimerBool = Boolean.FALSE;
-
-
+                Gdx.app.log("dt", "Back to normal");
             }
         }
     }
+
+
+
+
 
     /**
      * Changes health by value increase
@@ -246,10 +246,12 @@ public class Hud implements Disposable {
         powerUp = new Image(PowerupPic);
         //
         //powerUp.toFront();
-        //powerUp.setFillParent(false);
         powerUp.setFillParent(false);
-        powerUp.sizeBy(0.005f, 0.005f);
-        //powerUp.setScale(0.5f,0.0005f );
+        powerUp.setFillParent(false);
+        //Size of powerup On screen
+        powerUp.setScale(0.3f,0.3f );
+
+        //powerUp.setScale(Gdx.graphics.getWidth()*03f,Gdx.graphics.getHeight() *3f );
         stage.addActor(powerUp);
         PowerupTimerBool = Boolean.TRUE;
 

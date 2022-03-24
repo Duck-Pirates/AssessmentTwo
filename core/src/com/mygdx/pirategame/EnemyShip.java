@@ -44,7 +44,7 @@ public class EnemyShip extends Enemy{
         setRegion(enemyShip);
         setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
 
-        damage = 20;
+        damage = screen.difficulty.getDamageDealt();
     }
 
     /**
@@ -140,8 +140,8 @@ public class EnemyShip extends Enemy{
             hit.play(screen.game.getPreferences().getEffectsVolume());
         }
         //Deal with the damage
-        health -= damage;
-        bar.changeHealth(damage);
+        health -= screen.difficulty.getDamageDealt();
+        bar.changeHealth(screen.difficulty.getDamageDealt());
         Hud.changePoints(5);
     }
 

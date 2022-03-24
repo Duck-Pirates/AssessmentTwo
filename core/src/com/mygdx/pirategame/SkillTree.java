@@ -271,75 +271,62 @@ public class SkillTree implements Screen {
 
         //States.get() checks whether it has already been unlocked. 1 = not unlocked, 0 = unlocked
         if(states.get(0) == 1 && points >= 100 && coins >= 50){ // Movement 1 (5% speed)
-            //Change acceleration
-            GameScreen.changeAcceleration(20F);
-            //Change Max speed
-            GameScreen.changeMaxSpeed(20F);
+
+            GameScreen.difficulty.IncreaseMaxSpeedPercent(5);
+
             states.set(0, 0);
         }
         else if(states.get(1) == 1 && points >= 100 && coins >= 400){ // movement 2 (10% speed)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.IncreaseMaxSpeedPercent(10);
             states.set(1, 0);
         }
         else if(states.get(2) == 1 && points >= 200 && coins >= 1000){ // movement 3 (15% speed)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.IncreaseMaxSpeedPercent(15);
             states.set(1, 0);
         }
         else if(states.get(3) == 1 && points >= 200 && coins >= 50){ // traverse 1 (10% traverse)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.IncreaseTraversePercent(10);
             states.set(1, 0);
         }
         else if(states.get(4) == 1 && points >= 200 && coins >= 250){ // traverse 2 (20% traverse)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.IncreaseTraversePercent(20);
             states.set(1, 0);
         }
         else if(states.get(5) == 1 && points >= 200 && coins >= 100){ // damage 1 (5 damage)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.IncreaseDamageDealtPercent(5);
             states.set(1, 0);
         }
         else if(states.get(6) == 1 && points >= 200 && coins >= 350){ // damage 1 (10 damage)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.IncreaseDamageDealtPercent(10);
             states.set(1, 0);
         }
         else if(states.get(7) == 1 && points >= 200 && coins >= 800){ // damage 1 (20 damage)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.IncreaseDamageDealtPercent(20);
             states.set(1, 0);
         }
         else if(states.get(11) == 1 && points >= 200 && coins >= 500){ // gold multiplier 1 (x2 gold)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.IncreaseCoinMulti(2); // basically means prevGold * 2
             states.set(1, 0);
         }
         else if(states.get(12) == 1 && points >= 200 && coins >= 1000){ // gold multiplier 2 (x3 gold)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.IncreaseCoinMulti(3); // basically means num * 2 * 3
             states.set(1, 0);
         }
         else if(states.get(8) == 1 && points >= 200 && coins >= 50){ // armour 1 (5% armour )
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.DecreaseDamageRecievedPercent(14);
             states.set(1, 0);
         }
         else if(states.get(9) == 1 && points >= 200 && coins >= 300){ // armour 2 (10% armour)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.DecreaseDamageRecievedPercent(12);
             states.set(1, 0);
+
         }
         else if(states.get(10) == 1 && points >= 200 && coins >= 700){ // armour 3 (20% armour)
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            GameScreen.difficulty.DecreaseDamageRecievedPercent(8);
             states.set(1, 0);
         }
         else if(states.get(13) == 1 && points >= 200 && coins >= 1000){ // coneshot
-            //Change multiplier
-            Hud.changeCoinsMulti(2);
+            // TODO cone shot ability in shop
             states.set(1, 0);
         }
 
