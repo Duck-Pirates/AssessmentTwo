@@ -32,7 +32,7 @@ public enum Difficulty {
     }
 
     public void SetGoldCoinMulti(int num) {
-        this.goldCoinMulti *= num;
+        this.goldCoinMulti += num;
     }
 
     public void SetSpeedReduction(float num) { this.speedReduction = num; }
@@ -48,12 +48,55 @@ public enum Difficulty {
 
 
     // Save to previous if powerup is in effect
-    public void IncreaseMaxSpeedPercent(int num){this.maxSpeed = prevMaxSpeed * (1+ num/100); } // num increase
-    public void IncreaseTraversePercent(int num){this.traverseSpeed = prevTraverseSpeed * (1 + num/100); }
-    public void IncreaseDamageDealtPercent(int num){this.damageDealt = prevDamageDealt + num; }
-    public void IncreaseCoinMulti(int num){this.goldCoinMulti = prevGoldCoinMulti * num; }
+    public void IncreaseMaxSpeedPercent(int num){
+        Gdx.app.log("max Speed", Float.toString(maxSpeed));
+        if (maxSpeed == prevMaxSpeed){ // No powerup
+            maxSpeed = maxSpeed * (1+ num/100);
+        } else if (maxSpeed != prevMaxSpeed) { // Powerup
+            prevMaxSpeed = prevMaxSpeed * (1+ num/100); // Set prev max speed
+            maxSpeed = maxSpeed + (prevMaxSpeed - maxSpeed); // Add prev max difference to the powerup max speed
+        }
+        Gdx.app.log("maxSpeed", Float.toString(maxSpeed));
+    }
+    public void IncreaseTraversePercent(int num){
+        this.traverseSpeed = prevTraverseSpeed * (1 + num/100);
+    }
+    public void IncreaseDamageDealtPercent(int num){
+        //this.damageDealt = prevDamageDealt + num;
+        Gdx.app.log("damage dealt", Float.toString(damageDealt));
+        if (damageDealt == prevDamageDealt){ // No powerup
+            damageDealt = damageDealt + num;
+        } else if (damageDealt != prevDamageDealt) { // Powerup
+            prevDamageDealt = prevDamageDealt + num; // Set prev damage dealt
+            damageDealt = damageDealt + (prevDamageDealt - damageDealt); // Add prev max difference to the powerup max speed
+        }
+        Gdx.app.log("damage dealt", Float.toString(damageDealt));
+    }
+    public void IncreaseCoinMulti(int num){
+        //this.goldCoinMulti = num;
+
+        Gdx.app.log("gold coin multi", Float.toString(goldCoinMulti));
+        if (goldCoinMulti == prevGoldCoinMulti){
+            goldCoinMulti += num;
+        } else if (goldCoinMulti != prevGoldCoinMulti){
+            prevGoldCoinMulti += num;
+            goldCoinMulti += num;
+        }
+        Gdx.app.log("gold coin multi", Float.toString(goldCoinMulti));
+
+    }
     // SetGoldCoinMulti
-    public void DecreaseDamageRecievedPercent(int num){this.damageReceived = num;}
+    public void DecreaseDamageRecievedPercent(int num){
+        //this.damageReceived = num;
+        Gdx.app.log("damage received", Float.toString(damageReceived));
+        if (damageReceived == prevDamageReceived){
+            damageReceived = num;
+        } else if (damageReceived != prevDamageReceived){
+            prevDamageReceived = num;
+            damageReceived = num;
+        }
+        Gdx.app.log("damage received", Float.toString(damageReceived));
+    }
     // Cone shot
 
 
@@ -86,9 +129,8 @@ public enum Difficulty {
 
     public float getTraverseSpeed() {return traverseSpeed; }
 
-
+    // When powerup is activated, save the previous variables
     public void SavePowerupStats () {
-
         prevDamageDealt = damageDealt;
         prevMaxSpeed = maxSpeed;
         prevGoldCoinMulti = goldCoinMulti;
@@ -97,8 +139,8 @@ public enum Difficulty {
 
     }
 
+    // After powerup is deactivated, revert to previous variables...
     public void PreviousPowerupStats () {
-
         damageDealt = prevDamageDealt;
         maxSpeed = prevMaxSpeed;
         goldCoinMulti = prevGoldCoinMulti ;

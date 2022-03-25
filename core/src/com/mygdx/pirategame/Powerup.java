@@ -160,31 +160,28 @@ public class Powerup extends Entity{
 
     public void Ammo(){
         // Increase damage or shots per second
-
-
-        screen.difficulty.SetDamageDealt(2);
         screen.difficulty.SavePowerupStats();
+        screen.difficulty.SetDamageDealt(2);
     }
     public void Lightning(){
         // Increase Speed
-
-        screen.difficulty.SetMaxSpeed(6f);
         screen.difficulty.SavePowerupStats();
+        screen.difficulty.SetMaxSpeed(6f);
     }
     public void Money(){
         // Increase money earnt
-
-        screen.difficulty.SetGoldCoinMulti(2); // double current multi
         screen.difficulty.SavePowerupStats();
+        screen.difficulty.SetGoldCoinMulti(1); // double current multi
     }
     public void Repair(){
         // Recovers ship
+        screen.difficulty.SavePowerupStats();
         screen.difficulty.IncreaseHP();
     }
     public void Star(){
         // TODO Imunity?? could change for cone
-        screen.difficulty.SetDamageReceived(0);
         screen.difficulty.SavePowerupStats();
+        screen.difficulty.SetDamageReceived(0);
     }
 
 
