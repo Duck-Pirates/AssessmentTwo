@@ -55,8 +55,8 @@ public class SkillTree implements Screen {
 
 
 
-    private static Integer Speed1Cost = 10;
-    private static Integer Speed1Points = 100;
+    private static Integer Speed1Cost = 2;
+    private static Integer Speed1Points = 10;
     private static Integer Speed2Cost = 30;
     private static Integer Speed2Points = 500;
     private static Integer Speed3Cost = 60;
@@ -67,8 +67,8 @@ public class SkillTree implements Screen {
     private static Integer Traverse2Cost = 50;
     private static Integer Traverse2Points = 800;
 
-    private static Integer Damage1Cost = 10;
-    private static Integer Damage1Points = 200;
+    private static Integer Damage1Cost = 20;
+    private static Integer Damage1Points = 10;
     private static Integer Damage2Cost = 30;
     private static Integer Damage2Points = 500;
     private static Integer Damage3Cost = 60;
@@ -150,14 +150,15 @@ public class SkillTree implements Screen {
 
         //TODO If brought hide the button??
         movement1 = new TextButton("Speed + 5%", skin);
+        Gdx.app.log("Movement1", String.valueOf(states.get(0)));
         if (states.get(0) == 1 || states.get(0) == 2){
             movement1.setDisabled(true);
         } else if (states.get(0) == 0){
             movement1.setDisabled(false);
+            //Gdx.app.log("Movement1", "Brought");
             movement1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    Gdx.app.log("Movement1", "Brought");
                     GameScreen.difficulty.IncreaseMaxSpeedPercent(5);
                     states.set(0, 2);
                     movement1.setDisabled(true);
@@ -462,7 +463,7 @@ public class SkillTree implements Screen {
         //states.get(0) == 2 ==== purchased???
 
 
-        //States.get() checks whether it has already been unlocked. 1 = not unlocked, 0 = unlocked, purchased
+        //States.get() checks whether it has already been unlocked. 1 = not unlocked, 0 = unlocked, 2 = purchased
         if(states.get(0) == 1 && points >= Speed1Points && coins >= Speed1Cost ){ // Movement 1 (5% speed)
             //GameScreen.difficulty.IncreaseMaxSpeedPercent(5);
             states.set(0, 0);
