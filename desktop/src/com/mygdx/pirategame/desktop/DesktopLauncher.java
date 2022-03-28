@@ -8,6 +8,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		config.setWindowedMode(config.getDisplayMode().width-300, config.getDisplayMode().height-300);
 		new Lwjgl3Application(new PirateGame(), config);
 	}
 }
