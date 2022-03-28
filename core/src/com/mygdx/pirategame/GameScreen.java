@@ -3,12 +3,12 @@ package com.mygdx.pirategame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -38,6 +38,7 @@ public class GameScreen implements Screen {
     private float stateTime;
 
     protected static PirateGame game;
+    private float previousHeight = Gdx.graphics.getHeight(), previousWidth = Gdx.graphics.getWidth();
     private OrthographicCamera camera;
     private Viewport viewport;
     private final Stage stage;
@@ -452,6 +453,28 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
+        float monitorWidth = Lwjgl3ApplicationConfiguration.getDisplayMode().width;
+        float monitorHeight = Lwjgl3ApplicationConfiguration.getDisplayMode().height;
+        float ratio = monitorWidth/monitorHeight;
+        if(previousHeight != height | previousWidth != width){
+            if(previousHeight != height & previousWidth != width){
+                if( monitorWidth / width > monitorHeight / height){
+                    height = Math.round(width*(1/ratio));
+                }
+                else if (monitorWidth / width < monitorHeight / height){
+                    width = Math.round(height * ratio);
+                }
+            }
+            else if(previousHeight!= height){
+                width = Math.round(height * ratio);
+            }
+            else if(previousWidth != width){
+                height = Math.round(width*(1/ratio));
+            }
+        }
+        previousHeight = height;
+        previousWidth =  width;
+        Gdx.graphics.setWindowedMode(width, height);
         viewport.update(width, height);
         stage.getViewport().update(width, height, true);
         Hud.resize(width, height);
