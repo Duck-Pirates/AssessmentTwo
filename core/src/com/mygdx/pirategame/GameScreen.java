@@ -18,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.*;
+
+import java.awt.*;
 import java.util.Random;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class GameScreen implements Screen {
 
     protected static PirateGame game;
     private float previousHeight = Gdx.graphics.getHeight(), previousWidth = Gdx.graphics.getWidth();
+    private Rectangle availableArea = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
     private OrthographicCamera camera;
     private Viewport viewport;
     private final Stage stage;
@@ -453,8 +456,8 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        float monitorWidth = Lwjgl3ApplicationConfiguration.getDisplayMode().width;
-        float monitorHeight = Lwjgl3ApplicationConfiguration.getDisplayMode().height;
+        float monitorWidth = availableArea.width;
+        float monitorHeight = availableArea.height;
         float ratio = monitorWidth/monitorHeight;
         if(previousHeight != height | previousWidth != width){
             if(previousHeight != height & previousWidth != width){
