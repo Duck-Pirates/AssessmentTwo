@@ -7,7 +7,11 @@ import com.mygdx.pirategame.PirateGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		
+
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+    config.width = Lwjgl3ApplicationConfiguration.getDesktopDisplayMode().width-300;
+		config.height = Lwjgl3ApplicationConfiguration.getDesktopDisplayMode().height-300;
 		new Lwjgl3Application(new PirateGame(), config);
+
 	}
 }

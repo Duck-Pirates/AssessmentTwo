@@ -176,8 +176,10 @@ public class College extends Enemy{
     public void onContact() {
         //Damage the college and lower health bar
         Gdx.app.log("enemy", "collision");
-        health -= damage;
-        bar.changeHealth(damage);
+
+        // Damage to college by cannon ball?
+        health -= screen.difficulty.getDamageDealt();
+        bar.changeHealth(screen.difficulty.getDamageDealt());
     }
 
     /**

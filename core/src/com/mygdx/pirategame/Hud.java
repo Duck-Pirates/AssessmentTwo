@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -31,7 +33,7 @@ public class Hud implements Disposable {
     private float timeCount;
     private float Constant_timeCount;
     private static Integer score;
-    private static Integer health;
+    public static Integer health;
     private Texture hp;
     private Texture boxBackground;
     private Texture coinPic;
@@ -55,14 +57,16 @@ public class Hud implements Disposable {
     private static Image powerUp;
 
 
+
     /**
      * Retrieves information and displays it in the hud
      * Adjusts hud with viewport
      *
      * @param sb Batch of images used in the hud
      */
-    public Hud(SpriteBatch sb) {
-        health = 100;
+    public Hud(SpriteBatch sb, GameScreen screen) {
+        this.screen = screen;
+        health = screen.difficulty.getHP();
         score = 0;
         coins = 0;
         coinMulti = 1;
@@ -101,7 +105,12 @@ public class Hud implements Disposable {
 
 
         scoreLabel = new Label(String.format("%03d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        healthLabel = new Label(String.format("%03d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        if (screen.difficulty == Difficulty.EASY){
+            healthLabel = new Label(String.format("%03d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        }
+        else{
+            healthLabel = new Label(String.format("%02d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        }
         coinLabel = new Label(String.format("%03d", coins), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         pointsText = new Label("Points:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
@@ -125,12 +134,16 @@ public class Hud implements Disposable {
         table1.add(scoreLabel).padTop(22).top().right().padRight(40);
 
 
+
         stage.addActor(table3);
         stage.addActor(table2);
         stage.addActor(table1);
         stage.addActor(powerUp);
 
         PowerupTimer = 0f;
+
+
+
     }
 
     /**
@@ -145,7 +158,7 @@ public class Hud implements Disposable {
         //Gdx.app.log("time", String.valueOf(Constant_timeCount));
         if(timeCount >= 1) {
             //Regen health every second
-            if(health != 100) {
+            if(health != this.screen.difficulty.getHP()) {
                 health += 1;
                 healthLabel.setText(String.format("%02d", health));
             }
@@ -155,13 +168,10 @@ public class Hud implements Disposable {
             timeCount = 0;
 
             //Check if a points boundary is met
-            SkillTree.pointsCheck(score);
-
-
+            SkillTree.pointsCheck(score, coins);
             //Gdx.app.log("dt", String.valueOf(dt));
             //Gdx.app.log("time", String.valueOf(timeCount));
             // PowerUp
-
         }
         if (PowerupTimerBool == Boolean.TRUE){
             if (PowerupTimer == 0f){
@@ -171,7 +181,7 @@ public class Hud implements Disposable {
             if (Constant_timeCount > PowerupTimer + PowerupTime){
                 // Remove powerup abilities
                 // Respawn that powerup
-
+                screen.difficulty.PreviousPowerupStats();
                 PowerupPic = new Texture("blank.png");
                 powerUp = new Image(PowerupPic);
                 powerUp.setFillParent(false);
@@ -179,11 +189,14 @@ public class Hud implements Disposable {
                 stage.addActor(powerUp);
                 PowerupTimer = 0f;
                 PowerupTimerBool = Boolean.FALSE;
-
-
+                Gdx.app.log("dt", "Back to normal");
             }
         }
     }
+
+
+
+
 
     /**
      * Changes health by value increase
@@ -191,11 +204,15 @@ public class Hud implements Disposable {
      * @param value Increase to health
      */
     public static void changeHealth(int value) {
-        health += value;
+
+        if (health + value > GameScreen.difficulty.getHP()){
+            health = GameScreen.difficulty.getHP();
+        }else{
+            health += value;
+        }
         healthLabel.setText(String.format("%02d", health));
+
     }
-
-
 
     /**
      * Changes coins by value increase
@@ -218,7 +235,7 @@ public class Hud implements Disposable {
         score += value;
         scoreLabel.setText(String.format("%03d", score));
         //Check if a points boundary is met
-        SkillTree.pointsCheck(score);
+        SkillTree.pointsCheck(score, coins);
     }
 
     /**
@@ -243,10 +260,12 @@ public class Hud implements Disposable {
         powerUp = new Image(PowerupPic);
         //
         //powerUp.toFront();
-        //powerUp.setFillParent(false);
         powerUp.setFillParent(false);
-        //powerUp.sizeBy(1, 1);
+        powerUp.setFillParent(false);
+        //Size of powerup On screen
         powerUp.setScale(0.3f,0.3f );
+
+        //powerUp.setScale(Gdx.graphics.getWidth()*03f,Gdx.graphics.getHeight() *3f );
         stage.addActor(powerUp);
         PowerupTimerBool = Boolean.TRUE;
 
@@ -269,7 +288,6 @@ public class Hud implements Disposable {
      */
     public static void resize(int width, int height){
         stage.getViewport().update(width, height, true);
-
     }
 
     /**
@@ -297,7 +315,5 @@ public class Hud implements Disposable {
     @Override
     public void dispose() {
         stage.dispose();
-
     }
 }
-
