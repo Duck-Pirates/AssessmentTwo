@@ -9,8 +9,8 @@ public class DesktopLauncher {
 		
 
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-    config.width = Lwjgl3ApplicationConfiguration.getDesktopDisplayMode().width-300;
-		config.height = Lwjgl3ApplicationConfiguration.getDesktopDisplayMode().height-300;
+    		//config.width = Lwjgl3ApplicationConfiguration.getDesktopDisplayMode().width-300;
+		//config.height = Lwjgl3ApplicationConfiguration.getDesktopDisplayMode().height-300;
 		new Lwjgl3Application(new PirateGame(), config);
 
 	}
