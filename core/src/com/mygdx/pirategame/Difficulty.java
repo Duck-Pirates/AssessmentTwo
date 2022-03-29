@@ -41,7 +41,7 @@ public enum Difficulty {
 
     public void SetDamageDealt(int num) { this.damageDealt = num; }  // DAMAGE Dealt
 
-    public void IncreaseHP() {this.HP += 50; }
+    //public void IncreaseHP() {this.HP += 50; }
 
     public void SetMaxSpeed(float num) { this.maxSpeed = num; }
 
@@ -97,9 +97,6 @@ public enum Difficulty {
         }
         Gdx.app.log("damage received", Float.toString(damageReceived));
     }
-    // Cone shot
-
-
 
     public float getSpeedReduction() { return speedReduction; }
 

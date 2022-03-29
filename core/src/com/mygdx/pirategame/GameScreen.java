@@ -5,6 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -66,6 +69,7 @@ public class GameScreen implements Screen {
 
     public Random rand = new Random();
     private Float TempTime;
+
 
     /**
      * Initialises the Game Screen,
@@ -179,6 +183,7 @@ public class GameScreen implements Screen {
 
         //GAME BUTTONS
         final TextButton pauseButton = new TextButton("Pause",skin);
+        final TextButton shopButton = new TextButton("Shop",skin);
         final TextButton skill = new TextButton("Skill Tree", skin);
 
         //PAUSE MENU BUTTONS
@@ -210,6 +215,8 @@ public class GameScreen implements Screen {
         //ADD TO TABLES
         table.add(pauseButton);
         table.row().pad(10, 0, 10, 0);
+        table.add(shopButton);
+        table.row().pad(10, 0, 10, 0);
         table.left().top();
 
         pauseTable.add(start).fillX().uniformX();
@@ -222,6 +229,8 @@ public class GameScreen implements Screen {
         pauseTable.center();
 
 
+
+
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
@@ -229,6 +238,13 @@ public class GameScreen implements Screen {
                 pauseTable.setVisible(true);
                 pause();
 
+            }
+        });
+        shopButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor){
+                pauseTable.setVisible(false);
+                game.changeScreen(PirateGame.SKILL);
             }
         });
         skill.addListener(new ChangeListener() {
@@ -260,6 +276,10 @@ public class GameScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+
+
+
+
     }
 
     /**

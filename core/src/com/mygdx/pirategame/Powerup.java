@@ -1,6 +1,7 @@
 package com.mygdx.pirategame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -33,10 +34,10 @@ public class Powerup extends Entity{
      * @param y      the y value to be placed at
      * @param type   the powerup's type, that changes the texture and sound of it
      */
+
+    //TODO powerups dissapear just after being picked up
     public Powerup(GameScreen screen, float x, float y, Integer type) {
         super(screen, x, y);
-
-        //TODO We need to add some texture and sound for the powerups
 
         //Set powerup image
 
@@ -109,7 +110,7 @@ public class Powerup extends Entity{
 
         //Set to destroy
         setToDestroyed = true;
-        Gdx.app.log("powerup", "collision");
+        //Gdx.app.log("powerup", "collision");
         //Play pickup sound
         if (screen.game.getPreferences().isEffectsEnabled()) {
             powerupPickup.play(screen.game.getPreferences().getEffectsVolume());
@@ -176,7 +177,9 @@ public class Powerup extends Entity{
     public void Repair(){
         // Recovers ship
         screen.difficulty.SavePowerupStats();
-        screen.difficulty.IncreaseHP();
+        //screen.difficulty.IncreaseHP();
+        Hud.changeHealth(50);
+
     }
     public void Star(){
         // TODO Imunity?? could change for cone

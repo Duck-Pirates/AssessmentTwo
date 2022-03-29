@@ -54,7 +54,6 @@ public class SkillTree implements Screen {
 
 
 
-
     private static Integer Speed1Cost = 2;
     private static Integer Speed1Points = 10;
     private static Integer Speed2Cost = 30;
@@ -88,6 +87,8 @@ public class SkillTree implements Screen {
 
     private static Integer Cone1Cost = 50;
     private static Integer Cone2Points = 1000;
+
+
 
 
 
@@ -131,6 +132,7 @@ public class SkillTree implements Screen {
         Gdx.input.setInputProcessor(stage);
         // Create a table that fills the screen
         Table table = new Table();
+        // Fills the parent
         table.setFillParent(true);
         stage.addActor(table);
 
@@ -147,10 +149,13 @@ public class SkillTree implements Screen {
         //create skill tree buttons
         //Sets enabled or disabled
 
+        //TODO Display total coins and points in the shop
 
-        //TODO If brought hide the button??
+        //TODO If brought hide the button?? (kinda done)
+
+        //TODO remove gold after purchase
         movement1 = new TextButton("Speed + 5%", skin);
-        Gdx.app.log("Movement1", String.valueOf(states.get(0)));
+        //Gdx.app.log("Movement1", String.valueOf(states.get(0)));
         if (states.get(0) == 1 || states.get(0) == 2){
             movement1.setDisabled(true);
         } else if (states.get(0) == 0){
@@ -361,7 +366,7 @@ public class SkillTree implements Screen {
 
 
         //Point unlock labels
-        //TODO Made seperate labels for points and cost
+
 
 
         final Label unlockmovement1 = new Label("Required: " + Integer.toString(Speed1Points) + " points \n Costs: " + Integer.toString(Speed1Cost) + " gold",skin);
@@ -467,6 +472,10 @@ public class SkillTree implements Screen {
         if(states.get(0) == 1 && points >= Speed1Points && coins >= Speed1Cost ){ // Movement 1 (5% speed)
             //GameScreen.difficulty.IncreaseMaxSpeedPercent(5);
             states.set(0, 0);
+        }else if (states.get(0) == 2){
+
+        }else {
+            //states.get(0) == 1;
         }
         if(states.get(1) == 1 && states.get(0) == 2 && points >= Speed2Points && coins >= Speed2Cost){ // movement 2 (10% speed)
             //GameScreen.difficulty.IncreaseMaxSpeedPercent(10);

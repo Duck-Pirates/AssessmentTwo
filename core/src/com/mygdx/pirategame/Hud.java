@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -31,7 +33,7 @@ public class Hud implements Disposable {
     private float timeCount;
     private float Constant_timeCount;
     private static Integer score;
-    private static Integer health;
+    public static Integer health;
     private Texture hp;
     private Texture boxBackground;
     private Texture coinPic;
@@ -53,6 +55,8 @@ public class Hud implements Disposable {
     private Image box;
     private Image coin;
     private static Image powerUp;
+
+
 
     /**
      * Retrieves information and displays it in the hud
@@ -130,12 +134,16 @@ public class Hud implements Disposable {
         table1.add(scoreLabel).padTop(22).top().right().padRight(40);
 
 
+
         stage.addActor(table3);
         stage.addActor(table2);
         stage.addActor(table1);
         stage.addActor(powerUp);
 
         PowerupTimer = 0f;
+
+
+
     }
 
     /**
@@ -196,8 +204,14 @@ public class Hud implements Disposable {
      * @param value Increase to health
      */
     public static void changeHealth(int value) {
-        health += value;
+
+        if (health + value > GameScreen.difficulty.getHP()){
+            health = GameScreen.difficulty.getHP();
+        }else{
+            health += value;
+        }
         healthLabel.setText(String.format("%02d", health));
+
     }
 
     /**
