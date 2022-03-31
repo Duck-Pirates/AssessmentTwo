@@ -80,7 +80,7 @@ public class GameScreen implements Screen {
         gameStatus = GAME_RUNNING;
         this.game = game;
         // Setting the difficulty, that will be changed based on the player's choice at the start of the game
-        this.difficulty = Difficulty.MEDIUM;
+        //this.difficulty = Difficulty.MEDIUM;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;

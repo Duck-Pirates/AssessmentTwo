@@ -22,7 +22,7 @@ public class MainMenu implements Screen {
 
     private final PirateGame parent;
     private final Stage stage;
-    private final TextureRegion background = new TextureRegion(new Texture("hudBG.png"));;
+    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));;
 
     /**
      * Instantiates a new Main menu.
@@ -72,7 +72,8 @@ public class MainMenu implements Screen {
         newGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                parent.changeScreen(PirateGame.GAME);
+                //parent.changeScreen(PirateGame.GAME);
+                parent.changeScreen(PirateGame.LOADING);
             }
         });
         //Help Screen

@@ -2,8 +2,13 @@ package com.mygdx.pirategame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Null;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -36,6 +41,7 @@ public class PirateGame extends Game {
 	private DeathScreen deathScreen;
 	private Help helpScreen;
 	private VictoryScreen victoryScreen;
+	private LoadingMenu loadingScreen;
 
 	private audioControls options;
 	public Music song;
@@ -47,6 +53,7 @@ public class PirateGame extends Game {
 	public final static int DEATH = 3;
 	public final static int HELP = 4;
 	public final static int VICTORY = 5;
+	public final static int LOADING = 6;
 
 	/**
 	 * Creates the main body of the game.
@@ -85,7 +92,10 @@ public class PirateGame extends Game {
 				break;
 
 			case GAME:
-				if (gameScreen == null) gameScreen = new GameScreen(this);
+				//TODO Loading Screen??
+				if (gameScreen == null) {
+					gameScreen = new GameScreen(this);
+				}
 				if (skillTreeScreen == null) skillTreeScreen = new SkillTree(this);
 				this.setScreen(gameScreen);
 				break;
@@ -109,6 +119,14 @@ public class PirateGame extends Game {
 				if (victoryScreen == null) victoryScreen = new VictoryScreen(this);
 				this.setScreen(victoryScreen);
 				break;
+
+			case LOADING:
+				if (loadingScreen == null) loadingScreen = new LoadingMenu(this);
+				this.setScreen(loadingScreen);
+				break;
+
+
+
 		}//
 	}
 

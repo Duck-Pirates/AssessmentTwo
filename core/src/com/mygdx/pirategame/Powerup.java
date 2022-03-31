@@ -179,7 +179,8 @@ public class Powerup extends Entity{
         screen.difficulty.SavePowerupStats();
         //screen.difficulty.IncreaseHP();
         Hud.changeHealth(50);
-
+        // TODO getting health back even if ur not getting damaged
+        // TODO heart powerup
     }
     public void Star(){
         // TODO Imunity?? could change for cone
