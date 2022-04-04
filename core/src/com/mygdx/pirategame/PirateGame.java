@@ -78,6 +78,9 @@ public class PirateGame extends Game {
 		song.setVolume(getPreferences().getMusicVolume());
 	}
 
+
+
+
 	/**
 	 * Changes the screen without killing the prior screen. Allows for the screens to be returned to without making new ones
 	 *
@@ -95,9 +98,16 @@ public class PirateGame extends Game {
 				//TODO Loading Screen??
 				if (gameScreen == null) {
 					gameScreen = new GameScreen(this);
+				} else {
+					gameScreen = new GameScreen(this);
 				}
+				// TODO check the code above for errors. ofc it doesn't make sense but there might be an error caused when saving a game
+
+
 				if (skillTreeScreen == null) skillTreeScreen = new SkillTree(this);
+
 				this.setScreen(gameScreen);
+
 				break;
 
 			case SKILL:

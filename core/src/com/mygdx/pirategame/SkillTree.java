@@ -71,19 +71,19 @@ public class SkillTree implements Screen {
 
 
     private static Integer Speed1Cost = 2;
-    private static Integer Speed1Points = 10;
-    private static Integer Speed2Cost = 30;
-    private static Integer Speed2Points = 500;
-    private static Integer Speed3Cost = 60;
-    private static Integer Speed3Points = 1000;
+    private static Integer Speed1Points = 5;
+    private static Integer Speed2Cost = 4;
+    private static Integer Speed2Points = 10;
+    private static Integer Speed3Cost = 6;
+    private static Integer Speed3Points = 20;
 
     private static Integer Traverse1Cost = 20;
     private static Integer Traverse1Points = 400;
     private static Integer Traverse2Cost = 50;
     private static Integer Traverse2Points = 800;
 
-    private static Integer Damage1Cost = 20;
-    private static Integer Damage1Points = 10;
+    private static Integer Damage1Cost = 2;
+    private static Integer Damage1Points = 5;
     private static Integer Damage2Cost = 30;
     private static Integer Damage2Points = 500;
     private static Integer Damage3Cost = 60;
@@ -150,7 +150,7 @@ public class SkillTree implements Screen {
         Table table = new Table();
         // Fills the parent
         table.setFillParent(true);
-        stage.addActor(table);
+
 
 
         // Table for the return button
@@ -220,7 +220,6 @@ public class SkillTree implements Screen {
 
         //TODO If brought hide the button?? (kinda done)
 
-        //TODO remove gold after purchase
         movement1 = new TextButton("Speed + 5%", skin);
         //Gdx.app.log("Movement1", String.valueOf(states.get(0)));
         if (states.get(0) == 1 || states.get(0) == 2){
@@ -251,7 +250,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseMaxSpeedPercent(10);
                     states.set(1, 2);
+                    Hud.SubtractCoin(Speed2Cost);
                     movement2.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -267,7 +268,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseMaxSpeedPercent(15);
                     states.set(2, 2);
+                    Hud.SubtractCoin(Speed3Cost);
                     movement3.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -283,7 +286,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseTraversePercent(10);
                     states.set(3, 2);
+                    Hud.SubtractCoin(Traverse1Cost);
                     traverse1.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -297,7 +302,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseTraversePercent(20);
                     states.set(4, 2);
+                    Hud.SubtractCoin(Traverse2Cost);
                     traverse2.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -312,7 +319,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseDamageDealtPercent(5);
                     states.set(5, 2);
+                    Hud.SubtractCoin(Damage1Cost);
                     damage1.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -326,7 +335,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseDamageDealtPercent(10);
                     states.set(6, 2);
+                    Hud.SubtractCoin(Damage2Cost);
                     damage2.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -340,7 +351,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseDamageDealtPercent(20);
                     states.set(7, 2);
+                    Hud.SubtractCoin(Damage3Cost);
                     damage3.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -355,7 +368,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.DecreaseDamageRecievedPercent(14);
                     states.set(8, 2);
+                    Hud.SubtractCoin(Armour1Cost);
                     armour1.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -369,7 +384,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.DecreaseDamageRecievedPercent(12);
                     states.set(9, 2);
+                    Hud.SubtractCoin(Armour2Cost);
                     armour2.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -383,7 +400,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.DecreaseDamageRecievedPercent(8);
                     states.set(10, 2);
+                    Hud.SubtractCoin(Armour3Cost);
                     armour3.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -398,7 +417,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseCoinMulti(1);
                     states.set(11, 2);
+                    Hud.SubtractCoin(Gold1Cost);
                     GoldMulti1.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -412,7 +433,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseCoinMulti(1);
                     states.set(12, 2);
+                    Hud.SubtractCoin(Gold2Cost);
                     GoldMulti2.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -427,7 +450,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     //TODO insert cone shoot function
                     states.set(13, 2);
+                    Hud.SubtractCoin(Cone1Cost);
                     GoldMulti1.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -516,7 +541,8 @@ public class SkillTree implements Screen {
         table.add(unlockcone);
         table.row().pad(10, 0, 10, 0);
 
-
+        table.toFront();
+        stage.addActor(table);
         //table.top();
 
         //add return button

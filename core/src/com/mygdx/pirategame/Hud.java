@@ -47,7 +47,7 @@ public class Hud implements Disposable {
     public static Integer coins;
     private static Integer coinMulti;
 
-    private static Boolean PowerupTimerBool = Boolean.FALSE;
+    public static Boolean PowerupTimerBool = Boolean.FALSE;
     private static float PowerupTimer;
     private static Integer PowerUpType;
 
@@ -154,6 +154,7 @@ public class Hud implements Disposable {
         Constant_timeCount += dt;
         //Gdx.app.log("dt", String.valueOf(dt));
         //Gdx.app.log("time", String.valueOf(Constant_timeCount));
+        coinLabel.setText(String.format("%03d", coins));
         if(timeCount >= 1) {
             //Regen health every second
             if(health != this.screen.difficulty.getHP()) {
@@ -164,6 +165,7 @@ public class Hud implements Disposable {
             score += 5;
             scoreLabel.setText(String.format("%03d", score));
             timeCount = 0;
+
 
             //Check if a points boundary is met
             SkillTree.pointsCheck(score, coins);
