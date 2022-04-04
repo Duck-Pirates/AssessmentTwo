@@ -567,10 +567,6 @@ public class SkillTree implements Screen {
         if(states.get(0) == 1 && points >= Speed1Points && coins >= Speed1Cost ){ // Movement 1 (5% speed)
             //GameScreen.difficulty.IncreaseMaxSpeedPercent(5);
             states.set(0, 0);
-        }else if (states.get(0) == 2){
-
-        }else {
-            //states.get(0) == 1;
         }
         if(states.get(1) == 1 && states.get(0) == 2 && points >= Speed2Points && coins >= Speed2Cost){ // movement 2 (10% speed)
             //GameScreen.difficulty.IncreaseMaxSpeedPercent(10);
@@ -672,7 +668,6 @@ public class SkillTree implements Screen {
         stage.getViewport().update(width, height, true);
         Gdx.app.log("w", String.valueOf(width));
         Gdx.app.log("h", String.valueOf(height));
-        damage1.setScale(width,height);
         stage.draw();
     }
 
