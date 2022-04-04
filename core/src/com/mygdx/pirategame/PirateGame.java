@@ -98,8 +98,6 @@ public class PirateGame extends Game {
 				//TODO Loading Screen??
 				if (gameScreen == null) {
 					gameScreen = new GameScreen(this);
-				} else {
-					gameScreen = new GameScreen(this);
 				}
 				// TODO check the code above for errors. ofc it doesn't make sense but there might be an error caused when saving a game
 
