@@ -7,8 +7,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import org.junit.Test;
 
 import java.util.Random;
+
+import static org.junit.Assert.*;
 
 /**
  * Coin
@@ -109,5 +112,26 @@ public class Coin extends Entity {
         if(!destroyed) {
             super.draw(batch);
         }
+    }
+
+    @Test
+    public void testCoinUpdate() {
+        Coin testCoin = new Coin(new GameScreen(new PirateGame()), 10,10);
+
+        // Schedule a destroy
+        testCoin.setToDestroyed = true;
+
+        // Assert that this destroy happens only after an update
+        assertFalse(testCoin.destroyed);
+
+        testCoin.update();
+
+        assertTrue(testCoin.destroyed);
+
+        Coin testCoin2 = new Coin(new GameScreen(new PirateGame()), 15,15);
+        assertFalse(testCoin2.setToDestroyed);
+        assertFalse(testCoin2.destroyed);
+        assertEquals(b2body.getPosition().x - getWidth(), testCoin2.getX());
+        assertEquals(b2body.getPosition().y - getHeight(), testCoin2.getY());
     }
 }

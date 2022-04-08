@@ -221,7 +221,7 @@ public class College extends Enemy{
         // Schedule a destroy
         testCollege.setToDestroy = true;
 
-        // Asser that this destroy happens only after an update
+        // Assert that this destroy happens only after an update
         assertFalse(testCollege.destroyed);
 
         testCollege.update(10.5F);
