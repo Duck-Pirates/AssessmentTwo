@@ -3,11 +3,18 @@ package com.mygdx.pirategame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * College
@@ -188,5 +195,53 @@ public class College extends Enemy{
     public void fire() {
         cannonBalls.add(new CollegeFire(screen, b2body.getPosition().x, b2body.getPosition().y));
     }
+
+
+    @Test
+    public void testCollegeSpawn() {
+        // Doesn't allow out-of-map spawning
+        assertFalse(getCoord(noSpawn.xCap + 1, 15));
+
+        // Does allow in-map spawning
+        assertTrue(getCoord(noSpawn.xCap - 1, noSpawn.yCap - 1));
+
+        // Block a tile
+        noSpawn.tileBlocked.put(5, 10);
+        // Expect false for the blocked tile, true otherwise
+        assertFalse(getCoord(5,10));
+        assertTrue(getCoord(5,11));
+        assertTrue(getCoord(10,5));
+    }
+
+    @Test
+    public void testImposingDeletion() {
+        College testCollege = new College(this, "Test College", 100 / PirateGame.PPM, 200 / PirateGame.PPM,
+                "alcuin_flag.png", "alcuin_ship.png", 1, invalidSpawn);
+
+        // Schedule a destroy
+        testCollege.setToDestroy = true;
+
+        // Asser that this destroy happens only after an update
+        assertFalse(testCollege.destroyed);
+
+        testCollege.update(10.5F);
+
+        assertTrue(testCollege.destroyed);
+
+        // Do the above implicitly...
+
+        College testCollege2 = new College(this, "Test College", 100 / PirateGame.PPM, 200 / PirateGame.PPM,
+                "alcuin_flag.png", "alcuin_ship.png", 1, invalidSpawn);
+
+        testCollege.health = 0;
+
+        assertFalse(testCollege.destroyed);
+
+        testCollege.update(10.5F);
+
+        assertTrue(testCollege.destroyed);
+    }
 }
+
+
 
