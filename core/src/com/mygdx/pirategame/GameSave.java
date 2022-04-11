@@ -16,24 +16,51 @@ import java.util.ArrayList;
 
 public class GameSave {
 
-    private Difficulty difficultySave;
+    private static Difficulty difficultySave;
+    private static AvailableSpawn invalidSpawnSave;
 
-    private PlayerSave playerSave;
-    private static ArrayList<CollegeSave> collegesSave;
+    private static PlayerSave playerSave;
+    private static ArrayList<CollegeSave> collegesSaves;
+    private static ArrayList<ShipSave> fleetsSaves;
+    private static ArrayList<CoinSave> coinSaves;
+    private static HudSave hudSave;
+    private static ArrayList<PowerUpSave> powerUpSaves;
+
+    private static float tempTimeSave;
+
+
+    private static ArrayList<Integer> statesSave;
 
     /**
      * Saves the game state and writes it to the json file
      * @param game The GameScreen class
      */
 
-    private void save(GameScreen game) {
-        this.difficultySave = game.difficulty;
+    private void save(GameScreen game, SkillTree shop) {
+        difficultySave = game.difficulty;
+        invalidSpawnSave = game.invalidSpawn;
 
-        this.playerSave = new PlayerSave(game.player);
-        for(int i = 0; i < game.colleges.size(); i++){
-            collegesSave.add(new CollegeSave(game.colleges.get(i)));
+        playerSave = new PlayerSave(game.player);
+        for (College college: game.colleges) {
+            CollegeSave collegeSave = new CollegeSave(college);
+            collegesSaves.add(collegeSave);
+            fleetsSaves.addAll(collegeSave.fleet);
         }
+        for (Coin coin: game.coins) {
+            coinSaves.add(new CoinSave(coin));
+        }
+        hudSave = new HudSave(game.hud);
+        for (Powerup powerup: game.powerups){
+            powerUpSaves.add(new PowerUpSave(powerup));
+        }
+
+        tempTimeSave = game.TempTime;
+
+        statesSave = shop.states;
     }
+
+
+
 
     /**
      * PlayerSave
@@ -92,6 +119,55 @@ public class GameSave {
             y = ship.getY();
             health = ship.health;
             college = ship.college;
+        }
+    }
+
+    /**
+     * CoinSave
+     * Auxiliary class to save data about the coins
+     */
+    public static class CoinSave {
+
+        private static float x, y;
+
+        public CoinSave(Coin coin){
+            x = coin.getX();
+            y = coin.getY();
+        }
+    }
+
+    /**
+     * HudSave
+     * Auxiliary class to save data about the HUD
+     */
+    public static class HudSave{
+
+        private static float timeCount, constantTimeCount, powerUpTimer;
+        private static Integer score, health, coins, coinMulti, powerUpType;
+        private static boolean powerUpTimerBool;
+
+        public HudSave(Hud hud){
+            timeCount = hud.timeCount;
+            constantTimeCount = hud.Constant_timeCount;
+            powerUpTimer = hud.PowerupTimer;
+            score = hud.score;
+            health = hud.health;
+            coins = hud.coins;
+            coinMulti = difficultySave.getGoldCoinMulti();
+            powerUpType = hud.PowerUpType;
+            powerUpTimerBool = hud.PowerupTimerBool;
+        }
+    }
+
+    public static class PowerUpSave{
+
+        private static float x, y;
+        private static Integer type;
+
+        public PowerUpSave(Powerup powerup){
+            x = powerup.getX();
+            y = powerup.getY();
+            type = powerup.powerupType;
         }
     }
 }
