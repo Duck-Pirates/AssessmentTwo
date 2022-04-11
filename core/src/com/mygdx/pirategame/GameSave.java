@@ -68,8 +68,8 @@ public class GameSave {
      */
     public static class PlayerSave{
 
-        protected float velocity, rotation, maxVelocity, maxAngularVelocity;
-        protected Vector2 position;
+        private float velocity, rotation, maxVelocity, maxAngularVelocity;
+        private Vector2 position;
 
         public PlayerSave(Player player) {
             velocity = player.velocity;
@@ -87,10 +87,10 @@ public class GameSave {
      */
     public static class CollegeSave{
 
-        protected final String collegeName;
-        protected ArrayList<ShipSave> fleet;
-        protected final float x, y;
-        protected int health;
+        private final String collegeName;
+        private ArrayList<ShipSave> fleet;
+        private final float x, y;
+        private int health;
 
         public CollegeSave(College college) {
             collegeName = college.getCurrentCollege();
@@ -104,21 +104,22 @@ public class GameSave {
     }
 
     /**
-     * CollegeSave
+     * ShipSave
      * Auxiliary class to save data about the college's fleets
      */
     public static class ShipSave{
 
-        protected String college;
-        protected final float x, y;
-        protected int health;
+        private String college;
+        private float x, y, rotation;
+        private int health;
 
 
         public ShipSave(EnemyShip ship){
+            college = ship.college;
             x = ship.getX();
             y = ship.getY();
+            rotation = ship.getRotation();
             health = ship.health;
-            college = ship.college;
         }
     }
 
@@ -159,6 +160,10 @@ public class GameSave {
         }
     }
 
+    /**
+     * PowerUpSave
+     * Auxiliary class to save data about the PowerUps
+     */
     public static class PowerUpSave{
 
         private static float x, y;
