@@ -188,5 +188,12 @@ public class College extends Enemy{
     public void fire() {
         cannonBalls.add(new CollegeFire(screen, b2body.getPosition().x, b2body.getPosition().y));
     }
+
+    /**
+     * Getter for the college name
+     */
+    public String getCurrentCollege(){
+        return currentCollege;
+    }
 }
 

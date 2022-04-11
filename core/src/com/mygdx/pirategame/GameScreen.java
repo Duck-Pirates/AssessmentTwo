@@ -52,8 +52,9 @@ public class GameScreen implements Screen {
     private World world;
     public static Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
-    private Player player;
-    private static HashMap<String, College> colleges = new HashMap<>();
+    protected Player player;
+    private static HashMap<String, Integer> name2college = new HashMap<String, Integer>(){{put("Alcuin", 0); put("Anne Lister", 1); put("Constantine", 2); put("Goodricke", 3);}};
+    protected static ArrayList<College> colleges = new ArrayList<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
@@ -105,20 +106,19 @@ public class GameScreen implements Screen {
         world.setContactListener(new WorldContactListener(this));
 
         // Spawning enemy ship and coin. x and y is spawn location
-        colleges = new HashMap<>();
-        colleges.put("Alcuin", new College(this, "Alcuin", 1900 / PirateGame.PPM, 2100 / PirateGame.PPM,
+        colleges.add(new College(this, "Alcuin", 1900 / PirateGame.PPM, 2100 / PirateGame.PPM,
                 "alcuin_flag.png", "alcuin_ship.png", 0, invalidSpawn));
-        colleges.put("Anne Lister", new College(this, "Anne Lister", 6304 / PirateGame.PPM, 1199 / PirateGame.PPM,
+        colleges.add(new College(this, "Anne Lister", 6304 / PirateGame.PPM, 1199 / PirateGame.PPM,
                 "anne_lister_flag.png", "anne_lister_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.put("Constantine", new College(this, "Constantine", 6240 / PirateGame.PPM, 6703 / PirateGame.PPM,
+        colleges.add(new College(this, "Constantine", 6240 / PirateGame.PPM, 6703 / PirateGame.PPM,
                 "constantine_flag.png", "constantine_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.put("Goodricke", new College(this, "Goodricke", 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
+        colleges.add(new College(this, "Goodricke", 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
                 "goodricke_flag.png", "goodricke_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
         ships = new ArrayList<>();
-        ships.addAll(colleges.get("Alcuin").fleet);
-        ships.addAll(colleges.get("Anne Lister").fleet);
-        ships.addAll(colleges.get("Constantine").fleet);
-        ships.addAll(colleges.get("Goodricke").fleet);
+        ships.addAll(colleges.get(0).fleet);
+        ships.addAll(colleges.get(1).fleet);
+        ships.addAll(colleges.get(2).fleet);
+        ships.addAll(colleges.get(3).fleet);
 
         //Random ships
         Boolean validLoc;
@@ -380,10 +380,9 @@ public class GameScreen implements Screen {
 
         // Update all players and entities
         player.update(dt);
-        colleges.get("Alcuin").update(dt);
-        colleges.get("Anne Lister").update(dt);
-        colleges.get("Constantine").update(dt);
-        colleges.get("Goodricke").update(dt);
+        for(int i = 0; i < colleges.size(); i++){
+            colleges.get(i).update(dt);
+        }
 
         //Update ships
         for (int i = 0; i < ships.size(); i++) {
@@ -428,15 +427,11 @@ public class GameScreen implements Screen {
 
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
-            if (!colleges.get("Anne Lister").destroyed) {
-                colleges.get("Anne Lister").fire();
+            for(College college: colleges){
+                if(!(college.destroyed || college.getCurrentCollege() == "Alcuin")){
+                    college.fire();
+                }
             }
-            if (!colleges.get("Constantine").destroyed) {
-                colleges.get("Constantine").fire();
-            }
-            if (!colleges.get("Goodricke").destroyed) {
-                colleges.get("Goodricke").fire();
-        }
         stateTime = 0;
     }
 
@@ -487,21 +482,20 @@ public class GameScreen implements Screen {
         //Renders colleges
         player.draw(game.batch);
 
-        colleges.get("Alcuin").draw(game.batch);
-        colleges.get("Anne Lister").draw(game.batch);
-        colleges.get("Constantine").draw(game.batch);
-        colleges.get("Goodricke").draw(game.batch);
+        for (College college: colleges) {
+            college.draw(game.batch);
+        }
 
         //Updates all ships
-        for (int i = 0; i < ships.size(); i++){
-            if (ships.get(i).college != "Unaligned") {
+        for (EnemyShip ship: ships){
+            if (ship.college != "Unaligned") {
                 //Flips a colleges allegence if their college is destroyed
-                if (colleges.get(ships.get(i).college).destroyed) {
+                if (getCollege(ship.college).destroyed) {
 
-                    ships.get(i).updateTexture("Alcuin", "alcuin_ship.png");
+                    ship.updateTexture("Alcuin", "alcuin_ship.png");
                 }
             }
-            ships.get(i).draw(game.batch);
+            ship.draw(game.batch);
         }
         game.batch.end();
         //player.SlowDownBoat();
@@ -551,8 +545,8 @@ public class GameScreen implements Screen {
      * @param collegeName uses a college name as an index
      * @return college : returns the college fetched from colleges
      */
-    public College getCollege(String collegeName) {
-        return colleges.get(collegeName);
+    public static College getCollege(String collegeName) {
+        return colleges.get(name2college.get(collegeName));
     }
 
     /**
@@ -561,12 +555,12 @@ public class GameScreen implements Screen {
      */
     public void gameOverCheck(){
         //Lose game if ship on 0 health or Alcuin is destroyed
-        if (Hud.getHealth() <= 0 || colleges.get("Alcuin").destroyed) {
+        if (Hud.getHealth() <= 0 || getCollege("Alcuin").destroyed) {
             game.changeScreen(PirateGame.DEATH);
             game.killGame();
         }
         //Win game if all colleges destroyed
-        else if (colleges.get("Anne Lister").destroyed && colleges.get("Constantine").destroyed && colleges.get("Goodricke").destroyed){
+        else if (getCollege("Anne Lister").destroyed && getCollege("Constantine").destroyed && getCollege("Goodricke").destroyed){
             game.changeScreen(PirateGame.VICTORY);
             game.killGame();
         }
@@ -622,9 +616,9 @@ public class GameScreen implements Screen {
         for (int i = 0; i < ships.size(); i++){
             ships.get(i).changeDamageReceived(value);
         }
-        colleges.get("Anne Lister").changeDamageReceived(value);
-        colleges.get("Constantine").changeDamageReceived(value);
-        colleges.get("Goodricke").changeDamageReceived(value);
+        getCollege("Anne Lister").changeDamageReceived(value);
+        getCollege("Constantine").changeDamageReceived(value);
+        getCollege("Goodricke").changeDamageReceived(value);
 
     }
 
