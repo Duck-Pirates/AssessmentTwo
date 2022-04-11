@@ -23,7 +23,7 @@ public class Powerup extends Entity{
     private boolean setToDestroyed;
     private boolean destroyed;
     private Sound powerupPickup;
-    private Integer powerupType;
+    protected Integer powerupType;
 
 
     /**

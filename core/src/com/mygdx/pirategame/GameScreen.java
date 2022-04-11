@@ -52,10 +52,10 @@ public class GameScreen implements Screen {
     private static HashMap<String, Integer> name2college = new HashMap<String, Integer>(){{put("Alcuin", 0); put("Anne Lister", 1); put("Constantine", 2); put("Goodricke", 3);}};
     protected static ArrayList<College> colleges = new ArrayList<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
-    private static ArrayList<Coin> Coins = new ArrayList<>();
-    private AvailableSpawn invalidSpawn = new AvailableSpawn();
-    private Hud hud;
-    private static ArrayList<Powerup> Powerups = new ArrayList<>();
+    protected static ArrayList<Coin> coins = new ArrayList<>();
+    protected AvailableSpawn invalidSpawn = new AvailableSpawn();
+    protected Hud hud;
+    protected static ArrayList<Powerup> powerups = new ArrayList<>();
 
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
@@ -65,7 +65,7 @@ public class GameScreen implements Screen {
     private Table table;
 
     public Random rand = new Random();
-    private Float TempTime;
+    protected Float TempTime;
 
 
     /**
@@ -134,7 +134,7 @@ public class GameScreen implements Screen {
         }
         TempTime = 0f;
         //Random coins
-        Coins = new ArrayList<>();
+        coins = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             validLoc = false;
             while (!validLoc) {
@@ -144,11 +144,11 @@ public class GameScreen implements Screen {
                 validLoc = checkGenPos(a, b);
             }
             //Add a coins at the random coords
-            Coins.add(new Coin(this, a, b));
+            coins.add(new Coin(this, a, b));
         }
 
-        //Spawn Powerups
-        Powerups = new ArrayList<>();
+        //Spawn powerups
+        powerups = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             validLoc = false;
             while (!validLoc) {
@@ -157,7 +157,7 @@ public class GameScreen implements Screen {
                 b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
                 validLoc = checkGenPos(a, b);
             }
-            Powerups.add(new Powerup(this, a, b, i));
+            powerups.add(new Powerup(this, a, b, i));
         }
 
 
@@ -386,13 +386,13 @@ public class GameScreen implements Screen {
         }
 
         //Updates coin
-        for (int i = 0; i < Coins.size(); i++) {
-            Coins.get(i).update();
+        for (int i = 0; i < coins.size(); i++) {
+            coins.get(i).update();
         }
 
         //Updates powerups
-        for (int i = 0; i < Powerups.size(); i++) {
-            Powerups.get(i).update();
+        for (int i = 0; i < powerups.size(); i++) {
+            powerups.get(i).update();
         }
 
         //Gdx.app.log("powerup", String.valueOf(ConstantTime));
@@ -412,7 +412,7 @@ public class GameScreen implements Screen {
                     b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
                     validLoc = checkGenPos(a, b);
                 }
-                Powerups.add(new Powerup(this, a, b, i));
+                powerups.add(new Powerup(this, a, b, i));
             }
             TempTime = 0f;
 
@@ -465,13 +465,13 @@ public class GameScreen implements Screen {
         // Order determines layering
 
         //Renders coins
-        for(int i=0;i<Coins.size();i++) {
-            Coins.get(i).draw(game.batch);
+        for(int i = 0; i< coins.size(); i++) {
+            coins.get(i).draw(game.batch);
         }
 
         //Renders powerups
-        for(int i=0;i<Powerups.size();i++) {
-            Powerups.get(i).draw(game.batch);
+        for(int i = 0; i< powerups.size(); i++) {
+            powerups.get(i).draw(game.batch);
         }
 
 

@@ -48,7 +48,7 @@ public class SkillTree implements Screen {
 
 
     //To store whether buttons are enabled or disabled
-    private static final List<Integer> states = new ArrayList<Integer>();
+    protected static final ArrayList<Integer> states = new ArrayList<Integer>();
 
     private static TextButton movement1;
     private static TextButton movement2;
