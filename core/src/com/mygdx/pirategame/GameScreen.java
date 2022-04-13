@@ -55,6 +55,7 @@ public class GameScreen implements Screen {
     private World world;
     public static Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
+
     private Player player;
     private static HashMap<String, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
@@ -64,6 +65,7 @@ public class GameScreen implements Screen {
     private Hud hud;
     private static ArrayList<Powerup> Powerups = new ArrayList<>();
     private static ArrayList<Cloud> clouds = new ArrayList<>();
+    private static ArrayList<Tornado> Tornadoes = new ArrayList<>();
 
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
@@ -84,8 +86,6 @@ public class GameScreen implements Screen {
     public GameScreen(PirateGame game){
         gameStatus = GAME_RUNNING;
         this.game = game;
-        // Setting the difficulty, that will be changed based on the player's choice at the start of the game
-        //this.difficulty = Difficulty.MEDIUM;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;
@@ -180,6 +180,19 @@ public class GameScreen implements Screen {
             }
             clouds.add(new Cloud(this, a, b));
         }
+        Tornadoes = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            validLoc = false;
+            while (!validLoc) {
+                //Get random x and y coords
+                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                validLoc = checkGenPos(a, b);
+            }
+            //Add a coins at the random coords
+            Tornadoes.add(new Tornado(this, a, b));
+        }
+
 
         //Setting stage
         stage = new Stage(new ScreenViewport());
@@ -445,6 +458,12 @@ public class GameScreen implements Screen {
                 clouds.get(i).resetAlpha();
             }
         }
+
+        for (int i = 0; i < Tornadoes.size(); i++) {
+            Tornado tornado = Tornadoes.get(i);
+            tornado.update(dt);
+            tornado.tornadoImpulse(player, dt);
+        }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             if (!colleges.get("Anne Lister").destroyed) {
@@ -510,6 +529,10 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").draw(game.batch);
         colleges.get("Constantine").draw(game.batch);
         colleges.get("Goodricke").draw(game.batch);
+
+        for(int i = 0; i< Tornadoes.size(); i++) {
+            Tornadoes.get(i).draw(game.batch);
+        }
 
         //Updates all ships
         for (int i = 0; i < ships.size(); i++){
