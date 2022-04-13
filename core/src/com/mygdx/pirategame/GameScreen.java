@@ -21,10 +21,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.*;
+import org.junit.Test;
+
 import java.util.Random;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -689,5 +694,81 @@ public class GameScreen implements Screen {
         b2dr.dispose();
         hud.dispose();
         stage.dispose();
+    }
+
+    @Test
+    public void testCollegesSetup() {
+        // Assert that the correct number of colleges has been added to the hashmap
+        assertEquals(4, colleges.size());
+
+        // Create a new college
+        College testCollege = new College(this, "Test College", 100 / PirateGame.PPM, 200 / PirateGame.PPM,
+                "alcuin_flag.png", "alcuin_ship.png", 30, invalidSpawn);
+
+        // Assert that it is correctly created with all the correct attributes generated
+        assertEquals((100 / PirateGame.PPM), testCollege.getX());
+        assertEquals((200 / PirateGame.PPM), testCollege.getY());
+
+        assertEquals(30, testCollege.fleet.size());
+
+        assertEquals("Test College", testCollege.fleet.get(0).college);
+
+        for (int i = 0; i < testCollege.fleet.size(); i++) {
+            assertEquals("Test College", testCollege.fleet.get(i).college);
+        }
+    }
+
+    @Test
+    public void testCollegesDestroy() {
+        College testCollege = new College(this, "Test College", 100 / PirateGame.PPM, 200 / PirateGame.PPM,
+                "alcuin_flag.png", "alcuin_ship.png", 30, invalidSpawn);
+
+        // Assert that the college starts with the correct amount of health
+        assertEquals(100, testCollege.health);
+
+        // That the health goes down as expected
+        testCollege.health -= 50;
+
+        assertEquals(50, testCollege.health);
+        assertFalse(testCollege.destroyed);
+
+        // That the college is destroyed as health passes zero, but damage below zero won't crash the game
+        testCollege.health -= 70;
+
+        assertTrue(testCollege.destroyed);
+    }
+
+    @Test
+    public void testShipSetup() {
+        College testCollege = new College(this, "Test College", 100 / PirateGame.PPM, 200 / PirateGame.PPM,
+                "alcuin_flag.png", "alcuin_ship.png", 1, invalidSpawn);
+
+        EnemyShip ship = testCollege.fleet.get(0);
+
+        assertEquals(100, ship.health);
+        assertEquals("Test College", ship.college);
+        assertFalse(ship.destroyed);
+    }
+
+    @Test
+    public void testShipDestroy() {
+        College testCollege = new College(this, "Test College", 100 / PirateGame.PPM, 200 / PirateGame.PPM,
+                "alcuin_flag.png", "alcuin_ship.png", 1, invalidSpawn);
+
+        EnemyShip ship = testCollege.fleet.get(0);
+
+        // Assert that the college starts with the correct amount of health
+        assertEquals(100, testCollege.health);
+
+        // That the health goes down as expected
+        testCollege.health -= 50;
+
+        assertEquals(50, testCollege.health);
+        assertFalse(testCollege.destroyed);
+
+        // That the college is destroyed as health passes zero, but damage below zero won't crash the game
+        testCollege.health -= 70;
+
+        assertTrue(testCollege.destroyed);
     }
 }
