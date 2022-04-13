@@ -32,7 +32,7 @@ public class Hud implements Disposable {
 
     private float timeCount;
     private float Constant_timeCount;
-    private static Integer score;
+    public static Integer score;
     public static Integer health;
     private Texture hp;
     private Texture boxBackground;
@@ -43,11 +43,11 @@ public class Hud implements Disposable {
     private static Label healthLabel;
     private static Label coinLabel;
     private static Label pointsText;
-    private static Label powerupLabel;
-    private static Integer coins;
+    //private static Label powerupLabel;
+    public static Integer coins;
     private static Integer coinMulti;
 
-    private static Boolean PowerupTimerBool = Boolean.FALSE;
+    public static Boolean PowerupTimerBool = Boolean.FALSE;
     private static float PowerupTimer;
     private static Integer PowerUpType;
 
@@ -114,8 +114,6 @@ public class Hud implements Disposable {
         coinLabel = new Label(String.format("%03d", coins), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         pointsText = new Label("Points:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-
-
         table3.add(box).width(160).height(160).padBottom(15).padLeft(30);
         table2.add(hpImg).width(32).height(32).padTop(16).padRight(90);
         table2.row();
@@ -156,6 +154,7 @@ public class Hud implements Disposable {
         Constant_timeCount += dt;
         //Gdx.app.log("dt", String.valueOf(dt));
         //Gdx.app.log("time", String.valueOf(Constant_timeCount));
+        coinLabel.setText(String.format("%03d", coins));
         if(timeCount >= 1) {
             //Regen health every second
             if(health != this.screen.difficulty.getHP()) {
@@ -167,12 +166,16 @@ public class Hud implements Disposable {
             scoreLabel.setText(String.format("%03d", score));
             timeCount = 0;
 
+
             //Check if a points boundary is met
             SkillTree.pointsCheck(score, coins);
             //Gdx.app.log("dt", String.valueOf(dt));
             //Gdx.app.log("time", String.valueOf(timeCount));
             // PowerUp
         }
+
+        // TODO Fix error of powerups not lasting the full 15 seconds, after picking up a new powerup
+        // TODO maybe make it not possible to pick up a new powerup... basicaly like a cool down timer
         if (PowerupTimerBool == Boolean.TRUE){
             if (PowerupTimer == 0f){
                 PowerupTimer = Constant_timeCount;
@@ -270,6 +273,13 @@ public class Hud implements Disposable {
         PowerupTimerBool = Boolean.TRUE;
 
     }
+
+    public static void SubtractCoin(Integer value){
+        coins -= value;
+    }
+
+
+
 
     /**
      * Changes health by value factor

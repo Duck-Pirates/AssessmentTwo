@@ -2,15 +2,14 @@ package com.mygdx.pirategame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -30,6 +29,23 @@ public class SkillTree implements Screen {
 
     private final PirateGame parent;
     private final Stage stage;
+
+    private Texture hp;
+    private Texture boxBackground;
+    private Texture coinPic;
+    private static Integer score;
+    public static Integer health;
+    private static Label scoreLabel;
+    private static Label healthLabel;
+    private static Label coinLabel;
+    private static Label pointsText;
+    private static Label powerupLabel;
+    private static Integer coins;
+    private static Integer coinMulti;
+    private Image hpImg;
+    private com.badlogic.gdx.scenes.scene2d.ui.Image box;
+    private Image coin;
+
 
     //To store whether buttons are enabled or disabled
     private static final List<Integer> states = new ArrayList<Integer>();
@@ -55,19 +71,19 @@ public class SkillTree implements Screen {
 
 
     private static Integer Speed1Cost = 2;
-    private static Integer Speed1Points = 10;
-    private static Integer Speed2Cost = 30;
-    private static Integer Speed2Points = 500;
-    private static Integer Speed3Cost = 60;
-    private static Integer Speed3Points = 1000;
+    private static Integer Speed1Points = 5;
+    private static Integer Speed2Cost = 4;
+    private static Integer Speed2Points = 10;
+    private static Integer Speed3Cost = 6;
+    private static Integer Speed3Points = 20;
 
     private static Integer Traverse1Cost = 20;
     private static Integer Traverse1Points = 400;
     private static Integer Traverse2Cost = 50;
     private static Integer Traverse2Points = 800;
 
-    private static Integer Damage1Cost = 20;
-    private static Integer Damage1Points = 10;
+    private static Integer Damage1Cost = 2;
+    private static Integer Damage1Points = 5;
     private static Integer Damage2Cost = 30;
     private static Integer Damage2Points = 500;
     private static Integer Damage3Cost = 60;
@@ -92,7 +108,7 @@ public class SkillTree implements Screen {
 
 
 
-    private final TextureRegion background = new TextureRegion(new Texture("hudBG.png"));;
+    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));;
 
 
     /**
@@ -134,7 +150,7 @@ public class SkillTree implements Screen {
         Table table = new Table();
         // Fills the parent
         table.setFillParent(true);
-        stage.addActor(table);
+
 
 
         // Table for the return button
@@ -151,9 +167,59 @@ public class SkillTree implements Screen {
 
         //TODO Display total coins and points in the shop
 
+        //Creates tables
+
+        hp = new Texture("hp.png");
+        boxBackground = new Texture("hudBG.png");
+        coinPic = new Texture("coin.png");
+        coin = new Image(coinPic);
+        hpImg = new Image(hp);
+        box = new Image(boxBackground);
+
+
+        Table table1 = new Table(); //Counters
+        Table table2 = new Table(); //Pictures or points label
+        Table table3 = new Table(); //Background
+
+        table1.top().right();
+        table1.setFillParent(true);
+        table2.top().right();
+        table2.setFillParent(true);
+        table3.top().right();
+        table3.setFillParent(true);
+
+        scoreLabel = new Label(String.format("%03d", Hud.score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        if (GameScreen.difficulty == Difficulty.EASY){
+            healthLabel = new Label(String.format("%03d", Hud.health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        }
+        else{
+            healthLabel = new Label(String.format("%02d", Hud.health), new Label.LabelStyle(new BitmapFont(), Color.RED));
+        }
+        coinLabel = new Label(String.format("%03d", Hud.coins), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
+        pointsText = new Label("Points:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+
+        table3.add(box).width(160).height(160).padBottom(15).padLeft(30);
+        table2.add(hpImg).width(32).height(32).padTop(16).padRight(90);
+        table2.row();
+        table2.add(coin).width(32).height(32).padTop(8).padRight(90);
+        table2.row();
+        table2.add(pointsText).width(32).height(32).padTop(6).padRight(90);
+        table2.row();
+
+        table1.add(healthLabel).padTop(20).top().right().padRight(40);
+        table1.row();
+        table1.add(coinLabel).padTop(20).top().right().padRight(40);
+        table1.row();
+        table1.add(scoreLabel).padTop(22).top().right().padRight(40);
+
+
+
+        stage.addActor(table3);
+        stage.addActor(table2);
+        stage.addActor(table1);
+
         //TODO If brought hide the button?? (kinda done)
 
-        //TODO remove gold after purchase
         movement1 = new TextButton("Speed + 5%", skin);
         //Gdx.app.log("Movement1", String.valueOf(states.get(0)));
         if (states.get(0) == 1 || states.get(0) == 2){
@@ -167,6 +233,8 @@ public class SkillTree implements Screen {
                     GameScreen.difficulty.IncreaseMaxSpeedPercent(5);
                     states.set(0, 2);
                     movement1.setDisabled(true);
+                    Hud.SubtractCoin(Speed1Cost);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -182,7 +250,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseMaxSpeedPercent(10);
                     states.set(1, 2);
+                    Hud.SubtractCoin(Speed2Cost);
                     movement2.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -198,7 +268,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseMaxSpeedPercent(15);
                     states.set(2, 2);
+                    Hud.SubtractCoin(Speed3Cost);
                     movement3.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -214,7 +286,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseTraversePercent(10);
                     states.set(3, 2);
+                    Hud.SubtractCoin(Traverse1Cost);
                     traverse1.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -228,7 +302,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseTraversePercent(20);
                     states.set(4, 2);
+                    Hud.SubtractCoin(Traverse2Cost);
                     traverse2.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -243,7 +319,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseDamageDealtPercent(5);
                     states.set(5, 2);
+                    Hud.SubtractCoin(Damage1Cost);
                     damage1.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -257,7 +335,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseDamageDealtPercent(10);
                     states.set(6, 2);
+                    Hud.SubtractCoin(Damage2Cost);
                     damage2.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -271,7 +351,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseDamageDealtPercent(20);
                     states.set(7, 2);
+                    Hud.SubtractCoin(Damage3Cost);
                     damage3.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -286,7 +368,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.DecreaseDamageRecievedPercent(14);
                     states.set(8, 2);
+                    Hud.SubtractCoin(Armour1Cost);
                     armour1.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -300,7 +384,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.DecreaseDamageRecievedPercent(12);
                     states.set(9, 2);
+                    Hud.SubtractCoin(Armour2Cost);
                     armour2.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -314,7 +400,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.DecreaseDamageRecievedPercent(8);
                     states.set(10, 2);
+                    Hud.SubtractCoin(Armour3Cost);
                     armour3.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -329,7 +417,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseCoinMulti(1);
                     states.set(11, 2);
+                    Hud.SubtractCoin(Gold1Cost);
                     GoldMulti1.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -343,7 +433,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     GameScreen.difficulty.IncreaseCoinMulti(1);
                     states.set(12, 2);
+                    Hud.SubtractCoin(Gold2Cost);
                     GoldMulti2.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -358,7 +450,9 @@ public class SkillTree implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
                     //TODO insert cone shoot function
                     states.set(13, 2);
+                    Hud.SubtractCoin(Cone1Cost);
                     GoldMulti1.setDisabled(true);
+                    coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
         }
@@ -447,7 +541,8 @@ public class SkillTree implements Screen {
         table.add(unlockcone);
         table.row().pad(10, 0, 10, 0);
 
-
+        table.toFront();
+        stage.addActor(table);
         //table.top();
 
         //add return button
@@ -472,10 +567,6 @@ public class SkillTree implements Screen {
         if(states.get(0) == 1 && points >= Speed1Points && coins >= Speed1Cost ){ // Movement 1 (5% speed)
             //GameScreen.difficulty.IncreaseMaxSpeedPercent(5);
             states.set(0, 0);
-        }else if (states.get(0) == 2){
-
-        }else {
-            //states.get(0) == 1;
         }
         if(states.get(1) == 1 && states.get(0) == 2 && points >= Speed2Points && coins >= Speed2Cost){ // movement 2 (10% speed)
             //GameScreen.difficulty.IncreaseMaxSpeedPercent(10);
@@ -577,7 +668,6 @@ public class SkillTree implements Screen {
         stage.getViewport().update(width, height, true);
         Gdx.app.log("w", String.valueOf(width));
         Gdx.app.log("h", String.valueOf(height));
-        damage1.setScale(width,height);
         stage.draw();
     }
 

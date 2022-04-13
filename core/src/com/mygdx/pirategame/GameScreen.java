@@ -80,7 +80,7 @@ public class GameScreen implements Screen {
         gameStatus = GAME_RUNNING;
         this.game = game;
         // Setting the difficulty, that will be changed based on the player's choice at the start of the game
-        this.difficulty = Difficulty.MEDIUM;
+        //this.difficulty = Difficulty.MEDIUM;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;
@@ -184,10 +184,13 @@ public class GameScreen implements Screen {
         //GAME BUTTONS
         final TextButton pauseButton = new TextButton("Pause",skin);
         final TextButton shopButton = new TextButton("Shop",skin);
-        final TextButton skill = new TextButton("Skill Tree", skin);
+
 
         //PAUSE MENU BUTTONS
+
         final TextButton start = new TextButton("Resume", skin);
+        final TextButton save = new TextButton("Save Game", skin);
+        final TextButton skill = new TextButton("Skill Tree", skin);
         final TextButton options = new TextButton("Options", skin);
         TextButton exit = new TextButton("Exit", skin);
 
@@ -220,6 +223,8 @@ public class GameScreen implements Screen {
         table.left().top();
 
         pauseTable.add(start).fillX().uniformX();
+        pauseTable.row().pad(20, 0, 10, 0);
+        pauseTable.add(save).fillX().uniformX();
         pauseTable.row().pad(20, 0, 10, 0);
         pauseTable.add(skill).fillX().uniformX();
         pauseTable.row().pad(20, 0, 10, 0);
@@ -262,11 +267,22 @@ public class GameScreen implements Screen {
                 resume();
             }
         });
+        save.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //TODO save game
+                //TODO takes you to main menu
+
+                game.changeScreen(PirateGame.MENU);
+            }
+        }
+        );
         options.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 pauseTable.setVisible(false);
                 game.setScreen(new Options(game,game.getScreen()));
+
             }
         }
         );
@@ -310,7 +326,7 @@ public class GameScreen implements Screen {
             }
             // Down physics impulse on 'S'
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                linearAcceleration -= 20;
+                linearAcceleration -= 10;
             }
             // Cannon fire on 'Spacce'
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {

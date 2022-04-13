@@ -3,14 +3,14 @@ package com.mygdx.pirategame;
 import com.badlogic.gdx.Gdx;
 
 public enum Difficulty {
-    EASY(3, 5, 15,100, 5, 8, 1, 4f, 20),
-    MEDIUM(0.95f, 5, 15,80, 3, 10, 1, 6f, 20),
-    HARD(0.90f, 10, 15,80, 2, 12, 1, 4f, 20);
+    EASY(0.95f, 5, 15,100, 5, 8, 1, 12f, 40),
+    MEDIUM(0.9f, 5, 15,80, 3, 10, 1, 8f, 30),
+    HARD(0.8f, 10, 15,80, 2, 12, 1, 4f, 20);
 
     private float speedReduction, maxSpeed, traverseSpeed;
     private int damageReceived, damageDealt, HP, maxGoldXCoin, maxCollegeShips, goldCoinMulti;
 
-    private float prevMaxSpeed, prevTraverseSpeed;
+    private float prevMaxSpeed, prevTraverseSpeed, prevspeedReduction;
     private int prevDamageReceived, prevDamageDealt, prevGoldCoinMulti;
 
     //TODO Add skill cost variable
@@ -35,15 +35,18 @@ public enum Difficulty {
         this.goldCoinMulti += num;
     }
 
-    public void SetSpeedReduction(float num) { this.speedReduction = num; }
+    //public void SetSpeedReduction(float num) { this.speedReduction = num; }
 
     public void SetDamageReceived(int num) { this.damageReceived = num; }  // DAMAGE RECEIVED
 
-    public void SetDamageDealt(int num) { this.damageDealt = num; }  // DAMAGE Dealt
+    public void SetDamageDealt(int num) { this.damageDealt += num; }  // DAMAGE Dealt
 
     //public void IncreaseHP() {this.HP += 50; }
 
-    public void SetMaxSpeed(float num) { this.maxSpeed = num; }
+    public void SetMaxSpeed(float num) {
+        this.maxSpeed = this.maxSpeed * num;
+        this.speedReduction = this.speedReduction * 1.01f;
+    }
 
 
 
@@ -133,6 +136,7 @@ public enum Difficulty {
         prevGoldCoinMulti = goldCoinMulti;
         prevDamageReceived = damageReceived;
         prevTraverseSpeed = traverseSpeed;
+        prevspeedReduction = speedReduction;
 
     }
 
@@ -143,6 +147,7 @@ public enum Difficulty {
         goldCoinMulti = prevGoldCoinMulti ;
         damageReceived = prevDamageReceived;
         traverseSpeed = prevTraverseSpeed;
+        speedReduction = prevspeedReduction;
     }
 
 

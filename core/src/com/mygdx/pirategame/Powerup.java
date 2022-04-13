@@ -106,12 +106,9 @@ public class Powerup extends Entity{
     }
     @Override
     public void entityContact() {
-        //Add powerup ability
 
-        //Set to destroy
         setToDestroyed = true;
-        //Gdx.app.log("powerup", "collision");
-        //Play pickup sound
+
         if (screen.game.getPreferences().isEffectsEnabled()) {
             powerupPickup.play(screen.game.getPreferences().getEffectsVolume());
         }
@@ -127,29 +124,31 @@ public class Powerup extends Entity{
         //Money - Increase earnings by 50%
         //Repair - Increase regain HP speed
         //Star - Take no damage
+        if (Hud.PowerupTimerBool == Boolean.FALSE) {
 
+            // Remove previous powerup
+            // Reset previous powerup
+            screen.difficulty.PreviousPowerupStats();
 
-        // Remove previous powerup
-        // Reset previous powerup
-        screen.difficulty.PreviousPowerupStats();
-
-        if (powerupType == 0) {
-            Hud.ChangePowerUpImage(0);
-            Ammo();
-        } else if (powerupType == 1){
-            Hud.ChangePowerUpImage(1);
-            Lightning();
-        } else if (powerupType == 2){
-            Hud.ChangePowerUpImage(2);
-            Money();
-        } else if (powerupType == 3){
-            Hud.ChangePowerUpImage(3);
-            Repair();
-        } else if (powerupType == 4){
-            Hud.ChangePowerUpImage(4);
-            Star();
+            if (powerupType == 0) {
+                Hud.ChangePowerUpImage(0);
+                Ammo();
+            } else if (powerupType == 1) {
+                Hud.ChangePowerUpImage(1);
+                Lightning();
+            } else if (powerupType == 2) {
+                Hud.ChangePowerUpImage(2);
+                Money();
+            } else if (powerupType == 3) {
+                Hud.ChangePowerUpImage(3);
+                Repair();
+            } else if (powerupType == 4) {
+                Hud.ChangePowerUpImage(4);
+                Star();
+            }
+        } else{
+            Gdx.app.log("pu", "powerup already picked up");
         }
-
     }
 
 
@@ -162,24 +161,25 @@ public class Powerup extends Entity{
     public void Ammo(){
         // Increase damage or shots per second
         screen.difficulty.SavePowerupStats();
-        screen.difficulty.SetDamageDealt(2);
+        screen.difficulty.SetDamageDealt(5); // increases damage dealt by 5... could be doubled??
     }
     public void Lightning(){
         // Increase Speed
         screen.difficulty.SavePowerupStats();
-        screen.difficulty.SetMaxSpeed(6f);
+        screen.difficulty.SetMaxSpeed(1.5f);// doubles mad speed + imcreases speed reduction by 1%
     }
     public void Money(){
         // Increase money earnt
         screen.difficulty.SavePowerupStats();
-        screen.difficulty.SetGoldCoinMulti(1); // double current multi
+        screen.difficulty.SetGoldCoinMulti(1); // +1 to current multi (from *1 to *2)
     }
     public void Repair(){
         // Recovers ship
         screen.difficulty.SavePowerupStats();
         //screen.difficulty.IncreaseHP();
-        Hud.changeHealth(50);
-
+        Hud.changeHealth(50); // increases HP by 50 aslong as its less than max,
+        // TODO getting health back even if ur not getting damaged
+        // TODO heart powerup
     }
     public void Star(){
         // TODO Imunity?? could change for cone
