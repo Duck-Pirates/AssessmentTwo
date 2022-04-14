@@ -1,8 +1,13 @@
 package com.mygdx.pirategame;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
 
 /**
  * GameSave
@@ -11,10 +16,13 @@ import java.util.ArrayList;
  * file.
  *
  * @author Davide Bressani
- * @version 1.0
+ * @version 2.0
  */
 
 public class GameSave {
+
+    private FileHandle file = Gdx.files.local("saves/save1.json");
+    private Json json = new Json();
 
     private static Difficulty difficultySave;
     private static AvailableSpawn invalidSpawnSave;
@@ -36,7 +44,8 @@ public class GameSave {
      * @param game The GameScreen class
      */
 
-    private void save(GameScreen game, SkillTree shop) {
+    protected void save(GameScreen game, SkillTree shop) {
+
         difficultySave = game.difficulty;
         invalidSpawnSave = game.invalidSpawn;
 
@@ -44,7 +53,12 @@ public class GameSave {
         for (College college: game.colleges) {
             CollegeSave collegeSave = new CollegeSave(college);
             collegesSaves.add(collegeSave);
-            fleetsSaves.addAll(collegeSave.fleet);
+            if(collegeSave.fleet != null){ // Checks if the college has a fleet (alcuin doesn't have any ships)
+                shipsSaves.addAll(collegeSave.fleet);
+            }
+        }
+        for (int i = 20; i > 0; i--){ // Saves the unaligned ships
+            shipsSaves.add(new ShipSave(game.ships.get(game.ships.size() - i)));
         }
         for (Coin coin: game.coins) {
             coinSaves.add(new CoinSave(coin));
@@ -57,6 +71,10 @@ public class GameSave {
         tempTimeSave = game.TempTime;
 
         statesSave = shop.states;
+
+        json.setOutputType(JsonWriter.OutputType.json);
+        ArrayList<Object> parameters2Save = new ArrayList<>(Arrays.asList(difficultySave, invalidSpawnSave, playerSave, collegesSaves, shipsSaves, coinSaves, hudSave, powerUpSaves, tempTimeSave, statesSave));
+        file.writeString(json.prettyPrint(parameters2Save), false);
     }
 
 
@@ -93,12 +111,11 @@ public class GameSave {
         private int health;
 
         public CollegeSave(College college) {
-            collegeName = college.getCurrentCollege();
+            collegeName = college.getCurrentCollegeName();
             for(EnemyShip ship: college.fleet){
                 fleet.add(new ShipSave(ship));
             }
-            x = college.getX();
-            y = college.getY();
+            position = college.b2body.getPosition();
             health = college.health;
         }
     }
@@ -110,14 +127,14 @@ public class GameSave {
     public static class ShipSave{
 
         private String college;
-        private float x, y, rotation;
+        private Vector2 position;
+        private float rotation;
         private int health;
 
 
         public ShipSave(EnemyShip ship){
             college = ship.college;
-            x = ship.getX();
-            y = ship.getY();
+            position = ship.b2body.getPosition();
             rotation = ship.getRotation();
             health = ship.health;
         }
@@ -143,9 +160,9 @@ public class GameSave {
      */
     public static class HudSave{
 
-        private static float timeCount, constantTimeCount, powerUpTimer;
-        private static Integer score, health, coins, coinMulti, powerUpType;
-        private static boolean powerUpTimerBool;
+        private float timeCount, constantTimeCount, powerUpTimer;
+        private Integer score, health, coins, powerUpType;
+        private boolean powerUpTimerBool;
 
         public HudSave(Hud hud){
             timeCount = hud.timeCount;
@@ -154,7 +171,6 @@ public class GameSave {
             score = hud.score;
             health = hud.health;
             coins = hud.coins;
-            coinMulti = difficultySave.getGoldCoinMulti();
             powerUpType = hud.PowerUpType;
             powerUpTimerBool = hud.PowerupTimerBool;
         }
