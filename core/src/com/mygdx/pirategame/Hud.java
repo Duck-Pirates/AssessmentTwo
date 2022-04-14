@@ -45,7 +45,7 @@ public class Hud implements Disposable {
     private static Label pointsText;
     //private static Label powerupLabel;
     public static Integer coins;
-    private static Integer coinMulti;
+    protected static Integer coinMulti;
 
     public static Boolean PowerupTimerBool = false;
     protected static float PowerupTimer;

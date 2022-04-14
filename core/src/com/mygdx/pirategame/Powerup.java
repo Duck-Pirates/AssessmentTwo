@@ -20,8 +20,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 public class Powerup extends Entity{
     private Texture powerup;
-    private boolean setToDestroyed;
-    private boolean destroyed;
+    protected boolean setToDestroyed;
+    protected boolean destroyed;
     private Sound powerupPickup;
     protected Integer powerupType;
 
@@ -85,10 +85,10 @@ public class Powerup extends Entity{
      * Defines all the parts of the powerup physical model. Sets it up for collisions
      */
     @Override
-    protected void defineEntity() {
+    protected void defineEntity(float x, float y) {
         //sets the body definitions
         BodyDef bdef = new BodyDef();
-        bdef.position.set(getX(), getY());
+        bdef.position.set(x, y);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 

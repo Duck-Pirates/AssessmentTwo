@@ -2,13 +2,8 @@ package com.mygdx.pirategame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Null;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 /**
@@ -36,8 +31,8 @@ public class PirateGame extends Game {
 
 	//Variable for each screen
 	private MainMenu menuScreen;
-	private GameScreen gameScreen;
-	private SkillTree skillTreeScreen;
+	protected GameScreen gameScreen;
+	protected SkillTree skillTreeScreen;
 	private DeathScreen deathScreen;
 	private Help helpScreen;
 	private VictoryScreen victoryScreen;
@@ -45,6 +40,7 @@ public class PirateGame extends Game {
 
 	private audioControls options;
 	public Music song;
+	public static Difficulty difficulty;
 
 	//Constant for swapping between screens
 	public final static int MENU = 0;
@@ -95,12 +91,8 @@ public class PirateGame extends Game {
 				break;
 
 			case GAME:
-				//TODO Loading Screen??
-				if (gameScreen == null) {
-					gameScreen = new GameScreen(this);
-				}
-				// TODO check the code above for errors. ofc it doesn't make sense but there might be an error caused when saving a game
 
+				if (gameScreen == null) gameScreen = new GameScreen(this, difficulty);
 
 				if (skillTreeScreen == null) skillTreeScreen = new SkillTree(this);
 

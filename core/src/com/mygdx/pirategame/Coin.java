@@ -20,8 +20,8 @@ import java.util.Random;
  */
 public class Coin extends Entity {
     private Texture coin;
-    private boolean setToDestroyed;
-    private boolean destroyed;
+    protected boolean setToDestroyed;
+    protected boolean destroyed;
     private Sound coinPickup;
     public Random rand = new Random();
 
@@ -64,10 +64,10 @@ public class Coin extends Entity {
      * Defines all the parts of the coins physical model. Sets it up for collisons
      */
     @Override
-    protected void defineEntity() {
+    protected void defineEntity(float x, float y) {
         //sets the body definitions
         BodyDef bdef = new BodyDef();
-        bdef.position.set(getX(), getY());
+        bdef.position.set(x, y);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 

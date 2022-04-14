@@ -48,10 +48,10 @@ public class GameScreen implements Screen {
     private World world;
     public static Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
-    protected Player player;
+    protected static Player player;
     private static HashMap<String, Integer> name2college = new HashMap<String, Integer>(){{put("Alcuin", 0); put("Anne Lister", 1); put("Constantine", 2); put("Goodricke", 3);}};
     protected static ArrayList<College> colleges = new ArrayList<>();
-    private static ArrayList<EnemyShip> ships = new ArrayList<>();
+    protected static ArrayList<EnemyShip> ships = new ArrayList<>();
     protected static ArrayList<Coin> coins = new ArrayList<>();
     protected AvailableSpawn invalidSpawn = new AvailableSpawn();
     protected Hud hud;
@@ -73,11 +73,11 @@ public class GameScreen implements Screen {
      * generates the world data and data for entities that exist upon it,
      * @param game passes game data to current class,
      */
-    public GameScreen(PirateGame game){
+    public GameScreen(PirateGame game, Difficulty difficulty){
         gameStatus = GAME_RUNNING;
         this.game = game;
         // Setting the difficulty, that will be changed based on the player's choice at the start of the game
-        //this.difficulty = Difficulty.MEDIUM;
+        this.difficulty = difficulty;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;
@@ -90,7 +90,7 @@ public class GameScreen implements Screen {
         // Initialising box2d physics
         world = new World(new Vector2(0,0), true);
         b2dr = new Box2DDebugRenderer();
-        player = new Player(this);
+        player = new Player(this, new Vector2(12, 25), 1f);
 
         // making the Tiled tmx file render as a map
         maploader = new TmxMapLoader();
@@ -424,7 +424,7 @@ public class GameScreen implements Screen {
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             for(College college: colleges){
-                if(!(college.destroyed || college.getCurrentCollege() == "Alcuin")){
+                if(!college.destroyed && !(college.getCurrentCollegeName().equals("Alcuin"))){
                     college.fire();
                 }
             }
@@ -484,7 +484,7 @@ public class GameScreen implements Screen {
 
         //Updates all ships
         for (EnemyShip ship: ships){
-            if (ship.college != "Unaligned") {
+            if (!ship.college.equals("Unaligned")) {
                 //Flips a colleges allegence if their college is destroyed
                 if (getCollege(ship.college).destroyed) {
 

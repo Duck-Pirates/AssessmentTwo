@@ -22,7 +22,7 @@ import java.util.Random;
 public class College extends Enemy{
     private Texture enemyCollege;
     public Random rand = new Random();
-    private String currentCollege;
+    private String currentCollege, currentCollegePath;
     private Array<CollegeFire> cannonBalls;
     private AvailableSpawn noSpawn;
     public ArrayList<EnemyShip> fleet = new ArrayList<>();
@@ -42,7 +42,8 @@ public class College extends Enemy{
         super(screen, x, y);
         this.screen = screen;
         noSpawn = invalidSpawn;
-        currentCollege = flag;
+        currentCollege = college;
+        currentCollegePath = flag;
         enemyCollege = new Texture(flag);
         //Set the position and size of the college
         setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
@@ -149,10 +150,10 @@ public class College extends Enemy{
      * Sets the data to define a college as an enemy
      */
     @Override
-    protected void defineEnemy() {
+    protected void defineEnemy(float x, float y) {
         //sets the body definitions
         BodyDef bdef = new BodyDef();
-        bdef.position.set(getX(), getY());
+        bdef.position.set(x, y);
         bdef.type = BodyDef.BodyType.StaticBody;
         b2body = world.createBody(bdef);
         //Sets collision boundaries
@@ -190,9 +191,16 @@ public class College extends Enemy{
     }
 
     /**
+     * Getter for the college's path
+     */
+    public String getCurrentCollegePath(){
+        return currentCollegePath;
+    }
+
+    /**
      * Getter for the college name
      */
-    public String getCurrentCollege(){
+    public String getCurrentCollegeName(){
         return currentCollege;
     }
 }
