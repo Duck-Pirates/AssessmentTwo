@@ -27,17 +27,17 @@ public class GameSave {
     private static Difficulty difficultySave;
     private static AvailableSpawn invalidSpawnSave;
 
-    private static PlayerSave playerSave;
-    private static ArrayList<CollegeSave> collegesSaves;
-    private static ArrayList<ShipSave> fleetsSaves;
-    private static ArrayList<CoinSave> coinSaves;
-    private static HudSave hudSave;
-    private static ArrayList<PowerUpSave> powerUpSaves;
+    private PlayerSave playerSave;
+    private ArrayList<CollegeSave> collegesSaves = new ArrayList<>();
+    private ArrayList<ShipSave> shipsSaves = new ArrayList<>();
+    private ArrayList<CoinSave> coinSaves = new ArrayList<>();
+    private HudSave hudSave;
+    private ArrayList<PowerUpSave> powerUpSaves = new ArrayList<>();
 
-    private static float tempTimeSave;
+    private float tempTimeSave;
 
 
-    private static ArrayList<Integer> statesSave;
+    private ArrayList<Integer> statesSave = new ArrayList<>();
 
     /**
      * Saves the game state and writes it to the json file
@@ -96,6 +96,18 @@ public class GameSave {
             maxAngularVelocity = player.maxAngularVelocity;
             position = player.b2body.getPosition();
         }
+
+        public PlayerSave(){
+
+        }
+
+        public void createPlayer(GameScreen game){
+            Player result = new Player(game, this.position, this.rotation);
+            result.velocity = this.velocity;
+            result.maxVelocity = this.maxVelocity;
+            result.maxAngularVelocity = this.maxAngularVelocity;
+            game.player = result;
+        }
     }
 
 
@@ -105,10 +117,11 @@ public class GameSave {
      */
     public static class CollegeSave{
 
-        private final String collegeName;
-        private ArrayList<ShipSave> fleet;
-        private final float x, y;
+        private String collegeName;
+        private ArrayList<ShipSave> fleet = new ArrayList<>();
+        private Vector2 position;
         private int health;
+        private boolean destroyed, setToDestroy;
 
         public CollegeSave(College college) {
             collegeName = college.getCurrentCollegeName();
@@ -117,7 +130,28 @@ public class GameSave {
             }
             position = college.b2body.getPosition();
             health = college.health;
+            destroyed = college.destroyed;
+            setToDestroy = college.setToDestroy;
         }
+
+        public CollegeSave(){
+
+        }
+
+        public College createCollege(GameScreen game){
+            College result = new College(game, collegeName, this.position.x, this.position.y, String.format("%s_flag.png", collegeName.toLowerCase()).replace(' ', '_'), String.format("%s_ship.png", collegeName.toLowerCase()).replace(' ', '_'), collegeName.equals("Alcuin") ? 0 : game.difficulty.getMaxCollegeShips(), game.invalidSpawn);
+            ArrayList<EnemyShip> newfleet = new ArrayList<>();
+            for(int i = 0; i < this.fleet.size(); i++){
+                newfleet.add(this.fleet.get(i).createEnemyShip(game));
+            }
+            result.fleet = newfleet;
+            result.b2body.getPosition().set(this.position);
+            result.health = this.health;
+            result.destroyed = this.destroyed;
+            result.setToDestroy = this.setToDestroy;
+            return result;
+        }
+
     }
 
     /**
@@ -130,6 +164,7 @@ public class GameSave {
         private Vector2 position;
         private float rotation;
         private int health;
+        private boolean destroyed, setToDestroy;
 
 
         public ShipSave(EnemyShip ship){
@@ -137,6 +172,25 @@ public class GameSave {
             position = ship.b2body.getPosition();
             rotation = ship.getRotation();
             health = ship.health;
+            destroyed = ship.destroyed;
+            setToDestroy = ship.setToDestroy;
+
+
+
+        }
+
+        public ShipSave(){
+
+        }
+
+        public EnemyShip createEnemyShip(GameScreen game){
+            EnemyShip result = new EnemyShip(game, this.position.x, this.position.y, String.format("%s_ship.png", this.college.toLowerCase()).replace(' ', '_'), this.college);
+            result.b2body.getPosition().set(this.position);
+            result.setRotation(this.rotation);
+            result.health = this.health;
+            result.destroyed = this.destroyed;
+            result.setToDestroy = this.setToDestroy;
+            return result;
         }
     }
 
@@ -146,11 +200,17 @@ public class GameSave {
      */
     public static class CoinSave {
 
-        private static float x, y;
+        private Vector2 position;
+        private boolean destroyed, setToDestroyed;
 
         public CoinSave(Coin coin){
-            x = coin.getX();
-            y = coin.getY();
+            position = coin.b2body.getPosition();
+            destroyed = coin.destroyed;
+            setToDestroyed = coin.setToDestroyed;
+        }
+
+        public CoinSave(){
+
         }
     }
 
@@ -174,6 +234,23 @@ public class GameSave {
             powerUpType = hud.PowerUpType;
             powerUpTimerBool = hud.PowerupTimerBool;
         }
+
+        public HudSave(){
+
+        }
+
+        public void createHud(GameScreen game){
+            Hud oldHud = game.hud;
+            oldHud.timeCount = this.timeCount;
+            oldHud.Constant_timeCount = this.constantTimeCount;
+            oldHud.PowerupTimer = this.powerUpTimer;
+            oldHud.score = this.score;
+            oldHud.health = this.health;
+            oldHud.coins = this.coins;
+            oldHud.coinMulti = game.difficulty.getGoldCoinMulti();
+            oldHud.PowerUpType = this.powerUpType;
+            oldHud.PowerupTimerBool = this.powerUpTimerBool;
+        }
     }
 
     /**
@@ -182,12 +259,12 @@ public class GameSave {
      */
     public static class PowerUpSave{
 
-        private static float x, y;
-        private static Integer type;
+        private Vector2 position;
+        private Integer type;
+        private boolean destroyed, setToDestroyed;
 
         public PowerUpSave(Powerup powerup){
-            x = powerup.getX();
-            y = powerup.getY();
+            position = powerup.b2body.getPosition();
             type = powerup.powerupType;
         }
     }
