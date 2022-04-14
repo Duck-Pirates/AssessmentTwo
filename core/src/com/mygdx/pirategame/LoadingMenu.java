@@ -162,9 +162,7 @@ public class LoadingMenu implements Screen {
         LoadSaved.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                // TODO
-                // If nothing saved, pose an error message or do nothing
-                // Load saved version
+                parent.load();
             }
         });
 

@@ -266,10 +266,7 @@ public class GameScreen implements Screen {
         save.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //TODO save game
-                //TODO takes you to main menu
-
-                game.changeScreen(PirateGame.MENU);
+                game.save();
             }
         }
         );

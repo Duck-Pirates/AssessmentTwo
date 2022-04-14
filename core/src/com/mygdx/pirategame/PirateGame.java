@@ -170,4 +170,15 @@ public class PirateGame extends Game {
 	public void dispose () {
 		batch.dispose();
 	}
+
+	public void save() {
+		GameSave gameInstance = new GameSave();
+		gameInstance.save(gameScreen, skillTreeScreen);
+	}
+
+	public void load(){
+		GameSave gameInstance = new GameSave();
+		gameInstance.load(this);
+		this.changeScreen(GAME);
+	}
 }
