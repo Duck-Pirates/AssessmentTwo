@@ -266,6 +266,64 @@ public class GameSave {
         public PowerUpSave(Powerup powerup){
             position = powerup.b2body.getPosition();
             type = powerup.powerupType;
+            destroyed = powerup.destroyed;
+            setToDestroyed = powerup.setToDestroyed;
         }
+
+        public PowerUpSave(){
+
+        }
+
+        public Powerup createPowerUp(GameScreen game){
+            Powerup result = new Powerup(game, this.position.x, this.position.y, this.type);
+            result.destroyed = this.destroyed;
+            result.setToDestroyed = this.setToDestroyed;
+            result.b2body.getPosition().set(this.position);
+            return result;
+        }
+    }
+
+    public void load(PirateGame game){
+        ArrayList<Object> loaded_data = json.fromJson(ArrayList.class, file);
+
+        GameScreen gameScreen = new GameScreen(game, (Difficulty) loaded_data.get(0));
+        SkillTree shop = new SkillTree(game);
+
+        gameScreen.invalidSpawn = (AvailableSpawn) loaded_data.get(1);
+        ((PlayerSave) loaded_data.get(2)).createPlayer(gameScreen);
+        ArrayList<College> colleges = new ArrayList<>();
+        ArrayList<EnemyShip> ships = new ArrayList<>();
+        ArrayList<Coin> coins = new ArrayList<>();
+        ArrayList<Powerup> powerups = new ArrayList<>();
+        for (CollegeSave college:
+                (Array<CollegeSave>) loaded_data.get(3)) {
+            colleges.add(college.createCollege(gameScreen));
+            ships.addAll(colleges.get(colleges.size()-1).fleet);
+        }
+        for(ShipSave ship: (Array<ShipSave>) loaded_data.get(4)){
+            if(!ship.college.equals("Unaligned")){
+                continue;
+            }
+            ships.add(ship.createEnemyShip(gameScreen));
+        }
+        gameScreen.colleges = colleges;
+        gameScreen.ships = ships;
+        for (CoinSave coin: (Array<CoinSave>) loaded_data.get(5)){
+            Coin newcoin = new Coin(gameScreen, coin.position.x, coin.position.y);
+            newcoin.destroyed = coin.destroyed;
+            newcoin.setToDestroyed = coin.setToDestroyed;
+            newcoin.b2body.getPosition().set(coin.position);
+            coins.add(newcoin);
+        }
+        gameScreen.coins = coins;
+        ((HudSave) loaded_data.get(6)).createHud(gameScreen);
+        for(PowerUpSave powerUp: (Array<PowerUpSave>) loaded_data.get(7)){
+            powerups.add(powerUp.createPowerUp(gameScreen));
+        }
+        gameScreen.powerups = powerups;
+        gameScreen.TempTime = (Float) loaded_data.get(8);
+        shop.states = new ArrayList(Arrays.asList(((Array<Integer>) loaded_data.get(9)).toArray()));
+        game.gameScreen = gameScreen;
+        game.skillTreeScreen = shop;
     }
 }
