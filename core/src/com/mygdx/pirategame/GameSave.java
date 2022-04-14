@@ -74,7 +74,7 @@ public class GameSave {
 
         json.setOutputType(JsonWriter.OutputType.json);
         ArrayList<Object> parameters2Save = new ArrayList<>(Arrays.asList(difficultySave, invalidSpawnSave, playerSave, collegesSaves, shipsSaves, coinSaves, hudSave, powerUpSaves, tempTimeSave, statesSave));
-        file.writeString(json.prettyPrint(parameters2Save), false);
+        file.writeString(Base64Coder.encodeString(json.prettyPrint(parameters2Save)), false);
     }
 
 
@@ -284,7 +284,7 @@ public class GameSave {
     }
 
     public void load(PirateGame game){
-        ArrayList<Object> loaded_data = json.fromJson(ArrayList.class, file);
+        ArrayList<Object> loaded_data = json.fromJson(ArrayList.class, String.valueOf(Base64Coder.decode(file.readString())));
 
         GameScreen gameScreen = new GameScreen(game, (Difficulty) loaded_data.get(0));
         SkillTree shop = new SkillTree(game);
