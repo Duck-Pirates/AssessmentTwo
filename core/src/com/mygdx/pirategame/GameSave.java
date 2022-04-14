@@ -42,6 +42,7 @@ public class GameSave {
     /**
      * Saves the game state and writes it to the json file
      * @param game The GameScreen class
+     * @param shop The Game's shop
      */
 
     protected void save(GameScreen game, SkillTree shop) {
@@ -97,10 +98,17 @@ public class GameSave {
             position = player.b2body.getPosition();
         }
 
+        /**
+         * Only used by the LibGDX's Json library
+         */
         public PlayerSave(){
 
         }
 
+        /**
+         * Modifies the game's Player instance while loading the game
+         * @param game
+         */
         public void createPlayer(GameScreen game){
             Player result = new Player(game, this.position, this.rotation);
             result.velocity = this.velocity;
@@ -134,10 +142,18 @@ public class GameSave {
             setToDestroy = college.setToDestroy;
         }
 
+        /**
+         * Only used by the LibGDX's Json library
+         */
         public CollegeSave(){
 
         }
 
+        /**
+         * Create the College instance while loading the game
+         * @param game
+         * @return College Object
+         */
         public College createCollege(GameScreen game){
             College result = new College(game, collegeName, this.position.x, this.position.y, String.format("%s_flag.png", collegeName.toLowerCase()).replace(' ', '_'), String.format("%s_ship.png", collegeName.toLowerCase()).replace(' ', '_'), collegeName.equals("Alcuin") ? 0 : game.difficulty.getMaxCollegeShips(), game.invalidSpawn);
             ArrayList<EnemyShip> newfleet = new ArrayList<>();
@@ -179,10 +195,18 @@ public class GameSave {
 
         }
 
+        /**
+         * Only used by the LibGDX's Json library
+         */
         public ShipSave(){
 
         }
 
+        /**
+         * Creates the EnemyShip instance while loading the game
+         * @param game
+         * @return EnemyShip Object
+         */
         public EnemyShip createEnemyShip(GameScreen game){
             EnemyShip result = new EnemyShip(game, this.position.x, this.position.y, String.format("%s_ship.png", this.college.toLowerCase()).replace(' ', '_'), this.college);
             result.b2body.getPosition().set(this.position);
@@ -209,6 +233,9 @@ public class GameSave {
             setToDestroyed = coin.setToDestroyed;
         }
 
+        /**
+         * Only used by the LibGDX's Json library
+         */
         public CoinSave(){
 
         }
@@ -235,10 +262,17 @@ public class GameSave {
             powerUpTimerBool = hud.PowerupTimerBool;
         }
 
+        /**
+         * Only used by the LibGDX's Json library
+         */
         public HudSave(){
 
         }
 
+        /**
+         * Modified the game's HUD instance while loading the game
+         * @param game
+         */
         public void createHud(GameScreen game){
             Hud oldHud = game.hud;
             oldHud.timeCount = this.timeCount;
@@ -270,10 +304,18 @@ public class GameSave {
             setToDestroyed = powerup.setToDestroyed;
         }
 
+        /**
+         * Only used by the LibGDX's Json library
+         */
         public PowerUpSave(){
 
         }
 
+        /**
+         * Create the PowerUp instance while loading the game
+         * @param game
+         * @return PowerUp Object
+         */
         public Powerup createPowerUp(GameScreen game){
             Powerup result = new Powerup(game, this.position.x, this.position.y, this.type);
             result.destroyed = this.destroyed;
@@ -283,6 +325,10 @@ public class GameSave {
         }
     }
 
+    /**
+     * Reads the data from a saved game and loads the game and changes the Screens in the Game's main class (PirateGame)
+     * @param game
+     */
     public void load(PirateGame game){
         ArrayList<Object> loaded_data = json.fromJson(ArrayList.class, String.valueOf(Base64Coder.decode(file.readString())));
 
@@ -323,6 +369,7 @@ public class GameSave {
         gameScreen.powerups = powerups;
         gameScreen.TempTime = (Float) loaded_data.get(8);
         shop.states = new ArrayList(Arrays.asList(((Array<Integer>) loaded_data.get(9)).toArray()));
+        
         game.gameScreen = gameScreen;
         game.skillTreeScreen = shop;
     }
