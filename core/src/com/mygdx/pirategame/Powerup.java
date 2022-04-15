@@ -1,12 +1,14 @@
 package com.mygdx.pirategame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+
 
 /**
  * This class implements methods and variables for every powerup in game, that will have their own class and methods too
@@ -22,8 +24,7 @@ public class Powerup extends Entity{
     private boolean destroyed;
     private Sound powerupPickup;
     private Integer powerupType;
-    private Boolean Visible;
-    private Integer StartTime;
+
 
     /**
      * Instantiates a new Powerup.
@@ -33,10 +34,10 @@ public class Powerup extends Entity{
      * @param y      the y value to be placed at
      * @param type   the powerup's type, that changes the texture and sound of it
      */
+
+    //TODO powerups dissapear just after being picked up
     public Powerup(GameScreen screen, float x, float y, Integer type) {
         super(screen, x, y);
-
-        //TODO We need to add some texture and sound for the powerups
 
         //Set powerup image
 
@@ -105,15 +106,13 @@ public class Powerup extends Entity{
     }
     @Override
     public void entityContact() {
-        //Add powerup ability
 
-        //Set to destroy
         setToDestroyed = true;
-        Gdx.app.log("powerup", "collision");
-        //Play pickup sound
+
         if (screen.game.getPreferences().isEffectsEnabled()) {
             powerupPickup.play(screen.game.getPreferences().getEffectsVolume());
         }
+
 
 
         //Select case
@@ -125,43 +124,33 @@ public class Powerup extends Entity{
         //Money - Increase earnings by 50%
         //Repair - Increase regain HP speed
         //Star - Take no damage
+        if (Hud.PowerupTimerBool == Boolean.FALSE) {
 
+            // Remove previous powerup
+            // Reset previous powerup
+            screen.difficulty.PreviousPowerupStats();
 
-        if (powerupType == 0) {
-            Hud.ChangePowerUpImage(0);
-            Ammo();
-        } else if (powerupType == 1){
-            Hud.ChangePowerUpImage(1);
-            Lightning();
-        } else if (powerupType == 2){
-            Hud.ChangePowerUpImage(2);
-            Money();
-        } else if (powerupType == 3){
-            Hud.ChangePowerUpImage(3);
-            Repair();
-        } else if (powerupType == 4){
-            Hud.ChangePowerUpImage(4);
-            Star();
-        }
-
-    }
-
-    private void DisplayCurrentPowerup(){
-        //  Start Timer
-        //  Display Powerup
-
-        if (powerupType == 0) {
-            powerup = new Texture("Ammo.png");
-        } else if (powerupType == 1){
-            powerup = new Texture("Lightning.png");
-        } else if (powerupType == 2){
-            powerup = new Texture("Money.png");
-        } else if (powerupType == 3){
-            powerup = new Texture("Repair.png");
-        } else if (powerupType == 4){
-            powerup = new Texture("Star.png");
+            if (powerupType == 0) {
+                Hud.ChangePowerUpImage(0);
+                Ammo();
+            } else if (powerupType == 1) {
+                Hud.ChangePowerUpImage(1);
+                Lightning();
+            } else if (powerupType == 2) {
+                Hud.ChangePowerUpImage(2);
+                Money();
+            } else if (powerupType == 3) {
+                Hud.ChangePowerUpImage(3);
+                Repair();
+            } else if (powerupType == 4) {
+                Hud.ChangePowerUpImage(4);
+                Star();
+            }
+        } else{
+            Gdx.app.log("pu", "powerup already picked up");
         }
     }
+
 
     private void HideCurrentPower(){
 
@@ -171,18 +160,31 @@ public class Powerup extends Entity{
 
     public void Ammo(){
         // Increase damage or shots per second
+        screen.difficulty.SavePowerupStats();
+        screen.difficulty.SetDamageDealt(5); // increases damage dealt by 5... could be doubled??
     }
     public void Lightning(){
         // Increase Speed
+        screen.difficulty.SavePowerupStats();
+        screen.difficulty.SetMaxSpeed(1.5f);// doubles mad speed + imcreases speed reduction by 1%
     }
     public void Money(){
         // Increase money earnt
+        screen.difficulty.SavePowerupStats();
+        screen.difficulty.SetGoldCoinMulti(1); // +1 to current multi (from *1 to *2)
     }
     public void Repair(){
         // Recovers ship
+        screen.difficulty.SavePowerupStats();
+        //screen.difficulty.IncreaseHP();
+        Hud.changeHealth(50); // increases HP by 50 aslong as its less than max,
+        // TODO getting health back even if ur not getting damaged
+        // TODO heart powerup
     }
     public void Star(){
-
+        // TODO Imunity?? could change for cone
+        screen.difficulty.SavePowerupStats();
+        screen.difficulty.SetDamageReceived(0);
     }
 
 
@@ -199,7 +201,5 @@ public class Powerup extends Entity{
             super.draw(batch);
         }
     }
-
-
 
 }

@@ -16,7 +16,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
  *@author Ethan Alabaster, Sam Pearson, Edward Poulter
  *@version 1.0
  */
-public class EnemyShip extends Enemy{
+public class EnemyShip extends Enemy {
     private Texture enemyShip;
     public String college;
     private String objective = "DEFENCE";
@@ -37,7 +37,7 @@ public class EnemyShip extends Enemy{
         enemyShip = new Texture(path);
         //Assign college
         college = assignment;
-        //Set audios
+        //Set audio
         destroy = Gdx.audio.newSound(Gdx.files.internal("ship-explosion-2.wav"));
         hit = Gdx.audio.newSound(Gdx.files.internal("ship-hit.wav"));
         //Set the position and size of the college
@@ -45,7 +45,7 @@ public class EnemyShip extends Enemy{
         setRegion(enemyShip);
         setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
 
-        damage = 20;
+        damage = screen.difficulty.getDamageDealt();
     }
 
     /**
@@ -55,7 +55,7 @@ public class EnemyShip extends Enemy{
      * @param dt Delta time (elapsed time since last game tick)
      */
     public void update(float dt) {
-        //If ship is set to destroy and isnt, destroy it
+        //If ship is set to destroy and isn't, destroy it
         if(setToDestroy && !destroyed) {
             //Play death noise
             if (screen.game.getPreferences().isEffectsEnabled()) {
@@ -73,6 +73,11 @@ public class EnemyShip extends Enemy{
             float angle = (float) Math.atan2(b2body.getLinearVelocity().y, b2body.getLinearVelocity().x);
             b2body.setTransform(b2body.getWorldCenter(), angle - ((float) Math.PI) / 2.0f);
             setRotation((float) (b2body.getAngle() * 180 / Math.PI));
+            
+            
+            
+            
+            
             //Update health bar
             bar.update();
 
@@ -141,13 +146,13 @@ public class EnemyShip extends Enemy{
             hit.play(screen.game.getPreferences().getEffectsVolume());
         }
         //Deal with the damage
-        health -= damage;
-        bar.changeHealth(damage);
+        health -= screen.difficulty.getDamageDealt();
+        bar.changeHealth(screen.difficulty.getDamageDealt());
         Hud.changePoints(5);
     }
 
     /**
-     * Updates the ship image. Particuarly change texture on college destruction
+     * Updates the ship image. Particularly change texture on college destruction
      *
      * @param alignment Associated college
      * @param path Path of new texture

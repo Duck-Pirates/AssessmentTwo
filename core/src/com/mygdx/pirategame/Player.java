@@ -102,13 +102,14 @@ public class Player extends Sprite {
 
     public void updateVelocity(int linearAcceleration, float delta){
 
-        velocity = velocity +  (linearAcceleration * delta) * (1 - velocity / maxVelocity);
+        velocity = (velocity +  (linearAcceleration * delta) * (1 - velocity / maxVelocity)) * screen.difficulty.getSpeedReduction();
+        //Gdx.app.log("powerup1", Float.toString(velocity));
+        //Gdx.app.log("powerup2", Float.toString(screen.difficulty.getMaxSpeed()));
         if (velocity < -1.5f) {
             velocity = -1.5f;
         }
-        //  Increase Speed
-        else if (velocity > 3.5f){
-            velocity = 3.5f;
+        else if (velocity > screen.difficulty.getMaxSpeed()){
+            velocity = screen.difficulty.getMaxSpeed();
         }
         setLinearVelocity(velocity);
     }
@@ -129,13 +130,13 @@ public class Player extends Sprite {
         }
         // Increase rotation
         if (angularVelocity > 5f) {
-            angularVelocity = 5f;
+            angularVelocity = 5;
         }
 
         if (angularVelocity > 0) {
-            angularVelocity -= (angularVelocity / 20);
+            angularVelocity -= (angularVelocity / screen.difficulty.getTraverseSpeed()); // change to update rotation
         } else if (angularVelocity < 0) {
-            angularVelocity -= (angularVelocity / 20);
+            angularVelocity -= (angularVelocity / screen.difficulty.getTraverseSpeed()); // change to update rotation
         }
 
 
@@ -156,7 +157,7 @@ public class Player extends Sprite {
 
 
     /**
-     * Called when E is pushed. Causes 1 cannon ball to spawn on both sides of the ships wih their relative velocity
+     * Called when E is pushed. Causes 1 cannon ball to spawn on both sides of the ships with their relative velocity
      */
     public void fire() {
         // Fires cannons
