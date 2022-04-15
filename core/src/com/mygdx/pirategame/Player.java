@@ -100,7 +100,7 @@ public class Player extends Sprite {
     }
 
     /**
-     * Called when E is pushed. Causes 1 cannon ball to spawn on both sides of the ships wih their relative velocity
+     * Called when E is pushed. Causes 1 cannon ball to spawn on both sides of the ships with their relative velocity
      */
     public void fire() {
         // Fires cannons
