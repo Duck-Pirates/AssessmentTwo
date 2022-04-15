@@ -106,7 +106,7 @@ public class College extends Enemy{
             //Award the player coins and points for destroying a college
             if (!currentCollege.equals("alcuin_flag.png")){
                 Hud.changePoints(100);
-                Hud.changeCoins(rand.nextInt(10));
+                Hud.changeCoins(rand.nextInt(10 - 1) + 1);
             }
         }
         //If not destroyed, update the college position
@@ -118,6 +118,7 @@ public class College extends Enemy{
             setToDestroy = true;
         }
         bar.update();
+
         if(health <= 0) {
             setToDestroy = true;
         }
@@ -137,6 +138,7 @@ public class College extends Enemy{
             super.draw(batch);
             //Render health bar
             bar.render(batch);
+
             //Render balls
             for(CollegeFire ball : cannonBalls)
                 ball.draw(batch);
@@ -174,8 +176,10 @@ public class College extends Enemy{
     public void onContact() {
         //Damage the college and lower health bar
         Gdx.app.log("enemy", "collision");
-        health -= damage;
-        bar.changeHealth(damage);
+
+        // Damage to college by cannon ball?
+        health -= screen.difficulty.getDamageDealt();
+        bar.changeHealth(screen.difficulty.getDamageDealt());
     }
 
     /**

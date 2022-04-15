@@ -8,6 +8,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
+import java.util.Random;
+
 /**
  * Coin
  * Creates an object for each coin
@@ -21,6 +23,7 @@ public class Coin extends Entity {
     private boolean setToDestroyed;
     private boolean destroyed;
     private Sound coinPickup;
+    public Random rand = new Random();
 
     /**
      * Instantiates a new Coin.
@@ -87,10 +90,9 @@ public class Coin extends Entity {
     @Override
     public void entityContact() {
         //Add a coin
-        Hud.changeCoins(1);
+        Hud.changeCoins((rand.nextInt(screen.difficulty.getMaxGoldXCoin()) + 1) * screen.difficulty.getGoldCoinMulti());
         //Set to destroy
         setToDestroyed = true;
-        Gdx.app.log("coin", "collision");
         //Play pickup sound
         if (screen.game.getPreferences().isEffectsEnabled()) {
             coinPickup.play(screen.game.getPreferences().getEffectsVolume());

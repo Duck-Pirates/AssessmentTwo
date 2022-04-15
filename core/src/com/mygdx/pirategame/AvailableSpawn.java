@@ -23,7 +23,7 @@ public class AvailableSpawn {
      * Generates the validity data for a given area
      */
     public AvailableSpawn() {
-        //Determines island coverage (where ships and coins can't spawn)
+        //Determines island coverage (where ships, powerups and coins can't spawn)
         for (int x = 0; x < xCap; x++) {
             for (int y = 0; y < yCap; y++) {
                 //Goodricke islands

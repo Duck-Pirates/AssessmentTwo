@@ -5,9 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -46,14 +50,15 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
 
     private World world;
+    public static Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
-
     private Player player;
     private static HashMap<String, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
     private Hud hud;
+    private static ArrayList<Powerup> Powerups = new ArrayList<>();
 
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
@@ -63,6 +68,8 @@ public class GameScreen implements Screen {
     private Table table;
 
     public Random rand = new Random();
+    private Float TempTime;
+
 
     /**
      * Initialises the Game Screen,
@@ -72,6 +79,8 @@ public class GameScreen implements Screen {
     public GameScreen(PirateGame game){
         gameStatus = GAME_RUNNING;
         this.game = game;
+        // Setting the difficulty, that will be changed based on the player's choice at the start of the game
+        //this.difficulty = Difficulty.MEDIUM;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;
@@ -79,7 +88,7 @@ public class GameScreen implements Screen {
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
         // Initialize a hud
-        hud = new Hud(game.batch);
+        hud = new Hud(game.batch, this);
 
         // Initialising box2d physics
         world = new World(new Vector2(0,0), true);
@@ -93,18 +102,18 @@ public class GameScreen implements Screen {
         new WorldCreator(this);
 
         // Setting up contact listener for collisions
-        world.setContactListener(new WorldContactListener());
+        world.setContactListener(new WorldContactListener(this));
 
         // Spawning enemy ship and coin. x and y is spawn location
         colleges = new HashMap<>();
         colleges.put("Alcuin", new College(this, "Alcuin", 1900 / PirateGame.PPM, 2100 / PirateGame.PPM,
                 "alcuin_flag.png", "alcuin_ship.png", 0, invalidSpawn));
         colleges.put("Anne Lister", new College(this, "Anne Lister", 6304 / PirateGame.PPM, 1199 / PirateGame.PPM,
-                "anne_lister_flag.png", "anne_lister_ship.png", 8, invalidSpawn));
+                "anne_lister_flag.png", "anne_lister_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
         colleges.put("Constantine", new College(this, "Constantine", 6240 / PirateGame.PPM, 6703 / PirateGame.PPM,
-                "constantine_flag.png", "constantine_ship.png", 8, invalidSpawn));
+                "constantine_flag.png", "constantine_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
         colleges.put("Goodricke", new College(this, "Goodricke", 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
-                "goodricke_flag.png", "goodricke_ship.png", 8, invalidSpawn));
+                "goodricke_flag.png", "goodricke_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
         ships = new ArrayList<>();
         ships.addAll(colleges.get("Alcuin").fleet);
         ships.addAll(colleges.get("Anne Lister").fleet);
@@ -124,10 +133,10 @@ public class GameScreen implements Screen {
                 //Check if valid
                 validLoc = checkGenPos(a, b);
             }
-            //Add a ship at the random coords
+            //Add a sh ip at the random coords
             ships.add(new EnemyShip(this, a, b, "unaligned_ship.png", "Unaligned"));
         }
-
+        TempTime = 0f;
         //Random coins
         Coins = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
@@ -142,8 +151,24 @@ public class GameScreen implements Screen {
             Coins.add(new Coin(this, a, b));
         }
 
+        //Spawn Powerups
+        Powerups = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            validLoc = false;
+            while (!validLoc) {
+                //Get random x and y coords
+                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                validLoc = checkGenPos(a, b);
+            }
+            Powerups.add(new Powerup(this, a, b, i));
+        }
+
+
         //Setting stage
         stage = new Stage(new ScreenViewport());
+
+
     }
 
     /**
@@ -158,10 +183,14 @@ public class GameScreen implements Screen {
 
         //GAME BUTTONS
         final TextButton pauseButton = new TextButton("Pause",skin);
-        final TextButton skill = new TextButton("Skill Tree", skin);
+        final TextButton shopButton = new TextButton("Shop",skin);
+
 
         //PAUSE MENU BUTTONS
+
         final TextButton start = new TextButton("Resume", skin);
+        final TextButton save = new TextButton("Save Game", skin);
+        final TextButton skill = new TextButton("Skill Tree", skin);
         final TextButton options = new TextButton("Options", skin);
         TextButton exit = new TextButton("Exit", skin);
 
@@ -189,9 +218,13 @@ public class GameScreen implements Screen {
         //ADD TO TABLES
         table.add(pauseButton);
         table.row().pad(10, 0, 10, 0);
+        table.add(shopButton);
+        table.row().pad(10, 0, 10, 0);
         table.left().top();
 
         pauseTable.add(start).fillX().uniformX();
+        pauseTable.row().pad(20, 0, 10, 0);
+        pauseTable.add(save).fillX().uniformX();
         pauseTable.row().pad(20, 0, 10, 0);
         pauseTable.add(skill).fillX().uniformX();
         pauseTable.row().pad(20, 0, 10, 0);
@@ -201,6 +234,8 @@ public class GameScreen implements Screen {
         pauseTable.center();
 
 
+
+
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
@@ -208,6 +243,13 @@ public class GameScreen implements Screen {
                 pauseTable.setVisible(true);
                 pause();
 
+            }
+        });
+        shopButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor){
+                pauseTable.setVisible(false);
+                game.changeScreen(PirateGame.SKILL);
             }
         });
         skill.addListener(new ChangeListener() {
@@ -225,11 +267,22 @@ public class GameScreen implements Screen {
                 resume();
             }
         });
+        save.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //TODO save game
+                //TODO takes you to main menu
+
+                game.changeScreen(PirateGame.MENU);
+            }
+        }
+        );
         options.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 pauseTable.setVisible(false);
                 game.setScreen(new Options(game,game.getScreen()));
+
             }
         }
         );
@@ -239,6 +292,10 @@ public class GameScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+
+
+
+
     }
 
     /**
@@ -251,39 +308,48 @@ public class GameScreen implements Screen {
      */
     public void handleInput(float dt) {
         if (gameStatus == GAME_RUNNING) {
+
+            int angularAcceleration = 0;
+            int linearAcceleration = 0;
+
             // Left physics impulse on 'A'
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                player.b2body.applyLinearImpulse(new Vector2(-accel, 0), player.b2body.getWorldCenter(), true);
+                angularAcceleration += 3;
             }
             // Right physics impulse on 'D'
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                player.b2body.applyLinearImpulse(new Vector2(accel, 0), player.b2body.getWorldCenter(), true);
+                angularAcceleration -= 3;
             }
             // Up physics impulse on 'W'
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                player.b2body.applyLinearImpulse(new Vector2(0, accel), player.b2body.getWorldCenter(), true);
+                linearAcceleration += 20;
             }
             // Down physics impulse on 'S'
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                player.b2body.applyLinearImpulse(new Vector2(0, -accel), player.b2body.getWorldCenter(), true);
+                linearAcceleration -= 10;
             }
-            // Cannon fire on 'E'
+            // Cannon fire on 'Spacce'
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 player.fire();
             }
+
+            if (!(Gdx.input.isKeyPressed(Input.Keys.W) | Gdx.input.isKeyPressed(Input.Keys.S))){
+
+                if(player.velocity > 0.1f || player.velocity < -0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
+                    player.slowDown(dt);
+                   
+                } else{
+                    player.velocity = 0f;
+                    player.updateVelocity(0, dt);
+                }
+            }
+            else {
+                player.updateVelocity(linearAcceleration, dt);
+            }
+            player.updateRotation(angularAcceleration, dt);
+            //Gdx.app.log("vel", String.valueOf(player.velocity));
             // Checking if player at max velocity, and keeping them below max
-            if (player.b2body.getLinearVelocity().x >= maxSpeed) {
-                player.b2body.applyLinearImpulse(new Vector2(-accel, 0), player.b2body.getWorldCenter(), true);
-            }
-            if (player.b2body.getLinearVelocity().x <= -maxSpeed) {
-                player.b2body.applyLinearImpulse(new Vector2(accel, 0), player.b2body.getWorldCenter(), true);
-            }
-            if (player.b2body.getLinearVelocity().y >= maxSpeed) {
-                player.b2body.applyLinearImpulse(new Vector2(0, -accel), player.b2body.getWorldCenter(), true);
-            }
-            if (player.b2body.getLinearVelocity().y <= -maxSpeed) {
-                player.b2body.applyLinearImpulse(new Vector2(0, accel), player.b2body.getWorldCenter(), true);
-            }
+
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if(gameStatus == GAME_PAUSED) {
@@ -306,6 +372,8 @@ public class GameScreen implements Screen {
      */
     public void update(float dt) {
         stateTime += dt;
+        TempTime += dt;
+
         handleInput(dt);
         // Stepping the physics engine by time of 1 frame
         world.step(1 / 60f, 6, 2);
@@ -326,6 +394,38 @@ public class GameScreen implements Screen {
         for (int i = 0; i < Coins.size(); i++) {
             Coins.get(i).update();
         }
+
+        //Updates powerups
+        for (int i = 0; i < Powerups.size(); i++) {
+            Powerups.get(i).update();
+        }
+
+        //Gdx.app.log("powerup", String.valueOf(ConstantTime));
+        //Add new powerup
+        //Gdx.app.log("x", String.valueOf(TempTime));
+
+        if (TempTime >= 29f){
+            Boolean validLoc;
+            int a = 0;
+            int b = 0;
+            Gdx.app.log("PowerUps", "Spawn More PowerUps");
+            for (int i = 0; i < 5; i++) {
+                validLoc = false;
+                while (!validLoc) {
+                    //Get random x and y coords
+                    a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                    b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                    validLoc = checkGenPos(a, b);
+                }
+                Powerups.add(new Powerup(this, a, b, i));
+            }
+            TempTime = 0f;
+
+        }
+
+
+
+
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             if (!colleges.get("Anne Lister").destroyed) {
@@ -341,6 +441,7 @@ public class GameScreen implements Screen {
     }
 
         hud.update(dt);
+
 
         // Centre camera on player boat
         camera.position.x = player.b2body.getPosition().x;
@@ -377,8 +478,15 @@ public class GameScreen implements Screen {
             Coins.get(i).draw(game.batch);
         }
 
+        //Renders powerups
+        for(int i=0;i<Powerups.size();i++) {
+            Powerups.get(i).draw(game.batch);
+        }
+
+
         //Renders colleges
         player.draw(game.batch);
+
         colleges.get("Alcuin").draw(game.batch);
         colleges.get("Anne Lister").draw(game.batch);
         colleges.get("Constantine").draw(game.batch);
@@ -396,6 +504,7 @@ public class GameScreen implements Screen {
             ships.get(i).draw(game.batch);
         }
         game.batch.end();
+        //player.SlowDownBoat();
         Hud.stage.draw();
         stage.act();
         stage.draw();
@@ -463,6 +572,19 @@ public class GameScreen implements Screen {
         }
     }
 
+
+
+    //public void IncreaseMaxSpeedPercent(int num){difficulty.IncreaseMaxSpeedPercent(num); } // num increase
+    //public void IncreaseTraversePercent(int num){difficulty.IncreaseTraversePercent(num); }
+    //public void IncreaseDamageDealtPercent(int num){difficulty.IncreaseDamageDealtPercent(num);}
+    // SetGoldCoinMulti
+    //public void DecreaseDamageRecievedPercent(int num){difficulty.DecreaseDamageRecievedPercent(num);}
+
+
+
+
+    // TODO delete
+    // ------------------------------------------------------------------------
     /**
      * Fetches the player's current position
      *
@@ -506,6 +628,14 @@ public class GameScreen implements Screen {
 
     }
 
+    public void SetGoldCoinMulti(int num){
+        this.difficulty.SetGoldCoinMulti(num);
+    }
+
+    // ----------------------------------
+
+
+
     /**
      * Tests validity of randomly generated position
      *
@@ -521,6 +651,7 @@ public class GameScreen implements Screen {
         }
         return true;
     }
+
 
     /**
      * Pauses game

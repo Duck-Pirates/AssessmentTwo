@@ -11,6 +11,12 @@ import com.badlogic.gdx.physics.box2d.*;
  */
 public class WorldContactListener implements ContactListener {
 
+    public static GameScreen screen;
+
+    WorldContactListener(GameScreen screen){
+        this.screen = screen;
+    }
+
     /**
      * The start of the collision. Tells the game what should happen when the contact begins
      * @param contact The object that contains information about the collision
@@ -27,6 +33,14 @@ public class WorldContactListener implements ContactListener {
         switch (cDef){
             case PirateGame.COIN_BIT | PirateGame.PLAYER_BIT:
                 if(fixA.getFilterData().categoryBits == PirateGame.COIN_BIT) {
+                    ((Entity) fixA.getUserData()).entityContact();
+                }
+                else {
+                    ((Entity) fixB.getUserData()).entityContact();
+                }
+                break;
+            case PirateGame.POWERUP_BIT | PirateGame.PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == PirateGame.POWERUP_BIT) {
                     ((Entity) fixA.getUserData()).entityContact();
                 }
                 else {
@@ -80,11 +94,11 @@ public class WorldContactListener implements ContactListener {
                 break;
             case PirateGame.COLLEGEFIRE_BIT | PirateGame.PLAYER_BIT:
                 if(fixA.getFilterData().categoryBits == PirateGame.COLLEGEFIRE_BIT) {
-                    Hud.changeHealth(-5);
+                    Hud.changeHealth(-screen.difficulty.getDamageReceived());
                     ((CollegeFire) fixA.getUserData()).setToDestroy();
                 }
                 else {
-                    Hud.changeHealth(-5);
+                    Hud.changeHealth(-screen.difficulty.getDamageReceived());
                     ((CollegeFire) fixB.getUserData()).setToDestroy();
                 }
                 break;

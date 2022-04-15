@@ -44,7 +44,7 @@ public class EnemyShip extends Enemy {
         setRegion(enemyShip);
         setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
 
-        damage = 20;
+        damage = screen.difficulty.getDamageDealt();
     }
 
     /**
@@ -63,7 +63,7 @@ public class EnemyShip extends Enemy {
             world.destroyBody(b2body);
             destroyed = true;
             //Change player coins and points
-            Hud.changePoints(20);
+            Hud.changePoints(30);
             Hud.changeCoins(10);
         }
         else if(!destroyed) {
@@ -79,6 +79,7 @@ public class EnemyShip extends Enemy {
             
             //Update health bar
             bar.update();
+
         }
         if(health <= 0) {
             setToDestroy = true;
@@ -102,6 +103,8 @@ public class EnemyShip extends Enemy {
             super.draw(batch);
             //Render health bar
             bar.render(batch);
+            //Render health bar
+
         }
     }
 
@@ -142,8 +145,8 @@ public class EnemyShip extends Enemy {
             hit.play(screen.game.getPreferences().getEffectsVolume());
         }
         //Deal with the damage
-        health -= damage;
-        bar.changeHealth(damage);
+        health -= screen.difficulty.getDamageDealt();
+        bar.changeHealth(screen.difficulty.getDamageDealt());
         Hud.changePoints(5);
     }
 

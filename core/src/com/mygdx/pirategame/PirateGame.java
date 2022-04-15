@@ -2,8 +2,13 @@ package com.mygdx.pirategame;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Null;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -20,11 +25,12 @@ public class PirateGame extends Game {
 	public static final short DEFAULT_BIT = 1;
 	public static final short PLAYER_BIT = 2;
 	public static final short COLLEGEFIRE_BIT = 4;
-	public static final short COIN_BIT = 8;
-	public static final short CANNON_BIT = 16;
-	public static final short ENEMY_BIT = 32;
-	public static final short COLLEGE_BIT = 64;
-	public static final short COLLEGESENSOR_BIT = 128;
+	public static final short POWERUP_BIT = 8;
+	public static final short COIN_BIT = 16;
+	public static final short CANNON_BIT = 32;
+	public static final short ENEMY_BIT = 64;
+	public static final short COLLEGE_BIT = 128;
+	public static final short COLLEGESENSOR_BIT = 256;
 
 	public SpriteBatch batch;
 
@@ -35,6 +41,7 @@ public class PirateGame extends Game {
 	private DeathScreen deathScreen;
 	private Help helpScreen;
 	private VictoryScreen victoryScreen;
+	private LoadingMenu loadingScreen;
 
 	private audioControls options;
 	public Music song;
@@ -46,6 +53,7 @@ public class PirateGame extends Game {
 	public final static int DEATH = 3;
 	public final static int HELP = 4;
 	public final static int VICTORY = 5;
+	public final static int LOADING = 6;
 
 	/**
 	 * Creates the main body of the game.
@@ -70,6 +78,9 @@ public class PirateGame extends Game {
 		song.setVolume(getPreferences().getMusicVolume());
 	}
 
+
+
+
 	/**
 	 * Changes the screen without killing the prior screen. Allows for the screens to be returned to without making new ones
 	 *
@@ -84,9 +95,17 @@ public class PirateGame extends Game {
 				break;
 
 			case GAME:
-				if (gameScreen == null) gameScreen = new GameScreen(this);
+				//TODO Loading Screen??
+				if (gameScreen == null) {
+					gameScreen = new GameScreen(this);
+				}
+				// TODO check the code above for errors. ofc it doesn't make sense but there might be an error caused when saving a game
+
+
 				if (skillTreeScreen == null) skillTreeScreen = new SkillTree(this);
+
 				this.setScreen(gameScreen);
+
 				break;
 
 			case SKILL:
@@ -108,6 +127,14 @@ public class PirateGame extends Game {
 				if (victoryScreen == null) victoryScreen = new VictoryScreen(this);
 				this.setScreen(victoryScreen);
 				break;
+
+			case LOADING:
+				if (loadingScreen == null) loadingScreen = new LoadingMenu(this);
+				this.setScreen(loadingScreen);
+				break;
+
+
+
 		}//
 	}
 
