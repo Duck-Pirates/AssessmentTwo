@@ -1,7 +1,7 @@
 package com.mygdx.pirategame;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
@@ -15,7 +15,6 @@ import com.badlogic.gdx.physics.box2d.World;
 public abstract class Enemy extends Sprite {
     protected World world;
     protected GameScreen screen;
-    public Body b2body;
     public boolean setToDestroy;
     public boolean destroyed;
     public int health;
@@ -62,4 +61,6 @@ public abstract class Enemy extends Sprite {
     public void changeDamageReceived(int value){
         damage += value;
     }
+    
+    public abstract Vector2 getPosition();
 }

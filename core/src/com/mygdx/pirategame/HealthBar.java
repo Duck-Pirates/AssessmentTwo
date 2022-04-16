@@ -36,8 +36,8 @@ class HealthBar {
         healthBar.setSize(healthBar.getWidth(), healthBar.getHeight() - 2f);
 
         //Sets location of bar
-        healthBar.setX (this.owner.b2body.getPosition().x - 0.68f);
-        healthBar.setY(this.owner.b2body.getPosition().y + this.owner.getHeight() / 2);
+        healthBar.setX (this.owner.getPosition().x - 0.68f);
+        healthBar.setY(this.owner.getPosition().y + this.owner.getHeight() / 2);
         healthBar.setOrigin(0,0);
     }
 
@@ -47,8 +47,8 @@ class HealthBar {
     public void update(){
         if (owner != null) {
             //Update location
-            healthBar.setX( (owner.b2body.getPosition().x - 0.68f));
-            healthBar.setY(owner.b2body.getPosition().y + owner.getHeight() / 2);
+            healthBar.setX( (owner.getPosition().x - 0.68f));
+            healthBar.setY(owner.getPosition().y + owner.getHeight() / 2);
         }
     }
 

@@ -1,30 +1,29 @@
 package com.mygdx.pirategame;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.*;
-import java.util.Random;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 /**
@@ -133,7 +132,7 @@ public class GameScreen implements Screen {
                 //Check if valid
                 validLoc = checkGenPos(a, b);
             }
-            //Add a sh ip at the random coords
+            //Add a ship at the random coords
             ships.add(new EnemyShip(this, a, b, "unaligned_ship.png", "Unaligned"));
         }
         TempTime = 0f;
@@ -370,8 +369,7 @@ public class GameScreen implements Screen {
      *
      * @param dt Delta time (elapsed time since last game tick)
      */
-    public void update(float dt) {
-        stateTime += dt;
+    public void update(float dt) {stateTime += dt;
         TempTime += dt;
 
         handleInput(dt);

@@ -3,6 +3,7 @@ package com.mygdx.pirategame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
@@ -20,6 +21,7 @@ import java.util.Random;
  */
 
 public class College extends Enemy{
+	private Body body;
     private Texture enemyCollege;
     public Random rand = new Random();
     private String currentCollege;
@@ -103,7 +105,7 @@ public class College extends Enemy{
     	
         //If college is set to destroy and isnt, destroy it
         if(setToDestroy && !destroyed) {
-            world.destroyBody(b2body);
+            world.destroyBody(body);
             destroyed = true;
 
             //If it is the player ally college, end the game for the player
@@ -118,7 +120,7 @@ public class College extends Enemy{
         }
         //If not destroyed, update the college position
         else if(!destroyed) {
-            setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
+            setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight() / 2f);
 
         }
         if(health <= 0) {
@@ -161,7 +163,7 @@ public class College extends Enemy{
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.StaticBody;
-        b2body = world.createBody(bdef);
+        body = world.createBody(bdef);
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
@@ -172,7 +174,7 @@ public class College extends Enemy{
         fdef.filter.maskBits = PirateGame.PLAYER_BIT;
         fdef.shape = shape;
         fdef.isSensor = true;
-        b2body.createFixture(fdef).setUserData(this);
+        body.createFixture(fdef).setUserData(this);
     }
 
     /**
@@ -193,7 +195,7 @@ public class College extends Enemy{
      * Fires cannonballs
      */
     public void fire() {
-        cannonBalls.add(new CollegeFire(screen, b2body.getPosition().x, b2body.getPosition().y));
+        cannonBalls.add(new CollegeFire(screen, body.getPosition().x, body.getPosition().y));
     }
     
     
@@ -205,13 +207,7 @@ public class College extends Enemy{
      * COLLEGE_NAME - a college to be attacked
      */
     public void decideObjective() {
-    	if(timer - timeLastAttacked < 1000) {
-    		objective = "DEFENCE";
-    	} 
-    	else
-    	{
-    		objective = "MONEY";
-    	}
+    	objective = "WANDER";
     }
     
     public void setFleetObjective() {
@@ -219,6 +215,10 @@ public class College extends Enemy{
     	for(EnemyShip ship : fleet) {
     		ship.setObjective(objective);
     	}
+    }
+    
+    public Vector2 getPosition() {
+    	return body.getPosition();
     }
 }
 
