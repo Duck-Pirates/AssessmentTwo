@@ -70,24 +70,24 @@ public class SkillTree implements Screen {
 
 
 
-    private static Integer Speed1Cost = 2;
-    private static Integer Speed1Points = 5;
-    private static Integer Speed2Cost = 4;
-    private static Integer Speed2Points = 10;
-    private static Integer Speed3Cost = 6;
-    private static Integer Speed3Points = 20;
+    private static Integer Speed1Cost = 10;
+    private static Integer Speed1Points = 100;
+    private static Integer Speed2Cost = 25;
+    private static Integer Speed2Points = 400;
+    private static Integer Speed3Cost = 50;
+    private static Integer Speed3Points = 800;
 
     private static Integer Traverse1Cost = 20;
     private static Integer Traverse1Points = 400;
     private static Integer Traverse2Cost = 50;
     private static Integer Traverse2Points = 800;
 
-    private static Integer Damage1Cost = 2;
-    private static Integer Damage1Points = 5;
-    private static Integer Damage2Cost = 30;
-    private static Integer Damage2Points = 500;
+    private static Integer Damage1Cost = 10;
+    private static Integer Damage1Points = 100;
+    private static Integer Damage2Cost = 25;
+    private static Integer Damage2Points = 400;
     private static Integer Damage3Cost = 60;
-    private static Integer Damage3Points = 1000;
+    private static Integer Damage3Points = 800;
 
     private static Integer Gold1Cost = 40;
     private static Integer Gold1Points = 500;

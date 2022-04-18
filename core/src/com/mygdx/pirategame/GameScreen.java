@@ -218,7 +218,7 @@ public class GameScreen implements Screen {
         //PAUSE MENU BUTTONS
         final TextButton start = new TextButton("Resume", skin);
         final TextButton save = new TextButton("Save Game", skin);
-        final TextButton skill = new TextButton("Skill Tree", skin);
+        final TextButton skill = new TextButton("Shop", skin);
         final TextButton options = new TextButton("Options", skin);
         TextButton exit = new TextButton("Exit", skin);
 

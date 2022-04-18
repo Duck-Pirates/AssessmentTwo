@@ -117,7 +117,7 @@ public class Tornado extends Entity {
         float d = fr.len();
         float strength = 50f / (d*d);
         if(strength > 10){
-            strength = Math.min(5*strength, 125);
+            strength = Math.min(5*strength, 30);
             player.updateRotation(-strength/12, dt);
         }
         fr = fr.nor();

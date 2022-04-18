@@ -3,9 +3,9 @@ package com.mygdx.pirategame;
 import com.badlogic.gdx.Gdx;
 
 public enum Difficulty {
-    EASY(0.95f, 5, 15,100, 5, 8, 1, 12f, 40),
-    MEDIUM(0.9f, 5, 15,80, 3, 10, 1, 8f, 30),
-    HARD(0.8f, 10, 15,80, 2, 12, 1, 4f, 20);
+    EASY(0.95f, 5, 15,100, 5, 8, 1, 14f, 40),
+    MEDIUM(0.93f, 5, 15,80, 3, 10, 1, 12f, 35),
+    HARD(0.91f, 10, 15,80, 2, 12, 1, 10f, 30);
 
     private float speedReduction, maxSpeed, traverseSpeed;
     private int damageReceived, damageDealt, HP, maxGoldXCoin, maxCollegeShips, goldCoinMulti;
@@ -45,7 +45,13 @@ public enum Difficulty {
 
     public void SetMaxSpeed(float num) {
         this.maxSpeed = this.maxSpeed * num;
-        this.speedReduction = this.speedReduction * 1.01f;
+
+        if (this.speedReduction < 0.94f){
+            this.speedReduction = this.speedReduction + 0.03f;
+        }
+        else{
+            this.speedReduction = this.speedReduction + 0.01f;
+        }
     }
 
 
@@ -59,6 +65,7 @@ public enum Difficulty {
             prevMaxSpeed = prevMaxSpeed * (1+ num/100); // Set prev max speed
             maxSpeed = maxSpeed + (prevMaxSpeed - maxSpeed); // Add prev max difference to the powerup max speed
         }
+        this.speedReduction = this.speedReduction + 0.01f;
         Gdx.app.log("maxSpeed", Float.toString(maxSpeed));
     }
     public void IncreaseTraversePercent(int num){
