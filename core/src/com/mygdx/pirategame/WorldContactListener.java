@@ -102,6 +102,14 @@ public class WorldContactListener implements ContactListener {
                     ((CollegeFire) fixB.getUserData()).setToDestroy();
                 }
                 break;
+            case PirateGame.TORNADO_BIT | PirateGame.PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == PirateGame.TORNADO_BIT) {
+                    ((Tornado) fixA.getUserData()).inContact = true;
+                }
+                else {
+                    ((Tornado) fixB.getUserData()).inContact = true;
+                }
+                break;
         }
     }
 
@@ -111,8 +119,20 @@ public class WorldContactListener implements ContactListener {
      */
     @Override
     public void endContact(Contact contact) {
+        Fixture fixA = contact.getFixtureA();
+        Fixture fixB = contact.getFixtureB();
+
+        int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         // Displays contact message
         Gdx.app.log("End Contact", "");
+        if(cDef == (PirateGame.TORNADO_BIT | PirateGame.PLAYER_BIT)){
+            if(fixA.getFilterData().categoryBits == PirateGame.TORNADO_BIT) {
+                ((Tornado) fixA.getUserData()).reset();
+            }
+            else {
+                ((Tornado) fixB.getUserData()).reset();
+            }
+        }
     }
 
     /**

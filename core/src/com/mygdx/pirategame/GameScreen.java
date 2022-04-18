@@ -20,7 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
+
+import java.util.Arrays;
 import java.util.Random;
 
 import java.util.ArrayList;
@@ -52,13 +55,17 @@ public class GameScreen implements Screen {
     private World world;
     public static Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
+
     private Player player;
     private static HashMap<String, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
+    private HashMap<Integer, ArrayList<Integer>> invalidSpawnClouds = new HashMap<>();
     private Hud hud;
     private static ArrayList<Powerup> Powerups = new ArrayList<>();
+    private static ArrayList<Cloud> clouds = new ArrayList<>();
+    private static ArrayList<Tornado> Tornadoes = new ArrayList<>();
 
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
@@ -79,8 +86,6 @@ public class GameScreen implements Screen {
     public GameScreen(PirateGame game){
         gameStatus = GAME_RUNNING;
         this.game = game;
-        // Setting the difficulty, that will be changed based on the player's choice at the start of the game
-        //this.difficulty = Difficulty.MEDIUM;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;
@@ -133,7 +138,7 @@ public class GameScreen implements Screen {
                 //Check if valid
                 validLoc = checkGenPos(a, b);
             }
-            //Add a sh ip at the random coords
+            //Add a ship at the random coords
             ships.add(new EnemyShip(this, a, b, "unaligned_ship.png", "Unaligned"));
         }
         TempTime = 0f;
@@ -164,6 +169,30 @@ public class GameScreen implements Screen {
             Powerups.add(new Powerup(this, a, b, i));
         }
 
+        clouds = new ArrayList<>();
+        for (int i = 0; i < rand.nextInt(51-30)+30; i++) {
+            validLoc = false;
+            while (!validLoc) {
+                //Get random x and y coords
+                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                validLoc = checkGenPosClouds(a, b);
+            }
+            clouds.add(new Cloud(this, a, b));
+        }
+        Tornadoes = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            validLoc = false;
+            while (!validLoc) {
+                //Get random x and y coords
+                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                validLoc = checkGenPos(a, b);
+            }
+            //Add a coins at the random coords
+            Tornadoes.add(new Tornado(this, a, b));
+        }
+
 
         //Setting stage
         stage = new Stage(new ScreenViewport());
@@ -187,10 +216,9 @@ public class GameScreen implements Screen {
 
 
         //PAUSE MENU BUTTONS
-
         final TextButton start = new TextButton("Resume", skin);
         final TextButton save = new TextButton("Save Game", skin);
-        final TextButton skill = new TextButton("Skill Tree", skin);
+        final TextButton skill = new TextButton("Shop", skin);
         final TextButton options = new TextButton("Options", skin);
         TextButton exit = new TextButton("Exit", skin);
 
@@ -232,8 +260,6 @@ public class GameScreen implements Screen {
         pauseTable.row().pad(20, 0, 10, 0);
         pauseTable.add(exit).fillX().uniformX();
         pauseTable.center();
-
-
 
 
         pauseButton.addListener(new ChangeListener() {
@@ -282,7 +308,6 @@ public class GameScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 pauseTable.setVisible(false);
                 game.setScreen(new Options(game,game.getScreen()));
-
             }
         }
         );
@@ -292,10 +317,6 @@ public class GameScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-
-
-
-
     }
 
     /**
@@ -426,6 +447,23 @@ public class GameScreen implements Screen {
 
 
 
+
+        //Updates clouds
+        for (int i = 0; i < clouds.size(); i++) {
+            clouds.get(i).update(dt);
+            if ((player.getX() >= clouds.get(i).getX() - 2 && player.getX() <= clouds.get(i).getX() + 2) && (player.getY() >= clouds.get(i).getY() - 2 && player.getY() <= clouds.get(i).getY() + 2)){
+                clouds.get(i).changeAlpha();
+            }
+            else{
+                clouds.get(i).resetAlpha();
+            }
+        }
+
+        for (int i = 0; i < Tornadoes.size(); i++) {
+            Tornado tornado = Tornadoes.get(i);
+            tornado.update(dt);
+            tornado.tornadoImpulse(player, dt);
+        }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             if (!colleges.get("Anne Lister").destroyed) {
@@ -492,6 +530,10 @@ public class GameScreen implements Screen {
         colleges.get("Constantine").draw(game.batch);
         colleges.get("Goodricke").draw(game.batch);
 
+        for(int i = 0; i< Tornadoes.size(); i++) {
+            Tornadoes.get(i).draw(game.batch);
+        }
+
         //Updates all ships
         for (int i = 0; i < ships.size(); i++){
             if (ships.get(i).college != "Unaligned") {
@@ -503,6 +545,12 @@ public class GameScreen implements Screen {
             }
             ships.get(i).draw(game.batch);
         }
+
+        // Renders all the clouds on top of eerything else
+        for(int i = 0; i <clouds.size(); i++){
+            clouds.get(i).draw(game.batch);
+        }
+
         game.batch.end();
         //player.SlowDownBoat();
         Hud.stage.draw();
@@ -572,19 +620,6 @@ public class GameScreen implements Screen {
         }
     }
 
-
-
-    //public void IncreaseMaxSpeedPercent(int num){difficulty.IncreaseMaxSpeedPercent(num); } // num increase
-    //public void IncreaseTraversePercent(int num){difficulty.IncreaseTraversePercent(num); }
-    //public void IncreaseDamageDealtPercent(int num){difficulty.IncreaseDamageDealtPercent(num);}
-    // SetGoldCoinMulti
-    //public void DecreaseDamageRecievedPercent(int num){difficulty.DecreaseDamageRecievedPercent(num);}
-
-
-
-
-    // TODO delete
-    // ------------------------------------------------------------------------
     /**
      * Fetches the player's current position
      *
@@ -652,6 +687,28 @@ public class GameScreen implements Screen {
         return true;
     }
 
+    /**
+     * Test if a cloud has already been spawned near these coordinates
+     * @param x random x value
+     * @param y random y value
+     */
+    private Boolean checkGenPosClouds(int x, int y){
+        if (invalidSpawnClouds.containsKey(x)){
+            ArrayList<Integer> yTest = invalidSpawnClouds.get(x);
+            if (yTest.contains(y)){
+                return false;
+            }
+        }
+        for (int i = -1; i < 2; i++){
+            if(invalidSpawnClouds.containsKey(x+i)){
+                invalidSpawnClouds.get(x+i).addAll(new ArrayList<>(Arrays.asList(y-1, y, y+1)));
+            }
+            else{
+                invalidSpawnClouds.put(x+i, new ArrayList<>(Arrays.asList(y-1, y, y+1)));
+            }
+        }
+        return true;
+    }
 
     /**
      * Pauses game

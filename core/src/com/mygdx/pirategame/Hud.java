@@ -46,6 +46,7 @@ public class Hud implements Disposable {
     //private static Label powerupLabel;
     public static Integer coins;
     private static Integer coinMulti;
+    private static Integer previousHealth = 100;
 
     public static Boolean PowerupTimerBool = Boolean.FALSE;
     private static float PowerupTimer;
@@ -55,7 +56,6 @@ public class Hud implements Disposable {
     private Image box;
     private Image coin;
     private static Image powerUp;
-
 
 
     /**
@@ -114,6 +114,8 @@ public class Hud implements Disposable {
         coinLabel = new Label(String.format("%03d", coins), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         pointsText = new Label("Points:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
+
+
         table3.add(box).width(160).height(160).padBottom(15).padLeft(30);
         table2.add(hpImg).width(32).height(32).padTop(16).padRight(90);
         table2.row();
@@ -132,16 +134,12 @@ public class Hud implements Disposable {
         table1.add(scoreLabel).padTop(22).top().right().padRight(40);
 
 
-
         stage.addActor(table3);
         stage.addActor(table2);
         stage.addActor(table1);
         stage.addActor(powerUp);
 
         PowerupTimer = 0f;
-
-
-
     }
 
     /**
@@ -166,12 +164,12 @@ public class Hud implements Disposable {
             scoreLabel.setText(String.format("%03d", score));
             timeCount = 0;
 
-
             //Check if a points boundary is met
             SkillTree.pointsCheck(score, coins);
             //Gdx.app.log("dt", String.valueOf(dt));
             //Gdx.app.log("time", String.valueOf(timeCount));
             // PowerUp
+
         }
 
         // TODO Fix error of powerups not lasting the full 15 seconds, after picking up a new powerup
@@ -197,10 +195,6 @@ public class Hud implements Disposable {
         }
     }
 
-
-
-
-
     /**
      * Changes health by value increase
      *
@@ -214,8 +208,9 @@ public class Hud implements Disposable {
             health += value;
         }
         healthLabel.setText(String.format("%02d", health));
-
     }
+
+
 
     /**
      * Changes coins by value increase
@@ -263,6 +258,7 @@ public class Hud implements Disposable {
         powerUp = new Image(PowerupPic);
         //
         //powerUp.toFront();
+        //powerUp.setFillParent(false);
         powerUp.setFillParent(false);
         powerUp.setFillParent(false);
         //Size of powerup On screen
@@ -298,6 +294,7 @@ public class Hud implements Disposable {
      */
     public static void resize(int width, int height){
         stage.getViewport().update(width, height, true);
+
     }
 
     /**
@@ -325,5 +322,7 @@ public class Hud implements Disposable {
     @Override
     public void dispose() {
         stage.dispose();
+
     }
 }
+
