@@ -81,9 +81,6 @@ public class PirateGame extends Game {
 		song.setVolume(getPreferences().getMusicVolume());
 	}
 
-
-
-
 	/**
 	 * Changes the screen without killing the prior screen. Allows for the screens to be returned to without making new ones
 	 *
@@ -138,7 +135,7 @@ public class PirateGame extends Game {
 
 
 
-		}//
+		}
 	}
 
 	/**

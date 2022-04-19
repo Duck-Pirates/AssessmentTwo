@@ -2,8 +2,6 @@ package com.mygdx.pirategame.entities;
 
 import static com.mygdx.pirategame.PirateGame.PPM;
 
-import java.awt.geom.RectangularShape;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
@@ -15,7 +13,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screens.GameScreen;
@@ -34,7 +36,7 @@ public class Player extends Sprite implements Steerable<Vector2> {
     private float velocity = 0;
     protected float maxVelocity = 50;
     protected float maxAngularVelocity = 2;
-
+    
     private Body body;
     private float zeroLinearSpeedThreshold = 0.01f;
     private float maxLinearSpeed, maxLinearAcceleration;

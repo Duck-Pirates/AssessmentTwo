@@ -4,22 +4,22 @@ import static com.mygdx.pirategame.PirateGame.PPM;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.GdxAI;
+import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
+import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
-import com.badlogic.gdx.ai.steer.behaviors.Pursue;
-import com.badlogic.gdx.ai.steer.behaviors.Wander;
 import com.badlogic.gdx.ai.utils.Location;
-import com.badlogic.gdx.audio.Sound; 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.fsm.EnemyStateMachine;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
 
@@ -34,10 +34,10 @@ import com.mygdx.pirategame.screens.Hud;
 public class EnemyShip extends Enemy implements Steerable<Vector2> {
     private Texture enemyShip;
     public String college;
-    private String objective = "WANDER";
-    private boolean objectiveChanged = true;
     private Sound destroy;
     private Sound hit;
+    
+    public StateMachine<EnemyShip, EnemyStateMachine> stateMachine;
     
     private Body body;
     private float zeroLinearSpeedThreshold = 0.01f;
@@ -60,15 +60,17 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
     public EnemyShip(GameScreen screen, float x, float y, String path, String assignment) {
         super(screen, x, y);
         enemyShip = new Texture(path);
-        //Assign college
         college = assignment;
+        
+        stateMachine = new DefaultStateMachine<EnemyShip, EnemyStateMachine>(this, EnemyStateMachine.SLEEP);
+        
         //AI variables
         zeroLinearSpeedThreshold = 0.1f;
 	    maxLinearSpeed = 50f;
 	    maxLinearAcceleration = 10f;
 	    maxAngularSpeed = 50f;
 	    maxAngularAcceleration = 10f;
-	    boundingRadius = 50/PPM;
+	    boundingRadius = 50 / PPM;
 	    tagged = false;
 	    steerOutput = new SteeringAcceleration<Vector2>(new Vector2());
         //Set audio
@@ -100,32 +102,13 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
             //Change player coins and points
             Hud.changePoints(30);
             Hud.changeCoins(10);
-        }
-        else if(!destroyed) {
             
-//        	if(false) {
-//        		
-//        	} else {
-//        		objective = "WANDER";
-//        	}
-        	
-        	if(objectiveChanged) {
-        		if(objective == "DEFENCE") {
-        			
-        		} else if(objective == "WANDER") {
-        			Wander<Vector2> wanderSB = new Wander<Vector2>(this)
-        					.setAlignTolerance(0.0174533f)
-        					.setEnabled(true)
-        					.setFaceEnabled(true)
-        					.setWanderOffset(0f)
-        					.setWanderRadius(50f / PPM)
-        					.setWanderRate((float) Math.PI / 2);
-        			behavior = wanderSB;
-        		} else if(objective == "PURSUE") {
-//        			Pursue<Vector2> persueSB = new Pursue<Vector2>(this);
-        		}
-        		objectiveChanged = false;
-        	}
+            enemyShip.dispose();
+            destroy.dispose();
+            hit.dispose();
+        } else if(!destroyed) {
+            
+        	stateMachine.update();
         	
         	GdxAI.getTimepiece().update(delta);
         	if (behavior != null) {
@@ -220,14 +203,6 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
         college = alignment;
         enemyShip = new Texture(path);
         setRegion(enemyShip);
-    }
-    
-    public String getObjective() {
-    	return objective;
-    }
-    
-    public void setObjective(String objective) {
-    	this.objective = objective;
     }
     
 	public Body getBody() {

@@ -135,7 +135,6 @@ public class College extends Enemy{
         bar.update();
 
         decideObjective();
-        setFleetObjective();
         
         //Update cannon balls
         for(CollegeFire ball : cannonBalls) {
@@ -214,13 +213,6 @@ public class College extends Enemy{
      */
     public void decideObjective() {
     	objective = "WANDER";
-    }
-    
-    public void setFleetObjective() {
-    	
-    	for(EnemyShip ship : fleet) {
-    		ship.setObjective(objective);
-    	}
     }
     
     public Vector2 getPosition() {
