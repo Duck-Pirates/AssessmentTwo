@@ -41,18 +41,18 @@ public class WorldContactListener implements ContactListener {
         switch (cDef){
             case PirateGame.COIN_BIT | PirateGame.PLAYER_BIT:
                 if(fixA.getFilterData().categoryBits == PirateGame.COIN_BIT) {
-                    ((Entity) fixA.getUserData()).entityContact();
+                    ((Entity) fixA.getUserData()).onContact();
                 }
                 else {
-                    ((Entity) fixB.getUserData()).entityContact();
+                    ((Entity) fixB.getUserData()).onContact();
                 }
                 break;
             case PirateGame.POWERUP_BIT | PirateGame.PLAYER_BIT:
                 if(fixA.getFilterData().categoryBits == PirateGame.POWERUP_BIT) {
-                    ((Entity) fixA.getUserData()).entityContact();
+                    ((Entity) fixA.getUserData()).onContact();
                 }
                 else {
-                    ((Entity) fixB.getUserData()).entityContact();
+                    ((Entity) fixB.getUserData()).onContact();
                 }
                 break;
             case PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT:

@@ -75,12 +75,12 @@ public class Powerup extends Entity{
     public void update() {
         //If powerup is set to destroy and isnt, destroy it
         if(setToDestroyed && !destroyed) {
-            world.destroyBody(b2body);
+            world.destroyBody(body);
             destroyed = true;
         }
         //Update position of powerup
         else if(!destroyed) {
-            setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
+            setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight() / 2f);
         }
     }
 
@@ -93,7 +93,7 @@ public class Powerup extends Entity{
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = world.createBody(bdef);
+        body = world.createBody(bdef);
 
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
@@ -105,10 +105,10 @@ public class Powerup extends Entity{
         fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT;
         fdef.shape = shape;
         fdef.isSensor = true;
-        b2body.createFixture(fdef).setUserData(this);
+        body.createFixture(fdef).setUserData(this);
     }
     @Override
-    public void entityContact() {
+    public void onContact() {
 
         setToDestroyed = true;
 

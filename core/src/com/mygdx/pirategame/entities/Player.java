@@ -27,17 +27,14 @@ import com.mygdx.pirategame.screens.GameScreen;
  * @author Ethan Alabaster, Edward Poulter
  * @version 1.0
  */
-public class Player extends Sprite implements Steerable<Vector2> {
-    private final GameScreen screen;
+public class Player extends Entity implements Steerable<Vector2> {
     private Texture ship;
-    public World world;
     private Sound breakSound;
     private Array<CannonFire> cannonBalls;
     private float velocity = 0;
     protected float maxVelocity = 50;
     protected float maxAngularVelocity = 2;
     
-    private Body body;
     private float zeroLinearSpeedThreshold = 0.01f;
     private float maxLinearSpeed, maxLinearAcceleration;
     private float maxAngularSpeed, maxAngularAcceleration;
@@ -52,13 +49,10 @@ public class Player extends Sprite implements Steerable<Vector2> {
      * @param screen visual data
      */
     public Player(GameScreen screen) {
-        // Retrieves world data and creates ship texture
-        this.screen = screen;
+    	super(screen, 1200  / PirateGame.PPM, 2500 / PirateGame.PPM);
+        // Creates ship texture
         ship = new Texture("player_ship.png");
-        this.world = screen.getWorld();
 
-        // Defines a player, and the players position on screen and world
-        definePlayer();
         setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
         setRegion(ship);
         setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
@@ -109,7 +103,8 @@ public class Player extends Sprite implements Steerable<Vector2> {
     /**
      * Defines all the parts of the player's physical model. Sets it up for collisons
      */
-    private void definePlayer() {
+    @Override
+    protected void defineEntity() {
         // Defines a players position
         BodyDef bdef = new BodyDef();
         bdef.position.set(1200  / PirateGame.PPM, 2500 / PirateGame.PPM); // Default Pos: 1800,2500
@@ -198,6 +193,9 @@ public class Player extends Sprite implements Steerable<Vector2> {
         }
          */
     }
+    
+    @Override
+    public void onContact() {}
 
     /**
      * Draws the player using batch

@@ -32,7 +32,8 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		}
 		
 		public void update(EnemyShip entity) {
-			// if (coin == close) { entity.stateMachine.changeState(COLLECTCOIN); }
+			// if (enemy == close) { entity.stateMachine.changeState(PERSUE) }
+			// else if (coin == close) { entity.stateMachine.changeState(COLLECTCOIN); }
 		}
 	},
 	
@@ -48,7 +49,7 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 	},
 	
 	PERSUE() {
-		public void enter(EnemyShip entity, Enemy target) {
+		public void enter(EnemyShip entity, Entity target) {
 			// Pursue<Vector2> persue = new Pursue<Vector2>(entity, target);
 			// entity.setBehavior(persue);
 			// 

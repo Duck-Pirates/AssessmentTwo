@@ -163,7 +163,7 @@ public class College extends Enemy{
      * Sets the data to define a college as an enemy
      */
     @Override
-    protected void defineEnemy() {
+    protected void defineEntity() {
         //sets the body definitions
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());

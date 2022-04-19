@@ -54,12 +54,12 @@ public class Coin extends Entity {
     public void update() {
         //If coin is set to destroy and isnt, destroy it
         if(setToDestroyed && !destroyed) {
-            world.destroyBody(b2body);
+            world.destroyBody(body);
             destroyed = true;
         }
         //Update position of coin
         else if(!destroyed) {
-            setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 2f);
+            setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight() / 2f);
         }
     }
 
@@ -72,7 +72,7 @@ public class Coin extends Entity {
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = world.createBody(bdef);
+        body = world.createBody(bdef);
 
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
@@ -84,14 +84,14 @@ public class Coin extends Entity {
         fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT;
         fdef.shape = shape;
         fdef.isSensor = true;
-        b2body.createFixture(fdef).setUserData(this);
+        body.createFixture(fdef).setUserData(this);
     }
 
     /**
      * What happens when an entity collides with the coin. The only entity that is able to do so is the player ship
      */
     @Override
-    public void entityContact() {
+    public void onContact() {
         //Add a coin
         Hud.changeCoins((rand.nextInt(screen.difficulty.getMaxGoldXCoin()) + 1) * screen.difficulty.getGoldCoinMulti());
         //Set to destroy

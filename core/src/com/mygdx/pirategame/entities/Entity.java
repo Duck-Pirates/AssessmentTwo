@@ -16,7 +16,7 @@ import com.mygdx.pirategame.screens.GameScreen;
 public abstract class Entity extends Sprite {
     protected World world;
     protected GameScreen screen;
-    public Body b2body;
+    public Body body;
 
     /**
      * Instantiates an entity
@@ -41,5 +41,5 @@ public abstract class Entity extends Sprite {
     /**
      * Defines contact
      */
-    public abstract void entityContact();
+    public abstract void onContact();
 }

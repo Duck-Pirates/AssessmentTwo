@@ -137,7 +137,7 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
      * Sets data to act as an enemy
      */
     @Override
-    protected void defineEnemy() {
+    protected void defineEntity() {
     	
         //sets the body definitions
         BodyDef bdef = new BodyDef();

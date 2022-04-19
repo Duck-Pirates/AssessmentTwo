@@ -1,8 +1,6 @@
 package com.mygdx.pirategame.entities;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.pirategame.screens.GameScreen;
 
 /**
@@ -13,9 +11,7 @@ import com.mygdx.pirategame.screens.GameScreen;
  *@author Ethan Alabaster
  *@version 1.0
  */
-public abstract class Enemy extends Sprite {
-    protected World world;
-    protected GameScreen screen;
+public abstract class Enemy extends Entity {
     public boolean setToDestroy;
     public boolean destroyed;
     public int health;
@@ -31,28 +27,14 @@ public abstract class Enemy extends Sprite {
      * @param y y position of entity
      */
     public Enemy(GameScreen screen, float x, float y) {
-        this.world = screen.getWorld();
-        this.screen = screen;
-        setPosition(x, y);
+    	super(screen, x, y);
         this.setToDestroy = false;
         this.destroyed = false;
         this.health = 100;
-
-        defineEnemy();
         bar = new HealthBar(this);
-
     }
-
-    /**
-     * Defines enemy
-     */
-    protected abstract void defineEnemy();
-
-    /**
-     * Defines contact
-     */
-    public abstract void onContact();
-    public abstract void update(float dt);
+    
+    public abstract void update(float delta);
 
     /**
      * Checks recieved damage
