@@ -1,5 +1,6 @@
 package com.mygdx.pirategame.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
@@ -14,10 +15,12 @@ import com.mygdx.pirategame.screens.GameScreen;
  *@version 1.0
  */
 public abstract class Entity extends Sprite {
-    protected World world;
-    protected GameScreen screen;
+	protected GameScreen screen;
+	protected Texture texture;
+	protected World world;
     public Body body;
-
+    
+    
     /**
      * Instantiates an entity
      * Sets position in world

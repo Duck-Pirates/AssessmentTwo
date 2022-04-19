@@ -1,20 +1,20 @@
-package com.mygdx.pirategame.college;
+package com.mygdx.pirategame.entities;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.PirateGame;
-import com.mygdx.pirategame.entities.Enemy;
-import com.mygdx.pirategame.entities.EnemyShip;
+import com.mygdx.pirategame.college.CollegeFire;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
 import com.mygdx.pirategame.world.AvailableSpawn;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * College
@@ -26,15 +26,12 @@ import java.util.Random;
  *@version 1.0
  */
 
-public class College extends Enemy{
-	private Body body;
-    private Texture enemyCollege;
+public class College extends SteerableEntity {
     public Random rand = new Random();
     private String currentCollege;
     private Array<CollegeFire> cannonBalls;
     private AvailableSpawn noSpawn;
     public ArrayList<EnemyShip> fleet = new ArrayList<>();
-    private String objective;
     private float timeLastAttacked;
     private float timer = 0;
 
@@ -51,17 +48,15 @@ public class College extends Enemy{
      */
     public College(GameScreen screen, String college, float x, float y, String flag, String ship, int ship_no, AvailableSpawn invalidSpawn) {
         super(screen, x, y);
-        this.screen = screen;
         noSpawn = invalidSpawn;
         currentCollege = flag;
-        enemyCollege = new Texture(flag);
+        texture = new Texture(flag);
         //Set the position and size of the college
         setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
-        setRegion(enemyCollege);
+        setRegion(texture);
         setOrigin(32 / PirateGame.PPM, 55 / PirateGame.PPM);
         damage = 10;
         cannonBalls = new Array<>();
-        objective = "MONEY";
         int ranX = 0;
         int ranY = 0;
         boolean spawnIsValid;
@@ -133,8 +128,6 @@ public class College extends Enemy{
             setToDestroy = true;
         }
         bar.update();
-
-        decideObjective();
         
         //Update cannon balls
         for(CollegeFire ball : cannonBalls) {
@@ -195,28 +188,12 @@ public class College extends Enemy{
         health -= screen.difficulty.getDamageDealt();
         bar.changeHealth(screen.difficulty.getDamageDealt());
     }
-
+    
     /**
      * Fires cannonballs
      */
     public void fire() {
         cannonBalls.add(new CollegeFire(screen, body.getPosition().x, body.getPosition().y));
-    }
-    
-    
-    /**
-     * sets the current objective of the college
-     * there are 3 objectives:
-     * MONEY - collect coins
-     * DEFEND - defend the college
-     * COLLEGE_NAME - a college to be attacked
-     */
-    public void decideObjective() {
-    	objective = "WANDER";
-    }
-    
-    public Vector2 getPosition() {
-    	return body.getPosition();
     }
 }
 

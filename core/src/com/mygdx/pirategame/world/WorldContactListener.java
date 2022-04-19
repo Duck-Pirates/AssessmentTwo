@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.college.CollegeFire;
 import com.mygdx.pirategame.entities.CannonFire;
-import com.mygdx.pirategame.entities.Enemy;
+import com.mygdx.pirategame.entities.SteerableEntity;
 import com.mygdx.pirategame.entities.Entity;
 import com.mygdx.pirategame.entities.Player;
 import com.mygdx.pirategame.screens.GameScreen;
@@ -70,10 +70,10 @@ public class WorldContactListener implements ContactListener {
                 break;
             case PirateGame.ENEMY_BIT | PirateGame.PLAYER_BIT:
                 if(fixA.getFilterData().categoryBits == PirateGame.ENEMY_BIT) {
-                    ((Enemy) fixA.getUserData()).onContact();
+                    ((SteerableEntity) fixA.getUserData()).onContact();
                 }
                 else {
-                    ((Enemy) fixB.getUserData()).onContact();
+                    ((SteerableEntity) fixB.getUserData()).onContact();
                 }
                 break;
             case PirateGame.COLLEGE_BIT | PirateGame.CANNON_BIT:
@@ -92,11 +92,11 @@ public class WorldContactListener implements ContactListener {
                 break;
             case PirateGame.ENEMY_BIT | PirateGame.CANNON_BIT:
                 if(fixA.getFilterData().categoryBits == PirateGame.ENEMY_BIT) {
-                    ((Enemy) fixA.getUserData()).onContact();
+                    ((SteerableEntity) fixA.getUserData()).onContact();
                     ((CannonFire) fixB.getUserData()).setToDestroy();
                 }
                 else {
-                    ((Enemy) fixB.getUserData()).onContact();
+                    ((SteerableEntity) fixB.getUserData()).onContact();
                     ((CannonFire) fixA.getUserData()).setToDestroy();
                 }
                 break;

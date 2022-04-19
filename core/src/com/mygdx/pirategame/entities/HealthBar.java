@@ -19,7 +19,7 @@ public class HealthBar {
     private Sprite healthBar;
     private Texture image;
 
-    private Enemy owner;
+    private SteerableEntity owner;
 
     /**
      * Instantiates health bar
@@ -27,7 +27,7 @@ public class HealthBar {
      *
      * @param owner Parent entity of health bar
      */
-    public HealthBar(Enemy owner){
+    public HealthBar(SteerableEntity owner){
         this.owner = owner;
         image = new Texture("HealthBar.png");
         healthBar = new Sprite(image);

@@ -6,15 +6,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
-import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
-import com.badlogic.gdx.ai.steer.SteeringBehavior;
-import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -31,22 +27,13 @@ import com.mygdx.pirategame.screens.Hud;
  *@author Ethan Alabaster, Sam Pearson, Edward Poulter
  *@version 1.0
  */
-public class EnemyShip extends Enemy implements Steerable<Vector2> {
+public class EnemyShip extends SteerableEntity {
     private Texture enemyShip;
     public String college;
     private Sound destroy;
     private Sound hit;
     
     public StateMachine<EnemyShip, EnemyStateMachine> stateMachine;
-    
-    private Body body;
-    private float zeroLinearSpeedThreshold = 0.01f;
-    private float maxLinearSpeed, maxLinearAcceleration;
-    private float maxAngularSpeed, maxAngularAcceleration;
-    private float boundingRadius;
-    private boolean tagged;
-    SteeringBehavior<Vector2> behavior;
-    SteeringAcceleration<Vector2> steerOutput;
     
     /**
      * Instantiates enemy ship
@@ -64,15 +51,6 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
         
         stateMachine = new DefaultStateMachine<EnemyShip, EnemyStateMachine>(this, EnemyStateMachine.SLEEP);
         
-        //AI variables
-        zeroLinearSpeedThreshold = 0.1f;
-	    maxLinearSpeed = 50f;
-	    maxLinearAcceleration = 10f;
-	    maxAngularSpeed = 50f;
-	    maxAngularAcceleration = 10f;
-	    boundingRadius = 50 / PPM;
-	    tagged = false;
-	    steerOutput = new SteeringAcceleration<Vector2>(new Vector2());
         //Set audio
         destroy = Gdx.audio.newSound(Gdx.files.internal("ship-explosion-2.wav"));
         hit = Gdx.audio.newSound(Gdx.files.internal("ship-hit.wav"));
@@ -131,6 +109,8 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
 		body.setAngularVelocity(steering.angular * delta);
 		body.setLinearVelocity(steering.linear.scl(delta));
 	}
+    
+    public void fire() {}
 
     /**
      * Defines the ship as an enemy
@@ -204,120 +184,4 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
         enemyShip = new Texture(path);
         setRegion(enemyShip);
     }
-    
-	public Body getBody() {
-		return body;
-	}
-	
-    @Override
-	public Vector2 getPosition() {
-		return body.getPosition();
-	}
-
-	@Override
-	public float getOrientation() {
-		return body.getAngle();
-	}
-
-	@Override
-	public void setOrientation(float orientation) {
-		body.setTransform(getPosition(), orientation);
-	}
-
-	@Override
-	public float vectorToAngle(Vector2 vector) {
-		return (float)Math.atan2(-vector.x, vector.y);
-	}
-
-	@Override
-	public Vector2 angleToVector(Vector2 outVector, float angle) {
-		outVector.x = -(float)Math.sin(angle);
-		outVector.y = (float)Math.cos(angle);
-		return outVector;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Location<Vector2> newLocation() {
-		return (Location<Vector2>) new Vector2();
-	}
-
-	@Override
-	public float getZeroLinearSpeedThreshold() {
-		return zeroLinearSpeedThreshold;
-	}
-
-	@Override
-	public void setZeroLinearSpeedThreshold(float value) {
-		zeroLinearSpeedThreshold = value;
-	}
-
-	@Override
-	public float getMaxLinearSpeed() {
-		return maxLinearSpeed;
-	}
-
-	@Override
-	public void setMaxLinearSpeed(float maxLinearSpeed) {
-		this.maxLinearSpeed = maxLinearSpeed;
-	}
-
-	@Override
-	public float getMaxLinearAcceleration() {
-		return maxLinearAcceleration;
-	}
-
-	@Override
-	public void setMaxLinearAcceleration(float maxLinearAcceleration) {
-		this.maxLinearAcceleration = maxLinearAcceleration;
-	}
-
-	@Override
-	public float getMaxAngularSpeed() {
-		return maxAngularSpeed;
-	}
-
-	@Override
-	public void setMaxAngularSpeed(float maxAngularSpeed) {
-		this.maxAngularSpeed = maxAngularSpeed;
-	}
-
-	@Override
-	public float getMaxAngularAcceleration() {
-		return maxAngularAcceleration;
-	}
-
-	@Override
-	public void setMaxAngularAcceleration(float maxAngularAcceleration) {
-		this.maxAngularAcceleration = maxAngularAcceleration;
-	}
-
-	@Override
-	public Vector2 getLinearVelocity() {
-		return body.getLinearVelocity();
-	}
-
-	@Override
-	public float getAngularVelocity() {
-		return body.getAngularVelocity();
-	}
-
-	@Override
-	public float getBoundingRadius() {
-		return boundingRadius;
-	}
-
-	@Override
-	public boolean isTagged() {
-		return tagged;
-	}
-
-	@Override
-	public void setTagged(boolean tagged) {
-		this.tagged = tagged;
-	}
-	
-	public void setBehavior(SteeringBehavior<Vector2> behavior) {
-		this.behavior = behavior;
-	}
 }
