@@ -1,8 +1,16 @@
 package com.mygdx.pirategame;
 
+import static com.mygdx.pirategame.PirateGame.PPM;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.GdxAI;
+import com.badlogic.gdx.ai.steer.Steerable;
+import com.badlogic.gdx.ai.steer.SteeringAcceleration;
+import com.badlogic.gdx.ai.steer.SteeringBehavior;
+import com.badlogic.gdx.ai.steer.behaviors.Pursue;
 import com.badlogic.gdx.ai.steer.behaviors.Wander;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.ai.utils.Location;
+import com.badlogic.gdx.audio.Sound; 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -10,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 /**
  * Enemy Ship
@@ -19,14 +28,22 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
  *@author Ethan Alabaster, Sam Pearson, Edward Poulter
  *@version 1.0
  */
-public class EnemyShip extends Enemy {
-	private SteeringAgent steeringAgent;
+public class EnemyShip extends Enemy implements Steerable<Vector2> {
     private Texture enemyShip;
     public String college;
     private String objective = "WANDER";
     private boolean objectiveChanged = true;
     private Sound destroy;
     private Sound hit;
+    
+    private Body body;
+    private float zeroLinearSpeedThreshold = 0.01f;
+    private float maxLinearSpeed, maxLinearAcceleration;
+    private float maxAngularSpeed, maxAngularAcceleration;
+    private float boundingRadius;
+    private boolean tagged;
+    SteeringBehavior<Vector2> behavior;
+    SteeringAcceleration<Vector2> steerOutput;
     
     /**
      * Instantiates enemy ship
@@ -42,6 +59,15 @@ public class EnemyShip extends Enemy {
         enemyShip = new Texture(path);
         //Assign college
         college = assignment;
+        //AI variables
+        zeroLinearSpeedThreshold = 0.1f;
+	    maxLinearSpeed = 50f;
+	    maxLinearAcceleration = 10f;
+	    maxAngularSpeed = 50f;
+	    maxAngularAcceleration = 10f;
+	    boundingRadius = 50/PPM;
+	    tagged = false;
+	    steerOutput = new SteeringAcceleration<Vector2>(new Vector2());
         //Set audio
         destroy = Gdx.audio.newSound(Gdx.files.internal("ship-explosion-2.wav"));
         hit = Gdx.audio.newSound(Gdx.files.internal("ship-hit.wav"));
@@ -59,14 +85,14 @@ public class EnemyShip extends Enemy {
      *
      * @param dt Delta time (elapsed time since last game tick)
      */
-    public void update(float dt) {
+    public void update(float delta) {
         //If ship is set to destroy and isn't, destroy it
         if(setToDestroy && !destroyed) {
             //Play death noise
             if (screen.game.getPreferences().isEffectsEnabled()) {
                 destroy.play(screen.game.getPreferences().getEffectsVolume());
             }
-            world.destroyBody(steeringAgent.getBody());
+            world.destroyBody(body);
             destroyed = true;
             //Change player coins and points
             Hud.changePoints(30);
@@ -74,41 +100,43 @@ public class EnemyShip extends Enemy {
         }
         else if(!destroyed) {
             
+//        	if(false) {
+//        		
+//        	} else {
+//        		objective = "WANDER";
+//        	}
+        	
         	if(objectiveChanged) {
         		if(objective == "DEFENCE") {
         			
         		} else if(objective == "WANDER") {
-        			Wander<Vector2> wanderSB = new Wander<Vector2>(steeringAgent)
+        			Wander<Vector2> wanderSB = new Wander<Vector2>(this)
+        					.setEnabled(true)
         					.setFaceEnabled(true)
-        					.setAlignTolerance(0.1f)
-        					.setWanderRadius(10 * PirateGame.PPM)
-        					.setWanderRate(0.1f)
-        					.setWanderOffset(10 * PirateGame.PPM);
-        			steeringAgent.setBehavior(wanderSB);
+        					.setWanderOffset(0f)
+        					.setWanderRadius(50f / PPM)
+        					.setWanderRate((float) Math.PI / 2);
+        			behavior = wanderSB;
+        		} else if(objective == "PURSUE") {
+//        			Pursue<Vector2> persueSB = new Pursue<Vector2>(this);
         		}
         		objectiveChanged = false;
         	}
         	
-        	steeringAgent.update(dt);
-        	Body body = steeringAgent.getBody();
+        	GdxAI.getTimepiece().update(delta);
+        	if (behavior != null) {
+    			behavior.calculateSteering(steerOutput);
+    			applySteering(steerOutput, delta);
+    		}
+        	
         	setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight() / 2f);
-            float angle = (float) Math.atan2(body.getLinearVelocity().y, body.getLinearVelocity().x);
-            body.setTransform(body.getWorldCenter(), angle - ((float) Math.PI) / 2.0f);
-            setRotation((float) (body.getAngle() * 180 / Math.PI));
-            //Update health bar
+            setRotation((float) (Math.toDegrees(body.getAngle())));
+            
             bar.update();
-
         }
         if(health <= 0) {
             setToDestroy = true;
         }
-
-        // below code is to move the ship to a coordinate (target)
-        //Vector2 target = new Vector2(960 / PirateGame.PPM, 2432 / PirateGame.PPM);
-        //target.sub(body.getPosition());
-        //target.nor();
-        //float speed = 1.5f;
-        //body.setLinearVelocity(target.scl(speed));
     }
 
     /**
@@ -131,8 +159,6 @@ public class EnemyShip extends Enemy {
     @Override
     protected void defineEnemy() {
     	
-    	Body body;
-    	
         //sets the body definitions
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());
@@ -141,17 +167,20 @@ public class EnemyShip extends Enemy {
 
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(55 / PirateGame.PPM);
+        fdef.density = 1;
+        
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(20 / PPM, 50 / PPM);
+        fdef.shape = shape;
+        shape.dispose();
+        
         // setting BIT identifier
         fdef.filter.categoryBits = PirateGame.ENEMY_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT | PirateGame.CANNON_BIT;
-        fdef.shape = shape;
-        fdef.restitution = 0.7f;
-        body.createFixture(fdef).setUserData(this);
+        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT 
+        		| PirateGame.CANNON_BIT;
         
-        steeringAgent = new SteeringAgent(body, 55 / PirateGame.PPM);
+        body.createFixture(fdef).setUserData(this);
     }
 
     /**
@@ -190,8 +219,154 @@ public class EnemyShip extends Enemy {
     public void setObjective(String objective) {
     	this.objective = objective;
     }
+	
+	private void applySteering(SteeringAcceleration<Vector2> steering, float delta) {
+		boolean anyAccelerations = false;
+		
+		if(!steering.linear.isZero(zeroLinearSpeedThreshold)) {
+			Vector2 force = steering.linear.scl(delta);
+			body.applyForceToCenter(force, true);
+			anyAccelerations = true;
+		}
+		
+		if(steering.angular != 0) {
+			body.applyTorque(steering.angular * delta, true);
+			anyAccelerations = true;
+		} else {
+			Vector2 linVel = getLinearVelocity();
+			if(!linVel.isZero()) {
+				float newOrientation = vectorToAngle(linVel);
+				body.setAngularVelocity((newOrientation - getAngularVelocity()) * delta);
+				body.setTransform(body.getPosition(), newOrientation);
+			}
+		}
+		
+		if(anyAccelerations) {
+			Vector2 velocity = body.getLinearVelocity();
+			float currentSpeedSquare = velocity.len2();
+			if(currentSpeedSquare > maxLinearSpeed * maxLinearSpeed) {
+				body.setLinearVelocity(velocity.scl(maxLinearSpeed / (float) Math.sqrt(currentSpeedSquare)));
+			}
+			
+			if(body.getAngularVelocity() > maxAngularSpeed) {
+				body.setAngularVelocity(maxAngularSpeed);
+			}
+		}
+	}
     
-    public Vector2 getPosition() {
-    	return steeringAgent.getBody().getPosition();
-    }
+	public Body getBody() {
+		return body;
+	}
+	
+    @Override
+	public Vector2 getPosition() {
+		return body.getPosition();
+	}
+
+	@Override
+	public float getOrientation() {
+		return body.getAngle();
+	}
+
+	@Override
+	public void setOrientation(float orientation) {
+		body.setTransform(getPosition(), orientation);
+	}
+
+	@Override
+	public float vectorToAngle(Vector2 vector) {
+		return (float)Math.atan2(-vector.x, vector.y);
+	}
+
+	@Override
+	public Vector2 angleToVector(Vector2 outVector, float angle) {
+		outVector.x = -(float)Math.sin(angle);
+		outVector.y = (float)Math.cos(angle);
+		return outVector;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Location<Vector2> newLocation() {
+		return (Location<Vector2>) new Vector2();
+	}
+
+	@Override
+	public float getZeroLinearSpeedThreshold() {
+		return zeroLinearSpeedThreshold;
+	}
+
+	@Override
+	public void setZeroLinearSpeedThreshold(float value) {
+		zeroLinearSpeedThreshold = value;
+	}
+
+	@Override
+	public float getMaxLinearSpeed() {
+		return maxLinearSpeed;
+	}
+
+	@Override
+	public void setMaxLinearSpeed(float maxLinearSpeed) {
+		this.maxLinearSpeed = maxLinearSpeed;
+	}
+
+	@Override
+	public float getMaxLinearAcceleration() {
+		return maxLinearAcceleration;
+	}
+
+	@Override
+	public void setMaxLinearAcceleration(float maxLinearAcceleration) {
+		this.maxLinearAcceleration = maxLinearAcceleration;
+	}
+
+	@Override
+	public float getMaxAngularSpeed() {
+		return maxAngularSpeed;
+	}
+
+	@Override
+	public void setMaxAngularSpeed(float maxAngularSpeed) {
+		this.maxAngularSpeed = maxAngularSpeed;
+	}
+
+	@Override
+	public float getMaxAngularAcceleration() {
+		return maxAngularAcceleration;
+	}
+
+	@Override
+	public void setMaxAngularAcceleration(float maxAngularAcceleration) {
+		this.maxAngularAcceleration = maxAngularAcceleration;
+	}
+
+	@Override
+	public Vector2 getLinearVelocity() {
+		return body.getLinearVelocity();
+	}
+
+	@Override
+	public float getAngularVelocity() {
+		return body.getAngularVelocity();
+	}
+
+	@Override
+	public float getBoundingRadius() {
+		return boundingRadius;
+	}
+
+	@Override
+	public boolean isTagged() {
+		return tagged;
+	}
+
+	@Override
+	public void setTagged(boolean tagged) {
+		this.tagged = tagged;
+	}
+	
+	public void setBehavior(SteeringBehavior<Vector2> behavior) {
+		this.behavior = behavior;
+	}
 }

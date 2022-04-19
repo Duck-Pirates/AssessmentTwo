@@ -1,11 +1,20 @@
 package com.mygdx.pirategame;
 
+import static com.mygdx.pirategame.PirateGame.PPM;
+
+import java.awt.geom.RectangularShape;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.steer.Steerable;
+import com.badlogic.gdx.ai.steer.SteeringAcceleration;
+import com.badlogic.gdx.ai.steer.SteeringBehavior;
+import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
@@ -14,17 +23,25 @@ import com.badlogic.gdx.utils.Array;
  * @author Ethan Alabaster, Edward Poulter
  * @version 1.0
  */
-public class Player extends Sprite {
+public class Player extends Sprite implements Steerable<Vector2> {
     private final GameScreen screen;
     private Texture ship;
     public World world;
-    public Body b2body;
     private Sound breakSound;
     private Array<CannonFire> cannonBalls;
     protected float velocity = 0;
     protected float maxVelocity = 50;
     protected float maxAngularVelocity = 2;
 
+    private Body body;
+    private float zeroLinearSpeedThreshold = 0.01f;
+    private float maxLinearSpeed, maxLinearAcceleration;
+    private float maxAngularSpeed, maxAngularAcceleration;
+    private float boundingRadius;
+    private boolean tagged;
+    SteeringBehavior<Vector2> behavior;
+    SteeringAcceleration<Vector2> steerOutput;
+    
     /**
      * Instantiates a new Player. Constructor only called once per game
      *
@@ -41,7 +58,16 @@ public class Player extends Sprite {
         setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
         setRegion(ship);
         setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
-
+        
+		zeroLinearSpeedThreshold = 0.1f;
+	    maxLinearSpeed = 50f;
+	    maxLinearAcceleration = 10f;
+	    maxAngularSpeed = 50f;
+	    maxAngularAcceleration = 10f;
+	    boundingRadius = 55 / PPM;
+	    tagged = false;
+	    
+	    steerOutput = new SteeringAcceleration<Vector2>(new Vector2());
         // Sound effect for damage
         breakSound = Gdx.audio.newSound(Gdx.files.internal("wood-bump.mp3"));
 
@@ -52,15 +78,15 @@ public class Player extends Sprite {
     /**
      * Update the position of the player. Also updates any cannon balls the player generates
      *
-     * @param dt Delta Time
+     * @param delta Delta Time
      */
-    public void update(float dt) {
-        setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight()/2f);
-        setRotation((float) (b2body.getAngle() * 180 / Math.PI));
+    public void update(float delta) {
+        setPosition(getPosition().x - getWidth() / 2f, getPosition().y - getHeight()/2f);
+        setRotation((float) (getOrientation() * 180 / Math.PI));
 
         // Updates cannonball data
         for(CannonFire ball : cannonBalls) {
-            ball.update(dt);
+            ball.update(delta);
             if(ball.isDestroyed())
                 cannonBalls.removeValue(ball, true);
         }
@@ -84,20 +110,23 @@ public class Player extends Sprite {
         BodyDef bdef = new BodyDef();
         bdef.position.set(1200  / PirateGame.PPM, 2500 / PirateGame.PPM); // Default Pos: 1800,2500
         bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = world.createBody(bdef);
 
         // Defines a player's shape and contact borders
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(55 / PirateGame.PPM);
+        shape.setRadius(50 / PPM);
+        fdef.shape = shape;
+        shape.dispose();
 
         // setting BIT identifier
         fdef.filter.categoryBits = PirateGame.PLAYER_BIT;
-
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.COIN_BIT | PirateGame.ENEMY_BIT | PirateGame.COLLEGE_BIT | PirateGame.COLLEGESENSOR_BIT | PirateGame.COLLEGEFIRE_BIT | PirateGame.POWERUP_BIT;
-        fdef.shape = shape;
-        b2body.createFixture(fdef).setUserData(this);
+        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.COIN_BIT | PirateGame.ENEMY_BIT 
+        		| PirateGame.COLLEGE_BIT | PirateGame.COLLEGESENSOR_BIT | PirateGame.COLLEGEFIRE_BIT 
+        		| PirateGame.POWERUP_BIT;
+
+        body = world.createBody(bdef);
+        body.createFixture(fdef).setUserData(this);
     }
 
     public void updateVelocity(int linearAcceleration, float delta){
@@ -124,7 +153,7 @@ public class Player extends Sprite {
 
     public void updateRotation(int angularAcceleration, float delta) {
 
-        float angularVelocity = b2body.getAngularVelocity() + (angularAcceleration * delta) * (velocity / maxAngularVelocity);
+        float angularVelocity = getAngularVelocity() + (angularAcceleration * delta) * (velocity / maxAngularVelocity);
         if (angularVelocity < -5f) {
             angularVelocity = -5f;
         }
@@ -140,29 +169,22 @@ public class Player extends Sprite {
         }
 
 
-        b2body.setAngularVelocity(angularVelocity);
+        body.setAngularVelocity(angularVelocity);
     }
 
     public void setLinearVelocity(float newVelocity){
-        float horizontalVelocity = -newVelocity * MathUtils.sin(b2body.getAngle());
-        float verticalVelocity = newVelocity * MathUtils.cos(b2body.getAngle());
-        b2body.setLinearVelocity(horizontalVelocity, verticalVelocity);
+        float horizontalVelocity = -newVelocity * MathUtils.sin(getOrientation());
+        float verticalVelocity = newVelocity * MathUtils.cos(getOrientation());
+        body.setLinearVelocity(horizontalVelocity, verticalVelocity);
     }
-
-
-
-
-
-
-
 
     /**
      * Called when E is pushed. Causes 1 cannon ball to spawn on both sides of the ships with their relative velocity
      */
     public void fire() {
         // Fires cannons
-        cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, b2body, 5));
-        cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, b2body, -5));
+        cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, 5));
+        cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, -5));
 
         // Cone fire below
         /*cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() - Math.PI / 6), -5, b2body.getLinearVelocity()));
@@ -185,4 +207,124 @@ public class Player extends Sprite {
         for(CannonFire ball : cannonBalls)
             ball.draw(batch);
     }
+    
+	public Body getBody() {
+		return body;
+	}
+	
+    @Override
+	public Vector2 getPosition() {
+		return body.getPosition();
+	}
+
+	@Override
+	public float getOrientation() {
+		return body.getAngle();
+	}
+
+	@Override
+	public void setOrientation(float orientation) {
+		body.setTransform(getPosition(), orientation);
+	}
+
+	@Override
+	public float vectorToAngle(Vector2 vector) {
+		return (float)Math.atan2(-vector.x, vector.y);
+	}
+
+	@Override
+	public Vector2 angleToVector(Vector2 outVector, float angle) {
+		outVector.x = -(float)Math.sin(angle);
+		outVector.y = (float)Math.cos(angle);
+		return outVector;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Location<Vector2> newLocation() {
+		return (Location<Vector2>) new Vector2();
+	}
+
+	@Override
+	public float getZeroLinearSpeedThreshold() {
+		return zeroLinearSpeedThreshold;
+	}
+
+	@Override
+	public void setZeroLinearSpeedThreshold(float value) {
+		zeroLinearSpeedThreshold = value;
+	}
+
+	@Override
+	public float getMaxLinearSpeed() {
+		return maxLinearSpeed;
+	}
+
+	@Override
+	public void setMaxLinearSpeed(float maxLinearSpeed) {
+		this.maxLinearSpeed = maxLinearSpeed;
+	}
+
+	@Override
+	public float getMaxLinearAcceleration() {
+		return maxLinearAcceleration;
+	}
+
+	@Override
+	public void setMaxLinearAcceleration(float maxLinearAcceleration) {
+		this.maxLinearAcceleration = maxLinearAcceleration;
+	}
+
+	@Override
+	public float getMaxAngularSpeed() {
+		return maxAngularSpeed;
+	}
+
+	@Override
+	public void setMaxAngularSpeed(float maxAngularSpeed) {
+		this.maxAngularSpeed = maxAngularSpeed;
+	}
+
+	@Override
+	public float getMaxAngularAcceleration() {
+		return maxAngularAcceleration;
+	}
+
+	@Override
+	public void setMaxAngularAcceleration(float maxAngularAcceleration) {
+		this.maxAngularAcceleration = maxAngularAcceleration;
+	}
+
+	@Override
+	public Vector2 getLinearVelocity() {
+		return body.getLinearVelocity();
+	}
+
+	@Override
+	public float getAngularVelocity() {
+		return body.getAngularVelocity();
+	}
+
+	@Override
+	public float getBoundingRadius() {
+		return boundingRadius;
+	}
+
+	@Override
+	public boolean isTagged() {
+		return tagged;
+	}
+
+	@Override
+	public void setTagged(boolean tagged) {
+		this.tagged = tagged;
+	}
+	
+	public void setBehavior(SteeringBehavior<Vector2> behavior) {
+		this.behavior = behavior;
+	}
+
+	public SteeringBehavior<Vector2> getBehavior() {
+		return behavior;
+	}
 }

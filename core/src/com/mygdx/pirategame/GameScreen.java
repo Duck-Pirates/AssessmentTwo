@@ -303,9 +303,9 @@ public class GameScreen implements Screen {
      *
      * Caps player velocity
      *
-     * @param dt Delta time (elapsed time since last game tick)
+     * @param delta Delta time (elapsed time since last game tick)
      */
-    public void handleInput(float dt) {
+    public void handleInput(float delta) {
         if (gameStatus == GAME_RUNNING) {
 
             int angularAcceleration = 0;
@@ -335,17 +335,17 @@ public class GameScreen implements Screen {
             if (!(Gdx.input.isKeyPressed(Input.Keys.W) | Gdx.input.isKeyPressed(Input.Keys.S))){
 
                 if(player.velocity > 0.1f || player.velocity < -0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
-                    player.slowDown(dt);
+                    player.slowDown(delta);
                    
                 } else{
                     player.velocity = 0f;
-                    player.updateVelocity(0, dt);
+                    player.updateVelocity(0, delta);
                 }
             }
             else {
-                player.updateVelocity(linearAcceleration, dt);
+                player.updateVelocity(linearAcceleration, delta);
             }
-            player.updateRotation(angularAcceleration, dt);
+            player.updateRotation(angularAcceleration, delta);
             //Gdx.app.log("vel", String.valueOf(player.velocity));
             // Checking if player at max velocity, and keeping them below max
 
@@ -367,35 +367,36 @@ public class GameScreen implements Screen {
     /**
      * Updates the state of each object with delta time
      *
-     * @param dt Delta time (elapsed time since last game tick)
+     * @param delta Delta time (elapsed time since last game tick)
      */
-    public void update(float dt) {stateTime += dt;
-        TempTime += dt;
+    public void update(float delta) {
+    	stateTime += delta;
+        TempTime += delta;
 
-        handleInput(dt);
+        handleInput(delta);
         // Stepping the physics engine by time of 1 frame
         world.step(1 / 60f, 6, 2);
-
+        GdxAI.getTimepiece().update(delta);
         // Update all players and entities
-        player.update(dt);
-        colleges.get("Alcuin").update(dt);
-        colleges.get("Anne Lister").update(dt);
-        colleges.get("Constantine").update(dt);
-        colleges.get("Goodricke").update(dt);
+        player.update(delta);
+        colleges.get("Alcuin").update(delta);
+        colleges.get("Anne Lister").update(delta);
+        colleges.get("Constantine").update(delta);
+        colleges.get("Goodricke").update(delta);
 
         //Update ships
-        for (int i = 0; i < ships.size(); i++) {
-            ships.get(i).update(dt);
+        for (EnemyShip ship : ships) {
+            ship.update(delta);
         }
 
         //Updates coin
-        for (int i = 0; i < Coins.size(); i++) {
-            Coins.get(i).update();
+        for (Coin coin : Coins) {
+            coin.update();
         }
 
         //Updates powerups
-        for (int i = 0; i < Powerups.size(); i++) {
-            Powerups.get(i).update();
+        for (Powerup powerup : Powerups) {
+            powerup.update();
         }
 
         //Gdx.app.log("powerup", String.valueOf(ConstantTime));
@@ -418,12 +419,8 @@ public class GameScreen implements Screen {
                 Powerups.add(new Powerup(this, a, b, i));
             }
             TempTime = 0f;
-
         }
-
-
-
-
+        
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             if (!colleges.get("Anne Lister").destroyed) {
@@ -434,16 +431,15 @@ public class GameScreen implements Screen {
             }
             if (!colleges.get("Goodricke").destroyed) {
                 colleges.get("Goodricke").fire();
-        }
+            }
         stateTime = 0;
-    }
+        }
 
-        hud.update(dt);
-
+        hud.update(delta);
 
         // Centre camera on player boat
-        camera.position.x = player.b2body.getPosition().x;
-        camera.position.y = player.b2body.getPosition().y;
+        camera.position.x = player.getPosition().x;
+        camera.position.y = player.getPosition().y;
         camera.update();
         renderer.setView(camera);
     }
@@ -452,20 +448,20 @@ public class GameScreen implements Screen {
      * Renders the visual data for all objects
      * Changes and renders new visual data for ships
      *
-     * @param dt Delta time (elapsed time since last game tick)
+     * @param delta Delta time (elapsed time since last game tick)
      */
     @Override
-    public void render(float dt) {
+    public void render(float delta) {
         if (gameStatus == GAME_RUNNING) {
-            update(dt);
+            update(delta);
         }
-        else{handleInput(dt);}
+        else{handleInput(delta);}
 
         Gdx.gl.glClearColor(46/255f, 204/255f, 113/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.render();
         // b2dr is the hitbox shapes, can be commented out to hide
-        //b2dr.render(world, camera.combined);
+        b2dr.render(world, camera.combined);
 
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
@@ -582,6 +578,11 @@ public class GameScreen implements Screen {
 
 
     // TODO delete
+    
+    public Player getPlayer() {
+    	return player;
+    }
+    
     // ------------------------------------------------------------------------
     /**
      * Fetches the player's current position
@@ -589,7 +590,7 @@ public class GameScreen implements Screen {
      * @return position vector : returns the position of the player
      */
     public Vector2 getPlayerPos(){
-        return new Vector2(player.b2body. getPosition().x,player.b2body.getPosition().y);
+        return new Vector2(player.getPosition().x, player.getPosition().y);
     }
 
     /**

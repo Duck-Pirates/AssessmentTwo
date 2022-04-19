@@ -1,6 +1,5 @@
 package com.mygdx.pirategame;
 
-import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
@@ -10,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 public class SteeringAgent implements Steerable<Vector2> {
 
-	Body body;
+	private Body body;
     private float zeroLinearSpeedThreshold = 0.01f;
     private float maxLinearSpeed, maxLinearAcceleration;
     private float maxAngularSpeed, maxAngularAcceleration;
@@ -21,11 +20,11 @@ public class SteeringAgent implements Steerable<Vector2> {
     
 	public SteeringAgent(Body body, float boundingRadius) {
 		this.body = body;
-		zeroLinearSpeedThreshold = 0.01f;
+		zeroLinearSpeedThreshold = 0.1f;
 	    maxLinearSpeed = 50f;
 	    maxLinearAcceleration = 10f;
-	    maxAngularSpeed = 5000f;
-	    maxAngularAcceleration = 1000f;
+	    maxAngularSpeed = 50f;
+	    maxAngularAcceleration = 10f;
 	    this.boundingRadius = boundingRadius;
 	    tagged = false;
 	    
@@ -37,21 +36,21 @@ public class SteeringAgent implements Steerable<Vector2> {
 
 		if (behavior != null) {
 			behavior.calculateSteering(steerOutput);
-			applySteering(delta);
+			applySteering(steerOutput, delta);
 		}
 	}
 	
-	private void applySteering(float delta) {
+	private void applySteering(SteeringAcceleration<Vector2> steering, float delta) {
 		boolean anyAccelerations = false;
 		
-		if(!steerOutput.linear.isZero()) {
-			Vector2 force = steerOutput.linear.scl(delta);
+		if(!steering.linear.isZero(zeroLinearSpeedThreshold)) {
+			Vector2 force = steering.linear.scl(delta);
 			body.applyForceToCenter(force, true);
 			anyAccelerations = true;
 		}
 		
-		if(steerOutput.angular != 0) {
-			body.applyTorque(steerOutput.angular * delta, true);
+		if(steering.angular != 0) {
+			body.applyTorque(steering.angular * delta, true);
 			anyAccelerations = true;
 		} else {
 			Vector2 linVel = getLinearVelocity();
@@ -91,7 +90,7 @@ public class SteeringAgent implements Steerable<Vector2> {
 
 	@Override
 	public void setOrientation(float orientation) {
-		body.setTransform(body.getPosition(), orientation);
+		body.setTransform(getPosition(), orientation);
 	}
 
 	@Override
@@ -106,9 +105,10 @@ public class SteeringAgent implements Steerable<Vector2> {
 		return outVector;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Location<Vector2> newLocation() {
-		return null;
+		return (Location<Vector2>) new Vector2();
 	}
 
 	@Override
