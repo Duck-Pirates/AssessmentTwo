@@ -4,6 +4,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.pirategame.configs.audioControls;
+import com.mygdx.pirategame.screens.DeathScreen;
+import com.mygdx.pirategame.screens.GameScreen;
+import com.mygdx.pirategame.screens.Help;
+import com.mygdx.pirategame.screens.LoadingMenu;
+import com.mygdx.pirategame.screens.MainMenu;
+import com.mygdx.pirategame.screens.SkillTree;
+import com.mygdx.pirategame.screens.VictoryScreen;
 
 
 /**
