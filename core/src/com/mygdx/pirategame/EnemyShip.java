@@ -111,6 +111,7 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
         			
         		} else if(objective == "WANDER") {
         			Wander<Vector2> wanderSB = new Wander<Vector2>(this)
+        					.setAlignTolerance(0.0174533f)
         					.setEnabled(true)
         					.setFaceEnabled(true)
         					.setWanderOffset(0f)
@@ -138,19 +139,12 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
             setToDestroy = true;
         }
     }
-
-    /**
-     * Constructs the ship batch
-     *
-     * @param batch The batch of visual data of the ship
-     */
-    public void draw(Batch batch) {
-        if(!destroyed) {
-            super.draw(batch);
-            //Render health bar
-            bar.render(batch);
-        }
-    }
+    
+    private void applySteering(SteeringAcceleration<Vector2> steering, float delta) {
+		
+		body.setAngularVelocity(steering.angular * delta);
+		body.setLinearVelocity(steering.linear.scl(delta));
+	}
 
     /**
      * Defines the ship as an enemy
@@ -181,6 +175,19 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
         		| PirateGame.CANNON_BIT;
         
         body.createFixture(fdef).setUserData(this);
+    }
+
+    /**
+     * Constructs the ship batch
+     *
+     * @param batch The batch of visual data of the ship
+     */
+    public void draw(Batch batch) {
+        if(!destroyed) {
+            super.draw(batch);
+            //Render health bar
+            bar.render(batch);
+        }
     }
 
     /**
@@ -219,40 +226,6 @@ public class EnemyShip extends Enemy implements Steerable<Vector2> {
     public void setObjective(String objective) {
     	this.objective = objective;
     }
-	
-	private void applySteering(SteeringAcceleration<Vector2> steering, float delta) {
-		boolean anyAccelerations = false;
-		
-		if(!steering.linear.isZero(zeroLinearSpeedThreshold)) {
-			Vector2 force = steering.linear.scl(delta);
-			body.applyForceToCenter(force, true);
-			anyAccelerations = true;
-		}
-		
-		if(steering.angular != 0) {
-			body.applyTorque(steering.angular * delta, true);
-			anyAccelerations = true;
-		} else {
-			Vector2 linVel = getLinearVelocity();
-			if(!linVel.isZero()) {
-				float newOrientation = vectorToAngle(linVel);
-				body.setAngularVelocity((newOrientation - getAngularVelocity()) * delta);
-				body.setTransform(body.getPosition(), newOrientation);
-			}
-		}
-		
-		if(anyAccelerations) {
-			Vector2 velocity = body.getLinearVelocity();
-			float currentSpeedSquare = velocity.len2();
-			if(currentSpeedSquare > maxLinearSpeed * maxLinearSpeed) {
-				body.setLinearVelocity(velocity.scl(maxLinearSpeed / (float) Math.sqrt(currentSpeedSquare)));
-			}
-			
-			if(body.getAngularVelocity() > maxAngularSpeed) {
-				body.setAngularVelocity(maxAngularSpeed);
-			}
-		}
-	}
     
 	public Body getBody() {
 		return body;
