@@ -24,12 +24,10 @@ import com.mygdx.pirategame.screens.Hud;
  * Generates enemy ship data
  * Instantiates an enemy ship
  *
- *@author Ethan Alabaster, Sam Pearson, Edward Poulter
- *@version 1.0
+ *@author Ethan Alabaster, Sam Pearson, Edward Poulter, Alexander Davis
+ *@version 3.1
  */
 public class EnemyShip extends SteerableEntity {
-    private Texture enemyShip;
-    public String college;
     private Sound destroy;
     private Sound hit;
     
@@ -46,7 +44,7 @@ public class EnemyShip extends SteerableEntity {
      */
     public EnemyShip(GameScreen screen, float x, float y, String path, String assignment) {
         super(screen, x, y);
-        enemyShip = new Texture(path);
+        texture = new Texture(path);
         college = assignment;
         
         stateMachine = new DefaultStateMachine<EnemyShip, EnemyStateMachine>(this, EnemyStateMachine.SLEEP);
@@ -56,7 +54,7 @@ public class EnemyShip extends SteerableEntity {
         hit = Gdx.audio.newSound(Gdx.files.internal("ship-hit.wav"));
         //Set the position and size of the college
         setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
-        setRegion(enemyShip);
+        setRegion(texture);
         setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
 
         damage = screen.difficulty.getDamageDealt();
@@ -66,7 +64,7 @@ public class EnemyShip extends SteerableEntity {
      * Updates the state of each object with delta time
      * Checks for ship destruction
      *
-     * @param dt Delta time (elapsed time since last game tick)
+     * @param delta Delta time (elapsed time since last game tick)
      */
     public void update(float delta) {
         //If ship is set to destroy and isn't, destroy it
@@ -77,11 +75,12 @@ public class EnemyShip extends SteerableEntity {
             }
             world.destroyBody(body);
             destroyed = true;
+            
             //Change player coins and points
             Hud.changePoints(30);
             Hud.changeCoins(10);
             
-            enemyShip.dispose();
+            texture.dispose();
             destroy.dispose();
             hit.dispose();
         } else if(!destroyed) {
@@ -94,6 +93,7 @@ public class EnemyShip extends SteerableEntity {
     			applySteering(steerOutput, delta);
     		}
         	
+        	//Sets sprite location/orientation
         	setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight() / 2f);
             setRotation((float) (Math.toDegrees(body.getAngle())));
             
@@ -171,17 +171,5 @@ public class EnemyShip extends SteerableEntity {
         health -= screen.difficulty.getDamageDealt();
         bar.changeHealth(screen.difficulty.getDamageDealt());
         Hud.changePoints(5);
-    }
-
-    /**
-     * Updates the ship image. Particularly change texture on college destruction
-     *
-     * @param alignment Associated college
-     * @param path Path of new texture
-     */
-    public void updateTexture(String alignment, String path){
-        college = alignment;
-        enemyShip = new Texture(path);
-        setRegion(enemyShip);
     }
 }

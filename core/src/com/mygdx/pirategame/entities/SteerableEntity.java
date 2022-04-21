@@ -6,6 +6,7 @@ import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.ai.utils.Location;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.pirategame.screens.GameScreen;
 
@@ -18,7 +19,9 @@ import com.mygdx.pirategame.screens.GameScreen;
  *@version 1.0
  */
 public abstract class SteerableEntity extends Entity implements Steerable<Vector2> {
-    public boolean setToDestroy;
+    public String college;
+    
+	public boolean setToDestroy;
     public boolean destroyed;
     public int health;
     public int damage;
@@ -31,6 +34,7 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
     protected boolean tagged;
     protected SteeringBehavior<Vector2> behavior;
     protected SteeringAcceleration<Vector2> steerOutput;
+
 
     /**
      * Instantiates an enemy
@@ -46,7 +50,6 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
         this.health = 100;
         bar = new HealthBar(this);
         
-        // Used by Steerable
         zeroLinearSpeedThreshold = 0.1f;
 	    maxLinearSpeed = 50f;
 	    maxLinearAcceleration = 10f;
@@ -69,36 +72,23 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
     public void changeDamageReceived(int value){
         damage += value;
     }
+    
+
+
+    /**
+     * Updates the ship image. Particularly change texture on college destruction
+     *
+     * @param alignment Associated college
+     * @param path Path of new texture
+     */
+    public void updateTexture(String alignment, String path){
+        college = alignment;
+        texture = new Texture(path);
+        setRegion(texture);
+    }
 	
 	public Vector2 getPosition() {
 		return body.getPosition();
-	}
-
-	public float getOrientation() {
-		return body.getAngle();
-	}
-
-	@Override
-	public void setOrientation(float orientation) {
-		body.setTransform(getPosition(), orientation);
-	}
-
-	@Override
-	public float vectorToAngle(Vector2 vector) {
-		return (float)Math.atan2(-vector.x, vector.y);
-	}
-
-	@Override
-	public Vector2 angleToVector(Vector2 outVector, float angle) {
-		outVector.x = -(float)Math.sin(angle);
-		outVector.y = (float)Math.cos(angle);
-		return outVector;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Location<Vector2> newLocation() {
-		return (Location<Vector2>) new Vector2();
 	}
 
 	@Override
@@ -178,5 +168,9 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 	
 	public void setBehavior(SteeringBehavior<Vector2> behavior) {
 		this.behavior = behavior;
+	}
+	
+	public SteeringBehavior<Vector2> getBehavior() {
+		return behavior;
 	}
 }

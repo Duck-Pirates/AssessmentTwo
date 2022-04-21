@@ -189,10 +189,6 @@ public class Powerup extends Entity{
         screen.difficulty.SetDamageReceived(0);
     }
 
-
-
-
-
     /**
      * Draws the powerup using batch
      *
@@ -203,5 +199,4 @@ public class Powerup extends Entity{
             super.draw(batch);
         }
     }
-
 }

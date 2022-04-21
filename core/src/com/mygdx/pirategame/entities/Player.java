@@ -46,6 +46,8 @@ public class Player extends SteerableEntity {
 
         // Sets cannonball array
         cannonBalls = new Array<CannonFire>();
+        
+        college = "Alcuin";
     }
 
     /**

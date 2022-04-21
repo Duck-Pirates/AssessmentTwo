@@ -2,15 +2,20 @@ package com.mygdx.pirategame.fsm;
 
 import static com.mygdx.pirategame.PirateGame.PPM;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.steer.behaviors.Flee;
 import com.badlogic.gdx.ai.steer.behaviors.Pursue;
+import com.badlogic.gdx.ai.steer.behaviors.ReachOrientation;
 import com.badlogic.gdx.ai.steer.behaviors.Seek;
 import com.badlogic.gdx.ai.steer.behaviors.Wander;
-import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.pirategame.entities.EnemyShip;
+import com.mygdx.pirategame.entities.Entity;
 import com.mygdx.pirategame.entities.SteerableEntity;
+import com.mygdx.pirategame.screens.GameScreen;
 
 public enum EnemyStateMachine implements State<EnemyShip> {
 	
@@ -21,7 +26,6 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 	},
 	
 	WANDER() {
-		
 		public void enter(EnemyShip entity) {
 			Wander<Vector2> wander = new Wander<Vector2>(entity)
 					.setAlignTolerance(0.0174533f)
@@ -34,50 +38,67 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		}
 		
 		public void update(EnemyShip entity) {
-			// if (enemy == close) { entity.stateMachine.changeState(PERSUE) }
-			// else if (coin == close) { entity.stateMachine.changeState(SEEK); }
+			if (EntityProximity.findAgents(entity, GameScreen.getShips(), 600 / PPM) != null) { 
+				entity.stateMachine.changeState(PERSUE); 
+			} else if (EntityProximity.findAgents(entity, GameScreen.getCoins(), 600 / PPM) != null) {
+				entity.stateMachine.changeState(SEEK);
+			}
 		}
 	},
 	
 	SEEK() {
-		public void enter(EnemyShip entity, Vector2 target) {
-			@SuppressWarnings("unchecked")
+		public void enter(EnemyShip entity) {
+			ArrayList<Entity> coins = EntityProximity.findAgents(entity, GameScreen.getCoins(), 600 / PPM);
 			Seek<Vector2> seek = new Seek<Vector2>(entity)
 					.setEnabled(true)
-					.setTarget((Location<Vector2>) target);
+					.setTarget(coins.get(0));
 			entity.setBehavior(seek);
 		}
 		
 		public void update(EnemyShip entity) {
-			// if (coinCollected) { entity.stateMachine.changeState(WANDER); }
+			if (EntityProximity.findAgents(entity, GameScreen.getShips(), 600 / PPM) != null) { 
+				entity.stateMachine.changeState(PERSUE); 
+			} else if (entity.getPosition() == ((Seek<Vector2>) entity.getBehavior()).getTarget()) {
+				entity.stateMachine.changeState(WANDER);
+			}
 		}
 	},
 	
 	PERSUE() {
-		public void enter(EnemyShip entity, SteerableEntity target) {
-			 Pursue<Vector2> persue = new Pursue<Vector2>(entity, target);
-			 entity.setBehavior(persue);
+		public void enter(EnemyShip entity) {
+			ArrayList<Entity> ships = EntityProximity.findAgents(entity, GameScreen.getShips(), 600 / PPM);
+			Pursue<Vector2> persue = new Pursue<Vector2>(entity, (SteerableEntity) ships.get(0))
+					.setEnabled(true)
+					.setMaxPredictionTime(0.01f);
+			entity.setBehavior(persue);
 		}
 		
 		public void update(EnemyShip entity) {
-			// persue enemy
+			// attack enemy
+			if(entity.health <= 15) {
+				entity.stateMachine.changeState(FLEE);
+			} else if(entity.getPosition().dst(((Pursue<Vector2>) entity.getBehavior()).getTarget().getPosition()) >= 1000 / PPM) {
+				entity.stateMachine.changeState(WANDER);
+			}
 		}
 	},
 	
 	FLEE() {
 		public void enter(EnemyShip entity) {
-			// Flee<Vector2> flee = new Flee<Vector2>(entity);
-			// entity.setBehavior(flee);
+			Flee<Vector2> flee = new Flee<Vector2>(entity);
+			entity.setBehavior(flee);
 		}
 		
 		public void update(EnemyShip entity) {
-			// if(healthLow || outNumbered ) { flee enemy towards college }
+			if(entity.health >= 70 && EntityProximity.findAgents(entity, GameScreen.getShips(), 600 / PPM) == null) {
+				entity.stateMachine.changeState(WANDER);
+			}
 		}
 	};
 
 	@Override
 	public void enter(EnemyShip entity) {
-		
+
 	}
 
 	@Override
@@ -87,7 +108,7 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 
 	@Override
 	public void exit(EnemyShip entity) {
-		
+		entity.setBehavior(null);
 	}
 
 	@Override

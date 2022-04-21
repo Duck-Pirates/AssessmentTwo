@@ -31,6 +31,7 @@ import com.mygdx.pirategame.entities.College;
 import com.mygdx.pirategame.entities.EnemyShip;
 import com.mygdx.pirategame.entities.Player;
 import com.mygdx.pirategame.entities.Powerup;
+import com.mygdx.pirategame.entities.SteerableEntity;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
@@ -63,7 +64,7 @@ public class GameScreen implements Screen {
     private Box2DDebugRenderer b2dr;
     private Player player;
     private static HashMap<String, College> colleges = new HashMap<>();
-    private static ArrayList<EnemyShip> ships = new ArrayList<>();
+    private static ArrayList<SteerableEntity> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
     private Hud hud;
@@ -124,6 +125,7 @@ public class GameScreen implements Screen {
         colleges.put("Goodricke", new College(this, "Goodricke", 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
                 "goodricke_flag.png", "goodricke_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
         ships = new ArrayList<>();
+        ships.add(player);
         ships.addAll(colleges.get("Alcuin").fleet);
         ships.addAll(colleges.get("Anne Lister").fleet);
         ships.addAll(colleges.get("Constantine").fleet);
@@ -395,7 +397,7 @@ public class GameScreen implements Screen {
         colleges.get("Goodricke").update(delta);
 
         //Update ships
-        for (EnemyShip ship : ships) {
+        for (SteerableEntity ship : ships) {
             ship.update(delta);
         }
 
@@ -698,5 +700,13 @@ public class GameScreen implements Screen {
         b2dr.dispose();
         hud.dispose();
         stage.dispose();
+    }
+    
+    public static ArrayList<SteerableEntity> getShips() {
+    	return ships;
+    }
+    
+    public static ArrayList<Coin> getCoins() {
+    	return Coins;
     }
 }
