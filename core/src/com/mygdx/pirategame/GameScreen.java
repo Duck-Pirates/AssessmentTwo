@@ -199,7 +199,7 @@ public class GameScreen implements Screen {
                 //Get random x and y coords
                 a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
                 b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                validLoc = checkGenPos(a, b);
+                validLoc = AvailableSpawn.add(a, b);
             }
             //Add a coins at the random coords
             Tornadoes.add(new Tornado(this, a, b));
@@ -449,7 +449,7 @@ public class GameScreen implements Screen {
                     //Get random x and y coords
                     a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
                     b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                    validLoc = checkGenPos(a, b);
+                    validLoc = AvailableSpawn.add(a, b);
                 }
                 Powerups.add(new Powerup(this, a, b, i));
             }
