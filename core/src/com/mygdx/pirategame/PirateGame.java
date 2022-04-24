@@ -4,6 +4,16 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.pirategame.configs.Difficulty;
+import com.mygdx.pirategame.configs.GameSave;
+import com.mygdx.pirategame.configs.audioControls;
+import com.mygdx.pirategame.screens.DeathScreen;
+import com.mygdx.pirategame.screens.GameScreen;
+import com.mygdx.pirategame.screens.Help;
+import com.mygdx.pirategame.screens.LoadingMenu;
+import com.mygdx.pirategame.screens.MainMenu;
+import com.mygdx.pirategame.screens.SkillTree;
+import com.mygdx.pirategame.screens.VictoryScreen;
 
 
 /**
@@ -33,8 +43,8 @@ public class PirateGame extends Game {
 
 	//Variable for each screen
 	private MainMenu menuScreen;
-	protected GameScreen gameScreen;
-	protected SkillTree skillTreeScreen;
+	public GameScreen gameScreen;
+	public SkillTree skillTreeScreen;
 	private DeathScreen deathScreen;
 	private Help helpScreen;
 	private VictoryScreen victoryScreen;
@@ -75,9 +85,6 @@ public class PirateGame extends Game {
 		}
 		song.setVolume(getPreferences().getMusicVolume());
 	}
-
-
-
 
 	/**
 	 * Changes the screen without killing the prior screen. Allows for the screens to be returned to without making new ones
@@ -129,7 +136,7 @@ public class PirateGame extends Game {
 
 
 
-		}//
+		}
 	}
 
 	/**
