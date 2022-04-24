@@ -7,7 +7,6 @@ import com.mygdx.pirategame.PirateGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		
-
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		//TODO Change this, but keep for now
 		config.setWindowedMode(1000, 700);
