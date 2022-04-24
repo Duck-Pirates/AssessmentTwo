@@ -62,29 +62,12 @@ public class College extends Enemy{
                 ranY = rand.nextInt(2000) - 1000;
                 ranX = (int)Math.floor(x + (ranX / PirateGame.PPM));
                 ranY = (int)Math.floor(y + (ranY / PirateGame.PPM));
-                spawnIsValid = getCoord(ranX, ranY);
+                spawnIsValid = AvailableSpawn.add(ranX, ranY);
             }
             fleet.add(new EnemyShip(screen, ranX, ranY, ship, college));
         }
     }
 
-    /**
-     * Checks ship spawning in at a valid location
-     *
-     * @param x x position to test
-     * @param y y position to test
-     * @return isValid : returns the validity of the proposed spawn point
-     */
-    public boolean getCoord(int x, int y) {
-        if (x < noSpawn.xBase || x >= noSpawn.xCap || y < noSpawn.yBase || y >= noSpawn.yCap) {
-            return false;
-        }else if (noSpawn.tileBlocked.containsKey(x)) {
-            if (noSpawn.tileBlocked.get(x).contains(y)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Updates the state of each object with delta time

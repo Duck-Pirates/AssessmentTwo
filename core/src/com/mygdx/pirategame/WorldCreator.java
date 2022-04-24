@@ -6,12 +6,16 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 
+import java.util.ArrayList;
+
 /**
  * This is the class where all boundaries and collisions are created for the map.
  * @author Ethan Alabaster
  * @version 1.0
  */
 public class WorldCreator {
+
+    protected static ArrayList<Rectangle> rectangleBounds = new ArrayList<>();
     /**
      * Starts the creation of the boundaries
      *
@@ -23,7 +27,6 @@ public class WorldCreator {
         // Object class is islands, stuff for boat to collide with
         for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
             new Islands(screen, rect);
         }
         for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
@@ -45,6 +48,21 @@ public class WorldCreator {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new CollegeWalls4(screen, rect);
+        }
+        for(MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            new CollegeWalls5(screen, rect);
+        }
+        for(MapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            new CollegeWalls6(screen, rect);
+        }
+        for(MapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            new CollegeWalls7(screen, rect);
         }
     }
 }

@@ -20,7 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
+
+import java.util.Arrays;
 import java.util.Random;
 
 import java.util.ArrayList;
@@ -52,13 +55,17 @@ public class GameScreen implements Screen {
     private World world;
     public static Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
+
     private Player player;
     private static HashMap<String, College> colleges = new HashMap<>();
     private static ArrayList<EnemyShip> ships = new ArrayList<>();
     private static ArrayList<Coin> Coins = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
+    private HashMap<Integer, ArrayList<Integer>> invalidSpawnClouds = new HashMap<>();
     private Hud hud;
     private static ArrayList<Powerup> Powerups = new ArrayList<>();
+    private static ArrayList<Cloud> clouds = new ArrayList<>();
+    private static ArrayList<Tornado> Tornadoes = new ArrayList<>();
 
     public static final int GAME_RUNNING = 0;
     public static final int GAME_PAUSED = 1;
@@ -79,8 +86,6 @@ public class GameScreen implements Screen {
     public GameScreen(PirateGame game){
         gameStatus = GAME_RUNNING;
         this.game = game;
-        // Setting the difficulty, that will be changed based on the player's choice at the start of the game
-        //this.difficulty = Difficulty.MEDIUM;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;
@@ -106,19 +111,29 @@ public class GameScreen implements Screen {
 
         // Spawning enemy ship and coin. x and y is spawn location
         colleges = new HashMap<>();
-        colleges.put("Alcuin", new College(this, "Alcuin", 1900 / PirateGame.PPM, 2100 / PirateGame.PPM,
+        colleges.put("Alcuin", new College(this, "Alcuin", 3872 / PirateGame.PPM, 4230 / PirateGame.PPM,
                 "alcuin_flag.png", "alcuin_ship.png", 0, invalidSpawn));
-        colleges.put("Anne Lister", new College(this, "Anne Lister", 6304 / PirateGame.PPM, 1199 / PirateGame.PPM,
-                "anne_lister_flag.png", "anne_lister_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.put("Constantine", new College(this, "Constantine", 6240 / PirateGame.PPM, 6703 / PirateGame.PPM,
-                "constantine_flag.png", "constantine_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.put("Goodricke", new College(this, "Goodricke", 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
-                "goodricke_flag.png", "goodricke_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
+        colleges.put("Anne Lister", new College(this, "Anne Lister", 5855 / PirateGame.PPM, 6470 / PirateGame.PPM,
+                "anne_lister_flag.png", "anne_lister_ship.png", 8, invalidSpawn));
+        colleges.put("Constantine", new College(this, "Constantine", 9055 / PirateGame.PPM, 9860 / PirateGame.PPM,
+                "constantine_flag.png", "constantine_ship.png", 8, invalidSpawn));
+        colleges.put("Goodricke", new College(this, "Goodricke", 4128 / PirateGame.PPM, 12936 / PirateGame.PPM,
+                "goodricke_flag.png", "goodricke_ship.png", 8, invalidSpawn));
+        colleges.put("Halifax", new College(this, "Halifax", 12768 / PirateGame.PPM, 14408 / PirateGame.PPM,
+                "halifax_flag.png", "halifax_ship.png", 8, invalidSpawn));
+        colleges.put("Langwith", new College(this, "Langwith", 12576 / PirateGame.PPM, 6920 / PirateGame.PPM,
+                "langwith_flag.png", "langwith_ship.png", 8, invalidSpawn));
+        colleges.put("Vanbrugh", new College(this, "Vanbrugh", 12896 / PirateGame.PPM, 3783 / PirateGame.PPM,
+                "vanbrugh_flag.png", "vanbrugh_ship.png", 8, invalidSpawn));
+
         ships = new ArrayList<>();
         ships.addAll(colleges.get("Alcuin").fleet);
         ships.addAll(colleges.get("Anne Lister").fleet);
         ships.addAll(colleges.get("Constantine").fleet);
         ships.addAll(colleges.get("Goodricke").fleet);
+        ships.addAll(colleges.get("Halifax").fleet);
+        ships.addAll(colleges.get("Langwith").fleet);
+        ships.addAll(colleges.get("Vanbrugh").fleet);
 
         //Random ships
         Boolean validLoc;
@@ -131,9 +146,9 @@ public class GameScreen implements Screen {
                 a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
                 b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
                 //Check if valid
-                validLoc = checkGenPos(a, b);
+                validLoc = AvailableSpawn.add(a, b);
             }
-            //Add a sh ip at the random coords
+            //Add a ship at the random coords
             ships.add(new EnemyShip(this, a, b, "unaligned_ship.png", "Unaligned"));
         }
         TempTime = 0f;
@@ -145,7 +160,9 @@ public class GameScreen implements Screen {
                 //Get random x and y coords
                 a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
                 b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                validLoc = checkGenPos(a, b);
+
+                //Check if valid
+                validLoc = AvailableSpawn.add(a, b);
             }
             //Add a coins at the random coords
             Coins.add(new Coin(this, a, b));
@@ -159,16 +176,38 @@ public class GameScreen implements Screen {
                 //Get random x and y coords
                 a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
                 b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                validLoc = checkGenPos(a, b);
+                validLoc = AvailableSpawn.add(a, b);
             }
             Powerups.add(new Powerup(this, a, b, i));
+        }
+
+        clouds = new ArrayList<>();
+        for (int i = 0; i < rand.nextInt(51-30)+30; i++) {
+            validLoc = false;
+            while (!validLoc) {
+                //Get random x and y coords
+                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                validLoc = checkGenPosClouds(a, b);
+            }
+            clouds.add(new Cloud(this, a, b));
+        }
+        Tornadoes = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            validLoc = false;
+            while (!validLoc) {
+                //Get random x and y coords
+                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                validLoc = AvailableSpawn.add(a, b);
+            }
+            //Add a coins at the random coords
+            Tornadoes.add(new Tornado(this, a, b));
         }
 
 
         //Setting stage
         stage = new Stage(new ScreenViewport());
-
-
     }
 
     /**
@@ -187,10 +226,9 @@ public class GameScreen implements Screen {
 
 
         //PAUSE MENU BUTTONS
-
         final TextButton start = new TextButton("Resume", skin);
         final TextButton save = new TextButton("Save Game", skin);
-        final TextButton skill = new TextButton("Skill Tree", skin);
+        final TextButton skill = new TextButton("Shop", skin);
         final TextButton options = new TextButton("Options", skin);
         TextButton exit = new TextButton("Exit", skin);
 
@@ -232,8 +270,6 @@ public class GameScreen implements Screen {
         pauseTable.row().pad(20, 0, 10, 0);
         pauseTable.add(exit).fillX().uniformX();
         pauseTable.center();
-
-
 
 
         pauseButton.addListener(new ChangeListener() {
@@ -282,7 +318,6 @@ public class GameScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 pauseTable.setVisible(false);
                 game.setScreen(new Options(game,game.getScreen()));
-
             }
         }
         );
@@ -292,10 +327,6 @@ public class GameScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-
-
-
-
     }
 
     /**
@@ -337,7 +368,7 @@ public class GameScreen implements Screen {
 
                 if(player.velocity > 0.1f || player.velocity < -0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
                     player.slowDown(dt);
-                   
+
                 } else{
                     player.velocity = 0f;
                     player.updateVelocity(0, dt);
@@ -347,7 +378,7 @@ public class GameScreen implements Screen {
                 player.updateVelocity(linearAcceleration, dt);
             }
             player.updateRotation(angularAcceleration, dt);
-            //Gdx.app.log("vel", String.valueOf(player.velocity));
+
             // Checking if player at max velocity, and keeping them below max
 
         }
@@ -384,6 +415,9 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").update(dt);
         colleges.get("Constantine").update(dt);
         colleges.get("Goodricke").update(dt);
+        colleges.get("Halifax").update(dt);
+        colleges.get("Langwith").update(dt);
+        colleges.get("Vanbrugh").update(dt);
 
         //Update ships
         for (int i = 0; i < ships.size(); i++) {
@@ -415,7 +449,7 @@ public class GameScreen implements Screen {
                     //Get random x and y coords
                     a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
                     b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                    validLoc = checkGenPos(a, b);
+                    validLoc = AvailableSpawn.add(a, b);
                 }
                 Powerups.add(new Powerup(this, a, b, i));
             }
@@ -426,6 +460,23 @@ public class GameScreen implements Screen {
 
 
 
+
+        //Updates clouds
+        for (int i = 0; i < clouds.size(); i++) {
+            clouds.get(i).update(dt);
+            if ((player.getX() >= clouds.get(i).getX() - 2 && player.getX() <= clouds.get(i).getX() + 2) && (player.getY() >= clouds.get(i).getY() - 2 && player.getY() <= clouds.get(i).getY() + 2)){
+                clouds.get(i).changeAlpha();
+            }
+            else{
+                clouds.get(i).resetAlpha();
+            }
+        }
+
+        for (int i = 0; i < Tornadoes.size(); i++) {
+            Tornado tornado = Tornadoes.get(i);
+            tornado.update(dt);
+            tornado.tornadoImpulse(player, dt);
+        }
         //After a delay check if a college is destroyed. If not, if can fire
         if (stateTime > 1) {
             if (!colleges.get("Anne Lister").destroyed) {
@@ -436,7 +487,17 @@ public class GameScreen implements Screen {
             }
             if (!colleges.get("Goodricke").destroyed) {
                 colleges.get("Goodricke").fire();
-        }
+            }
+            if (!colleges.get("Halifax").destroyed) {
+                colleges.get("Halifax").fire();
+            }
+            if (!colleges.get("Langwith").destroyed) {
+                colleges.get("Langwith").fire();
+            }
+            if (!colleges.get("Vanbrugh").destroyed) {
+                colleges.get("Vanbrugh").fire();
+            }
+
         stateTime = 0;
     }
 
@@ -491,6 +552,13 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").draw(game.batch);
         colleges.get("Constantine").draw(game.batch);
         colleges.get("Goodricke").draw(game.batch);
+        colleges.get("Halifax").draw(game.batch);
+        colleges.get("Langwith").draw(game.batch);
+        colleges.get("Vanbrugh").draw(game.batch);
+
+        for(int i = 0; i< Tornadoes.size(); i++) {
+            Tornadoes.get(i).draw(game.batch);
+        }
 
         //Updates all ships
         for (int i = 0; i < ships.size(); i++){
@@ -503,6 +571,12 @@ public class GameScreen implements Screen {
             }
             ships.get(i).draw(game.batch);
         }
+
+        // Renders all the clouds on top of eerything else
+        for(int i = 0; i <clouds.size(); i++){
+            clouds.get(i).draw(game.batch);
+        }
+
         game.batch.end();
         //player.SlowDownBoat();
         Hud.stage.draw();
@@ -566,25 +640,12 @@ public class GameScreen implements Screen {
             game.killGame();
         }
         //Win game if all colleges destroyed
-        else if (colleges.get("Anne Lister").destroyed && colleges.get("Constantine").destroyed && colleges.get("Goodricke").destroyed){
+        else if (colleges.get("Anne Lister").destroyed && colleges.get("Constantine").destroyed && colleges.get("Goodricke").destroyed && colleges.get("Halifax").destroyed && colleges.get("Langwith").destroyed && colleges.get("Vanbrugh").destroyed){
             game.changeScreen(PirateGame.VICTORY);
             game.killGame();
         }
     }
 
-
-
-    //public void IncreaseMaxSpeedPercent(int num){difficulty.IncreaseMaxSpeedPercent(num); } // num increase
-    //public void IncreaseTraversePercent(int num){difficulty.IncreaseTraversePercent(num); }
-    //public void IncreaseDamageDealtPercent(int num){difficulty.IncreaseDamageDealtPercent(num);}
-    // SetGoldCoinMulti
-    //public void DecreaseDamageRecievedPercent(int num){difficulty.DecreaseDamageRecievedPercent(num);}
-
-
-
-
-    // TODO delete
-    // ------------------------------------------------------------------------
     /**
      * Fetches the player's current position
      *
@@ -625,6 +686,9 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").changeDamageReceived(value);
         colleges.get("Constantine").changeDamageReceived(value);
         colleges.get("Goodricke").changeDamageReceived(value);
+        colleges.get("Halifax").changeDamageReceived(value);
+        colleges.get("Langwith").changeDamageReceived(value);
+        colleges.get("Vanbrugh").changeDamageReceived(value);
 
     }
 
@@ -637,21 +701,27 @@ public class GameScreen implements Screen {
 
 
     /**
-     * Tests validity of randomly generated position
-     *
+     * Test if a cloud has already been spawned near these coordinates
      * @param x random x value
      * @param y random y value
      */
-    private Boolean checkGenPos(int x, int y){
-        if (invalidSpawn.tileBlocked.containsKey(x)){
-            ArrayList<Integer> yTest = invalidSpawn.tileBlocked.get(x);
-            if (yTest.contains(y)) {
+    private Boolean checkGenPosClouds(int x, int y){
+        if (invalidSpawnClouds.containsKey(x)){
+            ArrayList<Integer> yTest = invalidSpawnClouds.get(x);
+            if (yTest.contains(y)){
                 return false;
+            }
+        }
+        for (int i = -1; i < 2; i++){
+            if(invalidSpawnClouds.containsKey(x+i)){
+                invalidSpawnClouds.get(x+i).addAll(new ArrayList<>(Arrays.asList(y-1, y, y+1)));
+            }
+            else{
+                invalidSpawnClouds.put(x+i, new ArrayList<>(Arrays.asList(y-1, y, y+1)));
             }
         }
         return true;
     }
-
 
     /**
      * Pauses game
