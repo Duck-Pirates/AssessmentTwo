@@ -111,19 +111,29 @@ public class GameScreen implements Screen {
 
         // Spawning enemy ship and coin. x and y is spawn location
         colleges = new HashMap<>();
-        colleges.put("Alcuin", new College(this, "Alcuin", 1900 / PirateGame.PPM, 2100 / PirateGame.PPM,
+        colleges.put("Alcuin", new College(this, "Alcuin", 3872 / PirateGame.PPM, 4230 / PirateGame.PPM,
                 "alcuin_flag.png", "alcuin_ship.png", 0, invalidSpawn));
-        colleges.put("Anne Lister", new College(this, "Anne Lister", 6304 / PirateGame.PPM, 1199 / PirateGame.PPM,
-                "anne_lister_flag.png", "anne_lister_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.put("Constantine", new College(this, "Constantine", 6240 / PirateGame.PPM, 6703 / PirateGame.PPM,
-                "constantine_flag.png", "constantine_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.put("Goodricke", new College(this, "Goodricke", 1760 / PirateGame.PPM, 6767 / PirateGame.PPM,
-                "goodricke_flag.png", "goodricke_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
+        colleges.put("Anne Lister", new College(this, "Anne Lister", 5855 / PirateGame.PPM, 6470 / PirateGame.PPM,
+                "anne_lister_flag.png", "anne_lister_ship.png", 8, invalidSpawn));
+        colleges.put("Constantine", new College(this, "Constantine", 9055 / PirateGame.PPM, 9860 / PirateGame.PPM,
+                "constantine_flag.png", "constantine_ship.png", 8, invalidSpawn));
+        colleges.put("Goodricke", new College(this, "Goodricke", 4128 / PirateGame.PPM, 12936 / PirateGame.PPM,
+                "goodricke_flag.png", "goodricke_ship.png", 8, invalidSpawn));
+        colleges.put("Halifax", new College(this, "Halifax", 12768 / PirateGame.PPM, 14408 / PirateGame.PPM,
+                "halifax_flag.png", "halifax_ship.png", 8, invalidSpawn));
+        colleges.put("Langwith", new College(this, "Langwith", 12576 / PirateGame.PPM, 6920 / PirateGame.PPM,
+                "langwith_flag.png", "langwith_ship.png", 8, invalidSpawn));
+        colleges.put("Vanbrugh", new College(this, "Vanbrugh", 12896 / PirateGame.PPM, 3783 / PirateGame.PPM,
+                "vanbrugh_flag.png", "vanbrugh_ship.png", 8, invalidSpawn));
+
         ships = new ArrayList<>();
         ships.addAll(colleges.get("Alcuin").fleet);
         ships.addAll(colleges.get("Anne Lister").fleet);
         ships.addAll(colleges.get("Constantine").fleet);
         ships.addAll(colleges.get("Goodricke").fleet);
+        ships.addAll(colleges.get("Halifax").fleet);
+        ships.addAll(colleges.get("Langwith").fleet);
+        ships.addAll(colleges.get("Vanbrugh").fleet);
 
         //Random ships
         Boolean validLoc;
@@ -136,7 +146,7 @@ public class GameScreen implements Screen {
                 a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
                 b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
                 //Check if valid
-                validLoc = checkGenPos(a, b);
+                validLoc = AvailableSpawn.add(a, b);
             }
             //Add a ship at the random coords
             ships.add(new EnemyShip(this, a, b, "unaligned_ship.png", "Unaligned"));
@@ -150,7 +160,9 @@ public class GameScreen implements Screen {
                 //Get random x and y coords
                 a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
                 b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                validLoc = checkGenPos(a, b);
+
+                //Check if valid
+                validLoc = AvailableSpawn.add(a, b);
             }
             //Add a coins at the random coords
             Coins.add(new Coin(this, a, b));
@@ -164,7 +176,7 @@ public class GameScreen implements Screen {
                 //Get random x and y coords
                 a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
                 b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                validLoc = checkGenPos(a, b);
+                validLoc = AvailableSpawn.add(a, b);
             }
             Powerups.add(new Powerup(this, a, b, i));
         }
@@ -196,8 +208,6 @@ public class GameScreen implements Screen {
 
         //Setting stage
         stage = new Stage(new ScreenViewport());
-
-
     }
 
     /**
@@ -358,7 +368,7 @@ public class GameScreen implements Screen {
 
                 if(player.velocity > 0.1f || player.velocity < -0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
                     player.slowDown(dt);
-                   
+
                 } else{
                     player.velocity = 0f;
                     player.updateVelocity(0, dt);
@@ -368,7 +378,7 @@ public class GameScreen implements Screen {
                 player.updateVelocity(linearAcceleration, dt);
             }
             player.updateRotation(angularAcceleration, dt);
-            //Gdx.app.log("vel", String.valueOf(player.velocity));
+
             // Checking if player at max velocity, and keeping them below max
 
         }
@@ -405,6 +415,9 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").update(dt);
         colleges.get("Constantine").update(dt);
         colleges.get("Goodricke").update(dt);
+        colleges.get("Halifax").update(dt);
+        colleges.get("Langwith").update(dt);
+        colleges.get("Vanbrugh").update(dt);
 
         //Update ships
         for (int i = 0; i < ships.size(); i++) {
@@ -474,7 +487,17 @@ public class GameScreen implements Screen {
             }
             if (!colleges.get("Goodricke").destroyed) {
                 colleges.get("Goodricke").fire();
-        }
+            }
+            if (!colleges.get("Halifax").destroyed) {
+                colleges.get("Halifax").fire();
+            }
+            if (!colleges.get("Langwith").destroyed) {
+                colleges.get("Langwith").fire();
+            }
+            if (!colleges.get("Vanbrugh").destroyed) {
+                colleges.get("Vanbrugh").fire();
+            }
+
         stateTime = 0;
     }
 
@@ -529,6 +552,9 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").draw(game.batch);
         colleges.get("Constantine").draw(game.batch);
         colleges.get("Goodricke").draw(game.batch);
+        colleges.get("Halifax").draw(game.batch);
+        colleges.get("Langwith").draw(game.batch);
+        colleges.get("Vanbrugh").draw(game.batch);
 
         for(int i = 0; i< Tornadoes.size(); i++) {
             Tornadoes.get(i).draw(game.batch);
@@ -614,7 +640,7 @@ public class GameScreen implements Screen {
             game.killGame();
         }
         //Win game if all colleges destroyed
-        else if (colleges.get("Anne Lister").destroyed && colleges.get("Constantine").destroyed && colleges.get("Goodricke").destroyed){
+        else if (colleges.get("Anne Lister").destroyed && colleges.get("Constantine").destroyed && colleges.get("Goodricke").destroyed && colleges.get("Halifax").destroyed && colleges.get("Langwith").destroyed && colleges.get("Vanbrugh").destroyed){
             game.changeScreen(PirateGame.VICTORY);
             game.killGame();
         }
@@ -660,6 +686,9 @@ public class GameScreen implements Screen {
         colleges.get("Anne Lister").changeDamageReceived(value);
         colleges.get("Constantine").changeDamageReceived(value);
         colleges.get("Goodricke").changeDamageReceived(value);
+        colleges.get("Halifax").changeDamageReceived(value);
+        colleges.get("Langwith").changeDamageReceived(value);
+        colleges.get("Vanbrugh").changeDamageReceived(value);
 
     }
 
@@ -670,22 +699,6 @@ public class GameScreen implements Screen {
     // ----------------------------------
 
 
-
-    /**
-     * Tests validity of randomly generated position
-     *
-     * @param x random x value
-     * @param y random y value
-     */
-    private Boolean checkGenPos(int x, int y){
-        if (invalidSpawn.tileBlocked.containsKey(x)){
-            ArrayList<Integer> yTest = invalidSpawn.tileBlocked.get(x);
-            if (yTest.contains(y)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * Test if a cloud has already been spawned near these coordinates

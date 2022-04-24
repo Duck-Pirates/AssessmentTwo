@@ -18,7 +18,7 @@ public class Islands extends InteractiveTileObject {
         super(screen, bounds);
         fixture.setUserData(this);
         //Set the category bit
-        setCategoryFilter(PirateGame.DEFAULT_BIT);
+        setCategoryFilter(PirateGame.NOSPAWNAREA_BIT);
     }
 
     /**
