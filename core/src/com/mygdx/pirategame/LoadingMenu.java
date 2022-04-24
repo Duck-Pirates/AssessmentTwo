@@ -138,7 +138,7 @@ public class LoadingMenu implements Screen {
         EASY.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                GameScreen.difficulty = Difficulty.EASY;
+                PirateGame.difficulty = Difficulty.EASY;
                 parent.changeScreen(PirateGame.GAME);
             }
         });
@@ -146,7 +146,7 @@ public class LoadingMenu implements Screen {
         MEDIUM.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                GameScreen.difficulty = Difficulty.MEDIUM;
+                PirateGame.difficulty = Difficulty.MEDIUM;
                 parent.changeScreen(PirateGame.GAME);
             }
         });
@@ -154,7 +154,7 @@ public class LoadingMenu implements Screen {
         HARD.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                GameScreen.difficulty = Difficulty.HARD;
+                PirateGame.difficulty = Difficulty.HARD;
                 parent.changeScreen(PirateGame.GAME);
             }
         });
@@ -162,9 +162,7 @@ public class LoadingMenu implements Screen {
         LoadSaved.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                // TODO
-                // If nothing saved, pose an error message or do nothing
-                // Load saved version
+                parent.load();
             }
         });
 

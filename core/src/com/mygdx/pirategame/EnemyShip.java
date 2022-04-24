@@ -113,10 +113,10 @@ public class EnemyShip extends Enemy {
      * Sets data to act as an enemy
      */
     @Override
-    protected void defineEnemy() {
+    protected void defineEnemy(float x, float y) {
         //sets the body definitions
         BodyDef bdef = new BodyDef();
-        bdef.position.set(getX(), getY());
+        bdef.position.set(x, y);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
