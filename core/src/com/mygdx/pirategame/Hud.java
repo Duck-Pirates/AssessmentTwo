@@ -30,8 +30,8 @@ public class Hud implements Disposable {
 
     private GameScreen screen;
 
-    private float timeCount;
-    private float Constant_timeCount;
+    protected float timeCount;
+    protected float Constant_timeCount;
     public static Integer score;
     public static Integer health;
     private Texture hp;
@@ -45,12 +45,12 @@ public class Hud implements Disposable {
     private static Label pointsText;
     //private static Label powerupLabel;
     public static Integer coins;
-    private static Integer coinMulti;
+    protected static Integer coinMulti;
     private static Integer previousHealth = 100;
 
-    public static Boolean PowerupTimerBool = Boolean.FALSE;
-    private static float PowerupTimer;
-    private static Integer PowerUpType;
+    public static Boolean PowerupTimerBool = false;
+    protected static float PowerupTimer;
+    protected static Integer PowerUpType;
 
     private Image hpImg;
     private Image box;
@@ -174,7 +174,7 @@ public class Hud implements Disposable {
 
         // TODO Fix error of powerups not lasting the full 15 seconds, after picking up a new powerup
         // TODO maybe make it not possible to pick up a new powerup... basicaly like a cool down timer
-        if (PowerupTimerBool == Boolean.TRUE){
+        if (PowerupTimerBool == true){
             if (PowerupTimer == 0f){
                 PowerupTimer = Constant_timeCount;
             }
@@ -189,7 +189,7 @@ public class Hud implements Disposable {
                 powerUp.setScale(0.3f,0.3f );
                 stage.addActor(powerUp);
                 PowerupTimer = 0f;
-                PowerupTimerBool = Boolean.FALSE;
+                PowerupTimerBool = false;
                 Gdx.app.log("dt", "Back to normal");
             }
         }
@@ -258,7 +258,6 @@ public class Hud implements Disposable {
         powerUp = new Image(PowerupPic);
         //
         //powerUp.toFront();
-        //powerUp.setFillParent(false);
         powerUp.setFillParent(false);
         powerUp.setFillParent(false);
         //Size of powerup On screen
@@ -266,7 +265,7 @@ public class Hud implements Disposable {
 
         //powerUp.setScale(Gdx.graphics.getWidth()*03f,Gdx.graphics.getHeight() *3f );
         stage.addActor(powerUp);
-        PowerupTimerBool = Boolean.TRUE;
+        PowerupTimerBool = true;
 
     }
 

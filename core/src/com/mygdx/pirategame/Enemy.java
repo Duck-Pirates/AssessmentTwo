@@ -38,7 +38,7 @@ public abstract class Enemy extends Sprite {
         this.destroyed = false;
         this.health = 100;
 
-        defineEnemy();
+        defineEnemy(x, y);
         bar = new HealthBar(this);
 
     }
@@ -46,7 +46,7 @@ public abstract class Enemy extends Sprite {
     /**
      * Defines enemy
      */
-    protected abstract void defineEnemy();
+    protected abstract void defineEnemy(float x, float y);
 
     /**
      * Defines contact

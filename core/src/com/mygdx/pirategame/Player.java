@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
@@ -15,7 +16,7 @@ import com.badlogic.gdx.utils.Array;
  * @version 1.0
  */
 public class Player extends Sprite {
-    private final GameScreen screen;
+    private GameScreen screen;
     private Texture ship;
     public World world;
     public Body b2body;
@@ -30,14 +31,16 @@ public class Player extends Sprite {
      *
      * @param screen visual data
      */
-    public Player(GameScreen screen) {
+
+    public Player(GameScreen screen, Vector2 position, Float angle){
+
         // Retrieves world data and creates ship texture
         this.screen = screen;
         ship = new Texture("player_ship.png");
         this.world = screen.getWorld();
 
         // Defines a player, and the players position on screen and world
-        definePlayer();
+        definePlayer(position, angle);
         setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
         setRegion(ship);
         setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
@@ -47,6 +50,7 @@ public class Player extends Sprite {
 
         // Sets cannonball array
         cannonBalls = new Array<CannonFire>();
+
     }
 
     /**
@@ -79,11 +83,12 @@ public class Player extends Sprite {
     /**
      * Defines all the parts of the player's physical model. Sets it up for collisons
      */
-    private void definePlayer() {
+    private void definePlayer(Vector2 position, float angle) {
         // Defines a players position
         BodyDef bdef = new BodyDef();
-        bdef.position.set(1200  / PirateGame.PPM, 2500 / PirateGame.PPM); // Default Pos: 1800,2500
+        bdef.position.set(position); // Default Pos: 1800,2500
         bdef.type = BodyDef.BodyType.DynamicBody;
+        bdef.angle = (float) (angle * Math.PI/180);
         b2body = world.createBody(bdef);
 
         // Defines a player's shape and contact borders
@@ -99,6 +104,8 @@ public class Player extends Sprite {
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
     }
+
+
 
     public void updateVelocity(int linearAcceleration, float delta){
 

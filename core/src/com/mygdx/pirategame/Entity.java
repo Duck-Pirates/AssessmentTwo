@@ -29,13 +29,13 @@ public abstract class Entity extends Sprite {
         this.world = screen.getWorld();
         this.screen = screen;
         setPosition(x, y);
-        defineEntity();
+        defineEntity(x, y);
     }
 
     /**
      * Defines an entity
      */
-    protected abstract void defineEntity();
+    protected abstract void defineEntity(float x, float y);
 
     /**
      * Defines contact
