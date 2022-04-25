@@ -1,18 +1,19 @@
 package com.mygdx.pirategame.entities;
 
+import static com.mygdx.pirategame.configs.Constants.PPM;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screens.GameScreen;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 
 /**
@@ -54,9 +55,9 @@ public class Cloud extends Entity{
         //Set the position and size of the cloud
         int dimension = 0;
         dimension = rand.nextInt(301-200)+200;
-        setBounds(0,0,dimension / PirateGame.PPM, dimension * (0.61328125f) / PirateGame.PPM);
+        setBounds(0,0,dimension / PPM, dimension * (0.61328125f) / PPM);
         //Sets origin of the cloud
-        setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
+        setOrigin(24 / PPM,24 / PPM);
         alpha = 0.7f;
     }
 

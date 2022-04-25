@@ -1,9 +1,16 @@
 package com.mygdx.pirategame.world;
 
+import static com.mygdx.pirategame.configs.Constants.PPM;
+
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.*;
-import com.mygdx.pirategame.PirateGame;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.pirategame.screens.GameScreen;
 
 /**
@@ -37,11 +44,11 @@ public abstract class InteractiveTileObject {
 
         //Set position
         bDef.type = BodyDef.BodyType.StaticBody;
-        bDef.position.set((bounds.getX() + bounds.getWidth() / 2) / PirateGame.PPM, (bounds.getY() + bounds.getHeight() / 2) / PirateGame.PPM);
+        bDef.position.set((bounds.getX() + bounds.getWidth() / 2) / PPM, (bounds.getY() + bounds.getHeight() / 2) / PPM);
 
         body = world.createBody(bDef);
 
-        shape.setAsBox(bounds.getWidth() / 2 / PirateGame.PPM, bounds.getHeight() / 2 / PirateGame.PPM);
+        shape.setAsBox(bounds.getWidth() / 2 / PPM, bounds.getHeight() / 2 / PPM);
         fDef.shape = shape;
         fDef.restitution = 0f;
         fixture = body.createFixture(fDef);

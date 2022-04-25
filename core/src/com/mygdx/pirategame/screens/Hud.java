@@ -5,10 +5,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -64,7 +64,7 @@ public class Hud implements Disposable {
      */
     public Hud(SpriteBatch sb, GameScreen screen) {
         this.screen = screen;
-        health = screen.difficulty.getHP();
+        health = GameScreen.difficulty.getHP();
         score = 0;
         coins = 0;
         coinMulti = 1;
@@ -103,7 +103,7 @@ public class Hud implements Disposable {
 
 
         scoreLabel = new Label(String.format("%03d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        if (screen.difficulty == Difficulty.EASY){
+        if (GameScreen.difficulty == Difficulty.EASY){
             healthLabel = new Label(String.format("%03d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
         }
         else{
@@ -153,7 +153,7 @@ public class Hud implements Disposable {
         coinLabel.setText(String.format("%03d", coins));
         if(timeCount >= 1) {
             //Regen health every second
-            if(health != this.screen.difficulty.getHP()) {
+            if(health != GameScreen.difficulty.getHP()) {
                 health += 1;
                 healthLabel.setText(String.format("%02d", health));
             }
@@ -180,7 +180,7 @@ public class Hud implements Disposable {
             if (Constant_timeCount > PowerupTimer + PowerupTime){
                 // Remove powerup abilities
                 // Respawn that powerup
-                screen.difficulty.PreviousPowerupStats();
+                GameScreen.difficulty.PreviousPowerupStats();
                 PowerupPic = new Texture("blank.png");
                 powerUp = new Image(PowerupPic);
                 powerUp.setFillParent(false);

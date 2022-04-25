@@ -1,10 +1,17 @@
 package com.mygdx.pirategame.college;
 
+import static com.mygdx.pirategame.configs.Constants.COLLEGEFIRE_BIT;
+import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
+import static com.mygdx.pirategame.configs.Constants.PPM;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import com.mygdx.pirategame.PirateGame;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.pirategame.screens.GameScreen;
 /**
  * College Fire
@@ -38,7 +45,7 @@ public class CollegeFire extends Sprite {
         cannonBall = new Texture("cannonBall.png");
         //Set the position and size of the ball
         setRegion(cannonBall);
-        setBounds(x, y, 10 / PirateGame.PPM, 10 / PirateGame.PPM);
+        setBounds(x, y, 10 / PPM, 10 / PPM);
         defineCannonBall();
     }
 
@@ -55,11 +62,11 @@ public class CollegeFire extends Sprite {
         //Sets collision boundaries
         FixtureDef fDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(5 / PirateGame.PPM);
+        shape.setRadius(5 / PPM);
         // setting BIT identifier
-        fDef.filter.categoryBits = PirateGame.COLLEGEFIRE_BIT;
+        fDef.filter.categoryBits = COLLEGEFIRE_BIT;
         // determining what this BIT can collide with
-        fDef.filter.maskBits = PirateGame.PLAYER_BIT;
+        fDef.filter.maskBits = PLAYER_BIT;
 
         fDef.shape = shape;
         b2body.createFixture(fDef).setUserData(this);

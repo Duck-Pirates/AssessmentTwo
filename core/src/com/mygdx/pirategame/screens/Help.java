@@ -1,5 +1,7 @@
 package com.mygdx.pirategame.screens;
 
+import static com.mygdx.pirategame.configs.Constants.MENU;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -16,9 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.pirategame.PirateGame;
-
-import java.util.ArrayList;
-import java.util.List;
 /**
  * Screen with instructions for the user
  * @author Sam Pearson
@@ -79,7 +78,7 @@ public class Help implements Screen {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                parent.changeScreen(PirateGame.MENU);
+                parent.changeScreen(MENU);
             }
         });
 

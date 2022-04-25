@@ -1,11 +1,10 @@
 package com.mygdx.pirategame.entities;
 
-import static com.mygdx.pirategame.PirateGame.PPM;
+import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
-import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.pirategame.screens.GameScreen;

@@ -1,12 +1,19 @@
 package com.mygdx.pirategame.entities;
 
-import static com.mygdx.pirategame.PirateGame.PPM;
+import static com.mygdx.pirategame.configs.Constants.COIN_BIT;
+import static com.mygdx.pirategame.configs.Constants.COLLEGEFIRE_BIT;
+import static com.mygdx.pirategame.configs.Constants.COLLEGESENSOR_BIT;
+import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
+import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
+import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
+import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
+import static com.mygdx.pirategame.configs.Constants.POWERUP_BIT;
+import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -14,7 +21,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screens.GameScreen;
 
 /**
@@ -35,13 +41,13 @@ public class Player extends SteerableEntity {
      * @param screen visual data
      */
     public Player(GameScreen screen) {
-    	super(screen, 1200  / PirateGame.PPM, 2500 / PirateGame.PPM);
+    	super(screen, 1200  / PPM, 2500 / PPM);
         // Creates ship texture
         texture = new Texture("player_ship.png");
         
-        setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
+        setBounds(0,0,64 / PPM, 110 / PPM);
         setRegion(texture);
-        setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
+        setOrigin(32 / PPM,55 / PPM);
 	    
         // Sound effect for damage
         breakSound = Gdx.audio.newSound(Gdx.files.internal("wood-bump.mp3"));
@@ -73,8 +79,8 @@ public class Player extends SteerableEntity {
      */
     public void playBreakSound() {
         // Plays damage sound effect
-        if (screen.game.getPreferences().isEffectsEnabled()) {
-            breakSound.play(screen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
+            breakSound.play(GameScreen.game.getPreferences().getEffectsVolume());
         }
     }
 
@@ -96,11 +102,11 @@ public class Player extends SteerableEntity {
         shape.dispose();
 
         // setting BIT identifier
-        fdef.filter.categoryBits = PirateGame.PLAYER_BIT;
+        fdef.filter.categoryBits = PLAYER_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.COIN_BIT | PirateGame.ENEMY_BIT 
-        		| PirateGame.COLLEGE_BIT | PirateGame.COLLEGESENSOR_BIT | PirateGame.COLLEGEFIRE_BIT 
-        		| PirateGame.POWERUP_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT | COIN_BIT | ENEMY_BIT 
+        		| COLLEGE_BIT | COLLEGESENSOR_BIT | COLLEGEFIRE_BIT 
+        		| POWERUP_BIT;
 
         body = world.createBody(bdef);
         body.createFixture(fdef).setUserData(this);
@@ -110,14 +116,14 @@ public class Player extends SteerableEntity {
 
     public void updateVelocity(int linearAcceleration, float delta){
 
-        setVelocity((getVelocity() +  (linearAcceleration * delta) * (1 - getVelocity() / maxVelocity)) * screen.difficulty.getSpeedReduction());
+        setVelocity((getVelocity() +  (linearAcceleration * delta) * (1 - getVelocity() / maxVelocity)) * GameScreen.difficulty.getSpeedReduction());
         //Gdx.app.log("powerup1", Float.toString(velocity));
         //Gdx.app.log("powerup2", Float.toString(screen.difficulty.getMaxSpeed()));
         if (getVelocity() < -1.5f) {
             setVelocity(-1.5f);
         }
-        else if (getVelocity() > screen.difficulty.getMaxSpeed()){
-            setVelocity(screen.difficulty.getMaxSpeed());
+        else if (getVelocity() > GameScreen.difficulty.getMaxSpeed()){
+            setVelocity(GameScreen.difficulty.getMaxSpeed());
         }
         setLinearVelocity(getVelocity());
     }
@@ -142,9 +148,9 @@ public class Player extends SteerableEntity {
         }
 
         if (angularVelocity > 0) {
-            angularVelocity -= (angularVelocity / screen.difficulty.getTraverseSpeed()); // change to update rotation
+            angularVelocity -= (angularVelocity / GameScreen.difficulty.getTraverseSpeed()); // change to update rotation
         } else if (angularVelocity < 0) {
-            angularVelocity -= (angularVelocity / screen.difficulty.getTraverseSpeed()); // change to update rotation
+            angularVelocity -= (angularVelocity / GameScreen.difficulty.getTraverseSpeed()); // change to update rotation
         }
 
 

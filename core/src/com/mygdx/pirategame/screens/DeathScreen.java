@@ -1,5 +1,7 @@
 package com.mygdx.pirategame.screens;
 
+import static com.mygdx.pirategame.configs.Constants.MENU;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -73,7 +75,7 @@ public class DeathScreen implements Screen {
              */
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                parent.changeScreen(PirateGame.MENU);
+                parent.changeScreen(MENU);
                 parent.killEndScreen();
             }
         });

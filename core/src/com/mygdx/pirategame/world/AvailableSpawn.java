@@ -1,9 +1,8 @@
 package com.mygdx.pirategame.world;
 
-import com.badlogic.gdx.math.Rectangle;
-
 import java.util.ArrayList;
-import java.util.HashMap;
+
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Available Spawn

@@ -1,5 +1,11 @@
 package com.mygdx.pirategame.entities;
 
+import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
+import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
+import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
+import static com.mygdx.pirategame.configs.Constants.POWERUP_BIT;
+import static com.mygdx.pirategame.configs.Constants.PPM;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,7 +13,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
 
@@ -60,11 +65,11 @@ public class Powerup extends Entity{
         Gdx.app.log("x", String.valueOf(x));
         Gdx.app.log("y", String.valueOf(y));
         //Set the position and size of the powerup
-        setBounds(0,0,100 / PirateGame.PPM, 100 / PirateGame.PPM);
+        setBounds(0,0,100 / PPM, 100 / PPM);
         //Set the texture
         setRegion(powerup);
         //Sets origin of the powerup
-        setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
+        setOrigin(24 / PPM,24 / PPM);
         powerupPickup = Gdx.audio.newSound(Gdx.files.internal("powerup-pickup.mp3"));
     }
 
@@ -97,11 +102,11 @@ public class Powerup extends Entity{
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(24 / PirateGame.PPM);
+        shape.setRadius(24 / PPM);
         // setting BIT identifier
-        fdef.filter.categoryBits = PirateGame.POWERUP_BIT;
+        fdef.filter.categoryBits = POWERUP_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT;
         fdef.shape = shape;
         fdef.isSensor = true;
         body.createFixture(fdef).setUserData(this);
@@ -111,8 +116,8 @@ public class Powerup extends Entity{
 
         setToDestroyed = true;
 
-        if (screen.game.getPreferences().isEffectsEnabled()) {
-            powerupPickup.play(screen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
+            powerupPickup.play(GameScreen.game.getPreferences().getEffectsVolume());
         }
 
 
@@ -130,7 +135,7 @@ public class Powerup extends Entity{
 
             // Remove previous powerup
             // Reset previous powerup
-            screen.difficulty.PreviousPowerupStats();
+            GameScreen.difficulty.PreviousPowerupStats();
 
             if (powerupType == 0) {
                 Hud.ChangePowerUpImage(0);
@@ -162,22 +167,22 @@ public class Powerup extends Entity{
 
     public void Ammo(){
         // Increase damage or shots per second
-        screen.difficulty.SavePowerupStats();
-        screen.difficulty.SetDamageDealt(5); // increases damage dealt by 5... could be doubled??
+        GameScreen.difficulty.SavePowerupStats();
+        GameScreen.difficulty.SetDamageDealt(5); // increases damage dealt by 5... could be doubled??
     }
     public void Lightning(){
         // Increase Speed
-        screen.difficulty.SavePowerupStats();
-        screen.difficulty.SetMaxSpeed(1.5f);// doubles mad speed + imcreases speed reduction by 1%
+        GameScreen.difficulty.SavePowerupStats();
+        GameScreen.difficulty.SetMaxSpeed(1.5f);// doubles mad speed + imcreases speed reduction by 1%
     }
     public void Money(){
         // Increase money earnt
-        screen.difficulty.SavePowerupStats();
-        screen.difficulty.SetGoldCoinMulti(1); // +1 to current multi (from *1 to *2)
+        GameScreen.difficulty.SavePowerupStats();
+        GameScreen.difficulty.SetGoldCoinMulti(1); // +1 to current multi (from *1 to *2)
     }
     public void Repair(){
         // Recovers ship
-        screen.difficulty.SavePowerupStats();
+        GameScreen.difficulty.SavePowerupStats();
         //screen.difficulty.IncreaseHP();
         Hud.changeHealth(50); // increases HP by 50 aslong as its less than max,
         // TODO getting health back even if ur not getting damaged
@@ -185,8 +190,8 @@ public class Powerup extends Entity{
     }
     public void Star(){
         // TODO Imunity?? could change for cone
-        screen.difficulty.SavePowerupStats();
-        screen.difficulty.SetDamageReceived(0);
+        GameScreen.difficulty.SavePowerupStats();
+        GameScreen.difficulty.SetDamageReceived(0);
     }
 
     /**

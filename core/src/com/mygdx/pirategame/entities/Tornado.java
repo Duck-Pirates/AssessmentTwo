@@ -1,5 +1,13 @@
 package com.mygdx.pirategame.entities;
 
+import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
+import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
+import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
+import static com.mygdx.pirategame.configs.Constants.PPM;
+import static com.mygdx.pirategame.configs.Constants.TORNADO_BIT;
+
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,11 +18,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
-
-import java.util.Random;
 
 /**
  * Tornado
@@ -47,9 +52,9 @@ public class Tornado extends Entity {
         // Set posistion and size of the tornado
         int dimension = rand.nextInt(257-128)+128;
         // The float number used for the height is to keep the ration of the texture image intact
-        setBounds(0,0, dimension / PirateGame.PPM, dimension * 1.473333333f / PirateGame.PPM);
+        setBounds(0,0, dimension / PPM, dimension * 1.473333333f / PPM);
         //Sets origin of the tornado
-        setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
+        setOrigin(24 / PPM,24 / PPM);
         tornado =new Texture(Gdx.files.internal("TornadoSwirls.png"));
         TextureRegion[][] tmp = new TextureRegion(tornado).split(150, 221);
         setRegion(tmp[0][0]);
@@ -70,13 +75,13 @@ public class Tornado extends Entity {
         // Defines a player's shape and contact borders
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(150 / PirateGame.PPM);
+        shape.setRadius(150 / PPM);
 
         // setting BIT identifier
-        fdef.filter.categoryBits = PirateGame.TORNADO_BIT;
+        fdef.filter.categoryBits = TORNADO_BIT;
 
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT;
         fdef.shape = shape;
         fdef.isSensor = true;
         body.createFixture(fdef).setUserData(this);

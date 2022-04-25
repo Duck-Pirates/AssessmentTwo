@@ -61,11 +61,11 @@ public class GameSave {
 
     public void save(GameScreen game, SkillTree shop) {
 
-        difficultySave = game.difficulty;
+        difficultySave = GameScreen.difficulty;
         invalidSpawnSave = game.invalidSpawn;
 
-        playerSave = new PlayerSave(game.player);
-        for (College college: game.colleges) {
+        playerSave = new PlayerSave(GameScreen.player);
+        for (College college: GameScreen.colleges) {
             CollegeSave collegeSave = new CollegeSave(college);
             collegesSaves.add(collegeSave);
             if(collegeSave.fleet != null){ // Checks if the college has a fleet (alcuin doesn't have any ships)
@@ -73,19 +73,19 @@ public class GameSave {
             }
         }
         for (int i = 20; i > 0; i--){ // Saves the unaligned ships
-            shipsSaves.add(new ShipSave(game.ships.get(game.ships.size() - i)));
+            shipsSaves.add(new ShipSave(GameScreen.ships.get(GameScreen.ships.size() - i)));
         }
-        for (Coin coin: game.coins) {
+        for (Coin coin: GameScreen.coins) {
             coinSaves.add(new CoinSave(coin));
         }
         hudSave = new HudSave(game.hud);
-        for (Powerup powerup: game.powerups){
+        for (Powerup powerup: GameScreen.powerups){
             powerUpSaves.add(new PowerUpSave(powerup));
         }
 
         tempTimeSave = game.TempTime;
 
-        statesSave = shop.states;
+        statesSave = SkillTree.states;
 
         json.setOutputType(JsonWriter.OutputType.json);
         ArrayList<Object> parameters2Save = new ArrayList<>(Arrays.asList(difficultySave, invalidSpawnSave, playerSave, collegesSaves, shipsSaves, coinSaves, hudSave, powerUpSaves, tempTimeSave, statesSave));
@@ -101,15 +101,13 @@ public class GameSave {
      */
     public static class PlayerSave{
 
-        private float velocity, rotation, maxVelocity, maxAngularVelocity;
-        private Vector2 position;
-
+        private float velocity, maxVelocity, maxAngularVelocity;
         public PlayerSave(Player player) {
             velocity = player.velocity;
-            rotation = player.getRotation();
+            player.getRotation();
             maxVelocity = player.getVelocity();
             maxAngularVelocity = player.getAngularVelocity();
-            position = player.body.getPosition();
+            player.body.getPosition();
         }
 
         /**
@@ -128,7 +126,7 @@ public class GameSave {
             result.velocity = this.velocity;
             result.maxVelocity = this.maxVelocity;
             result.maxAngularVelocity = this.maxAngularVelocity;
-            game.player = result;
+            GameScreen.player = result;
         }
     }
 
@@ -169,7 +167,7 @@ public class GameSave {
          * @return College Object
          */
         public College createCollege(GameScreen game){
-            College result = new College(game, collegeName, this.position.x, this.position.y, String.format("%s_flag.png", collegeName.toLowerCase()).replace(' ', '_'), String.format("%s_ship.png", collegeName.toLowerCase()).replace(' ', '_'), collegeName.equals("Alcuin") ? 0 : game.difficulty.getMaxCollegeShips(), game.invalidSpawn);
+            College result = new College(game, collegeName, this.position.x, this.position.y, String.format("%s_flag.png", collegeName.toLowerCase()).replace(' ', '_'), String.format("%s_ship.png", collegeName.toLowerCase()).replace(' ', '_'), collegeName.equals("Alcuin") ? 0 : GameScreen.difficulty.getMaxCollegeShips(), game.invalidSpawn);
             ArrayList<EnemyShip> newfleet = new ArrayList<>();
             for(int i = 0; i < this.fleet.size(); i++){
                 newfleet.add(this.fleet.get(i).createEnemyShip(game));
@@ -268,12 +266,12 @@ public class GameSave {
         public HudSave(Hud hud){
             timeCount = hud.timeCount;
             constantTimeCount = hud.Constant_timeCount;
-            powerUpTimer = hud.PowerupTimer;
-            score = hud.score;
-            health = hud.health;
-            coins = hud.coins;
-            powerUpType = hud.PowerUpType;
-            powerUpTimerBool = hud.PowerupTimerBool;
+            powerUpTimer = Hud.PowerupTimer;
+            score = Hud.score;
+            health = Hud.health;
+            coins = Hud.coins;
+            powerUpType = Hud.PowerUpType;
+            powerUpTimerBool = Hud.PowerupTimerBool;
         }
 
         /**
@@ -291,13 +289,13 @@ public class GameSave {
             Hud oldHud = game.hud;
             oldHud.timeCount = this.timeCount;
             oldHud.Constant_timeCount = this.constantTimeCount;
-            oldHud.PowerupTimer = this.powerUpTimer;
-            oldHud.score = this.score;
-            oldHud.health = this.health;
-            oldHud.coins = this.coins;
-            oldHud.coinMulti = game.difficulty.getGoldCoinMulti();
-            oldHud.PowerUpType = this.powerUpType;
-            oldHud.PowerupTimerBool = this.powerUpTimerBool;
+            Hud.PowerupTimer = this.powerUpTimer;
+            Hud.score = this.score;
+            Hud.health = this.health;
+            Hud.coins = this.coins;
+            Hud.coinMulti = GameScreen.difficulty.getGoldCoinMulti();
+            Hud.PowerUpType = this.powerUpType;
+            Hud.PowerupTimerBool = this.powerUpTimerBool;
         }
     }
 
@@ -355,8 +353,7 @@ public class GameSave {
         ArrayList<SteerableEntity> ships = new ArrayList<>();
         ArrayList<Coin> coins = new ArrayList<>();
         ArrayList<Powerup> powerups = new ArrayList<>();
-        for (CollegeSave college:
-                (Array<CollegeSave>) loaded_data.get(3)) {
+        for (CollegeSave college: (Array<CollegeSave>) loaded_data.get(3)) {
             colleges.add(college.createCollege(gameScreen));
             ships.addAll(colleges.get(colleges.size()-1).fleet);
         }
@@ -366,8 +363,8 @@ public class GameSave {
             }
             ships.add(ship.createEnemyShip(gameScreen));
         }
-        gameScreen.colleges = colleges;
-        gameScreen.ships = ships;
+        GameScreen.colleges = colleges;
+        GameScreen.ships = ships;
         for (CoinSave coin: (Array<CoinSave>) loaded_data.get(5)){
             Coin newcoin = new Coin(gameScreen, coin.position.x, coin.position.y);
             newcoin.destroyed = coin.destroyed;
@@ -375,16 +372,16 @@ public class GameSave {
             newcoin.body.getPosition().set(coin.position);
             coins.add(newcoin);
         }
-        gameScreen.coins = coins;
+        GameScreen.coins = coins;
         ((HudSave) loaded_data.get(6)).createHud(gameScreen);
         for(PowerUpSave powerUp: (Array<PowerUpSave>) loaded_data.get(7)){
             powerups.add(powerUp.createPowerUp(gameScreen));
         }
-        gameScreen.powerups = powerups;
+        GameScreen.powerups = powerups;
         gameScreen.TempTime = (Float) loaded_data.get(8);
-        shop.states = new ArrayList(Arrays.asList(((Array<Integer>) loaded_data.get(9)).toArray()));
+        SkillTree.states = new ArrayList(Arrays.asList(((Array<Integer>) loaded_data.get(9)).toArray()));
         
-        game.gameScreen = gameScreen;
-        game.skillTreeScreen = shop;
+        game.setGameScreen(gameScreen);
+        game.setSkillTreeScreen(shop);
     }
 }

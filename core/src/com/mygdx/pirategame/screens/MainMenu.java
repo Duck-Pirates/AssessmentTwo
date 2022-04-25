@@ -1,5 +1,8 @@
 package com.mygdx.pirategame.screens;
 
+import static com.mygdx.pirategame.configs.Constants.HELP;
+import static com.mygdx.pirategame.configs.Constants.LOADING;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,9 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.pirategame.PirateGame;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
  * Main menu is the first screen the player sees. Allows them to navigate where they want to go to
@@ -73,15 +76,15 @@ public class MainMenu implements Screen {
         newGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                //parent.changeScreen(PirateGame.GAME);
-                parent.changeScreen(PirateGame.LOADING);
+                //parent.changeScreen(GAME);
+                parent.changeScreen(LOADING);
             }
         });
         //Help Screen
         help.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                parent.changeScreen(PirateGame.HELP);
+                parent.changeScreen(HELP);
             }
         });
 

@@ -1,5 +1,7 @@
 package com.mygdx.pirategame.screens;
 
+import static com.mygdx.pirategame.configs.Constants.MENU;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -75,7 +77,7 @@ public class VictoryScreen implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
 
                     //Return to main screen
-                    parent.changeScreen(PirateGame.MENU);
+                    parent.changeScreen(MENU);
                     parent.killEndScreen();
                 }
             });

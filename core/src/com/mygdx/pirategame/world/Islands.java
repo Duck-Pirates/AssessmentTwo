@@ -1,7 +1,9 @@
 package com.mygdx.pirategame.world;
+
+import static com.mygdx.pirategame.configs.Constants.NOSPAWNAREA_BIT;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
-import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
 
@@ -21,7 +23,7 @@ public class Islands extends InteractiveTileObject {
         super(screen, bounds);
         fixture.setUserData(this);
         //Set the category bit
-        setCategoryFilter(PirateGame.NOSPAWNAREA_BIT);
+        setCategoryFilter(NOSPAWNAREA_BIT);
     }
 
     /**

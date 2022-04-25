@@ -1,6 +1,10 @@
 package com.mygdx.pirategame.entities;
 
-import static com.mygdx.pirategame.PirateGame.PPM;
+import static com.mygdx.pirategame.configs.Constants.CANNON_BIT;
+import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
+import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
+import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
+import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.GdxAI;
@@ -14,7 +18,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.fsm.EnemyStateMachine;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
@@ -53,11 +56,11 @@ public class EnemyShip extends SteerableEntity {
         destroy = Gdx.audio.newSound(Gdx.files.internal("ship-explosion-2.wav"));
         hit = Gdx.audio.newSound(Gdx.files.internal("ship-hit.wav"));
         //Set the position and size of the college
-        setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
+        setBounds(0,0,64 / PPM, 110 / PPM);
         setRegion(texture);
-        setOrigin(32 / PirateGame.PPM,55 / PirateGame.PPM);
+        setOrigin(32 /PPM,55 / PPM);
 
-        damage = screen.difficulty.getDamageDealt();
+        damage = GameScreen.difficulty.getDamageDealt();
     }
 
     /**
@@ -70,8 +73,8 @@ public class EnemyShip extends SteerableEntity {
         //If ship is set to destroy and isn't, destroy it
         if(setToDestroy && !destroyed) {
             //Play death noise
-            if (screen.game.getPreferences().isEffectsEnabled()) {
-                destroy.play(screen.game.getPreferences().getEffectsVolume());
+            if (GameScreen.game.getPreferences().isEffectsEnabled()) {
+                destroy.play(GameScreen.game.getPreferences().getEffectsVolume());
             }
             world.destroyBody(body);
             destroyed = true;
@@ -135,10 +138,9 @@ public class EnemyShip extends SteerableEntity {
         shape.dispose();
         
         // setting BIT identifier
-        fdef.filter.categoryBits = PirateGame.ENEMY_BIT;
+        fdef.filter.categoryBits = ENEMY_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT 
-        		| PirateGame.CANNON_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT | CANNON_BIT;
         
         body.createFixture(fdef).setUserData(this);
     }
@@ -164,12 +166,12 @@ public class EnemyShip extends SteerableEntity {
     public void onContact() {
         Gdx.app.log("enemy", "collision");
         //Play collision sound
-        if (screen.game.getPreferences().isEffectsEnabled()) {
-            hit.play(screen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
+            hit.play(GameScreen.game.getPreferences().getEffectsVolume());
         }
         //Deal with the damage
-        health -= screen.difficulty.getDamageDealt();
-        bar.changeHealth(screen.difficulty.getDamageDealt());
+        health -= GameScreen.difficulty.getDamageDealt();
+        bar.changeHealth(GameScreen.difficulty.getDamageDealt());
         Hud.changePoints(5);
     }
 }

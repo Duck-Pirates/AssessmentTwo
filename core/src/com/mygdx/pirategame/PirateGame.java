@@ -1,5 +1,7 @@
 package com.mygdx.pirategame;
 
+import static com.mygdx.pirategame.configs.Constants.*;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -24,44 +26,20 @@ import com.mygdx.pirategame.screens.VictoryScreen;
  * @version 1.0
  */
 public class PirateGame extends Game {
-	public static final float PPM = 100;
-
-	//Bits used in collisions
-	public static final short DEFAULT_BIT = 1;
-	public static final short PLAYER_BIT = 2;
-	public static final short COLLEGEFIRE_BIT = 4;
-	public static final short POWERUP_BIT = 8;
-	public static final short COIN_BIT = 16;
-	public static final short CANNON_BIT = 32;
-	public static final short ENEMY_BIT = 64;
-	public static final short COLLEGE_BIT = 128;
-	public static final short COLLEGESENSOR_BIT = 256;
-	public static final short TORNADO_BIT = 512;
-	public static final short NOSPAWNAREA_BIT = 1024;
-
-	public SpriteBatch batch;
+	private SpriteBatch batch;
 
 	//Variable for each screen
 	private MainMenu menuScreen;
-	public GameScreen gameScreen;
-	public SkillTree skillTreeScreen;
+	private GameScreen gameScreen;
+	private SkillTree skillTreeScreen;
 	private DeathScreen deathScreen;
 	private Help helpScreen;
 	private VictoryScreen victoryScreen;
 	private LoadingMenu loadingScreen;
 
 	private audioControls options;
-	public Music song;
-	public static Difficulty difficulty;
-
-	//Constant for swapping between screens
-	public final static int MENU = 0;
-	public final static int GAME = 1;
-	public final static int SKILL = 2;
-	public final static int DEATH = 3;
-	public final static int HELP = 4;
-	public final static int VICTORY = 5;
-	public final static int LOADING = 6;
+	private Music song;
+	private static Difficulty difficulty;
 
 	/**
 	 * Creates the main body of the game.
@@ -78,12 +56,12 @@ public class PirateGame extends Game {
 		options = new audioControls();
 
 		//Set background music and play if valid
-		song = Gdx.audio.newMusic(Gdx.files.internal("pirate-music.mp3"));
-		song.setLooping(true);
+		setSong(Gdx.audio.newMusic(Gdx.files.internal("pirate-music.mp3")));
+		getSong().setLooping(true);
 		if(getPreferences().isMusicEnabled()){
-			song.play();
+			getSong().play();
 		}
-		song.setVolume(getPreferences().getMusicVolume());
+		getSong().setVolume(getPreferences().getMusicVolume());
 	}
 
 	/**
@@ -100,18 +78,14 @@ public class PirateGame extends Game {
 				break;
 
 			case GAME:
-
-				if (gameScreen == null) gameScreen = new GameScreen(this, difficulty);
-
-				if (skillTreeScreen == null) skillTreeScreen = new SkillTree(this);
-
-				this.setScreen(gameScreen);
-
+				if (getGameScreen() == null) gameScreen = new GameScreen(this, difficulty);
+				if (getSkillTreeScreen() == null) skillTreeScreen = new SkillTree(this);
+				this.setScreen(getGameScreen());
 				break;
 
 			case SKILL:
-				if (skillTreeScreen == null) skillTreeScreen = new SkillTree(this);
-				this.setScreen(skillTreeScreen);
+				if (getSkillTreeScreen() == null) skillTreeScreen = new SkillTree(this);
+				this.setScreen(getSkillTreeScreen());
 				break;
 
 			case DEATH:
@@ -133,9 +107,7 @@ public class PirateGame extends Game {
 				if (loadingScreen == null) loadingScreen = new LoadingMenu(this);
 				this.setScreen(loadingScreen);
 				break;
-
-
-
+				
 		}
 	}
 
@@ -178,16 +150,55 @@ public class PirateGame extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		super.dispose();
 	}
 
 	public void save() {
 		GameSave gameInstance = new GameSave();
-		gameInstance.save(gameScreen, skillTreeScreen);
+		gameInstance.save(getGameScreen(), getSkillTreeScreen());
 	}
 
 	public void load(){
 		GameSave gameInstance = new GameSave();
 		gameInstance.load(this);
 		this.changeScreen(GAME);
+	}
+	
+	public static void setDifficulty(Difficulty difficulty) {
+		PirateGame.difficulty = difficulty;
+	}
+
+	public GameScreen getGameScreen() {
+		return gameScreen;
+	}
+
+	public void setGameScreen(GameScreen gameScreen) {
+		this.gameScreen = gameScreen;
+	}
+
+	public SkillTree getSkillTreeScreen() {
+		return skillTreeScreen;
+	}
+
+	public void setSkillTreeScreen(SkillTree skillTreeScreen) {
+		this.skillTreeScreen = skillTreeScreen;
+	}
+
+	public SpriteBatch getBatch() {
+		return batch;
+	}
+
+	/**
+	 * @return the song
+	 */
+	public Music getSong() {
+		return song;
+	}
+
+	/**
+	 * @param song the song to set
+	 */
+	public void setSong(Music song) {
+		this.song = song;
 	}
 }

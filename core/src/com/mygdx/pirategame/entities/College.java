@@ -1,5 +1,9 @@
 package com.mygdx.pirategame.entities;
 
+import static com.mygdx.pirategame.configs.Constants.COLLEGESENSOR_BIT;
+import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
+import static com.mygdx.pirategame.configs.Constants.PPM;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -10,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.college.CollegeFire;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
@@ -52,9 +55,9 @@ public class College extends SteerableEntity {
         currentCollege = flag;
         texture = new Texture(flag);
         //Set the position and size of the college
-        setBounds(0,0,64 / PirateGame.PPM, 110 / PirateGame.PPM);
+        setBounds(0,0,64 / PPM, 110 / PPM);
         setRegion(texture);
-        setOrigin(32 / PirateGame.PPM, 55 / PirateGame.PPM);
+        setOrigin(32 / PPM, 55 / PPM);
         damage = 10;
         cannonBalls = new Array<>();
         int ranX = 0;
@@ -67,8 +70,8 @@ public class College extends SteerableEntity {
             while (!spawnIsValid){
                 ranX = rand.nextInt(2000) - 1000;
                 ranY = rand.nextInt(2000) - 1000;
-                ranX = (int)Math.floor(x + (ranX / PirateGame.PPM));
-                ranY = (int)Math.floor(y + (ranY / PirateGame.PPM));
+                ranX = (int)Math.floor(x + (ranX / PPM));
+                ranY = (int)Math.floor(y + (ranY / PPM));
                 spawnIsValid = AvailableSpawn.add(ranX, ranY);
             }
             fleet.add(new EnemyShip(screen, ranX, ranY, ship, college));
@@ -148,11 +151,11 @@ public class College extends SteerableEntity {
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(55 / PirateGame.PPM);
+        shape.setRadius(55 / PPM);
         // setting BIT identifier
-        fdef.filter.categoryBits = PirateGame.COLLEGESENSOR_BIT;
+        fdef.filter.categoryBits = COLLEGESENSOR_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.PLAYER_BIT;
+        fdef.filter.maskBits = PLAYER_BIT;
         fdef.shape = shape;
         fdef.isSensor = true;
         body.createFixture(fdef).setUserData(this);
@@ -168,8 +171,8 @@ public class College extends SteerableEntity {
         Gdx.app.log("enemy", "collision");
 
         // Damage to college by cannon ball?
-        health -= screen.difficulty.getDamageDealt();
-        bar.changeHealth(screen.difficulty.getDamageDealt());
+        health -= GameScreen.difficulty.getDamageDealt();
+        bar.changeHealth(GameScreen.difficulty.getDamageDealt());
     }
     
     /**

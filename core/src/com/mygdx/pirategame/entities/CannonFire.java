@@ -1,13 +1,22 @@
 package com.mygdx.pirategame.entities;
 
+import static com.mygdx.pirategame.configs.Constants.CANNON_BIT;
+import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
+import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
+import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
+import static com.mygdx.pirategame.configs.Constants.PPM;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import com.mygdx.pirategame.PirateGame;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.pirategame.screens.GameScreen;
 
 /**
@@ -52,13 +61,13 @@ public class CannonFire extends Sprite {
         //set cannonBall dimensions for the texture
         cannonBall = new Texture("cannonBall.png");
         setRegion(cannonBall);
-        setBounds(x, y, 10 / PirateGame.PPM, 10 / PirateGame.PPM);
+        setBounds(x, y, 10 / PPM, 10 / PPM);
         //set collision bounds
         defineCannonBall();
         //set sound for fire and play if on
         fireNoise = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
-        if (screen.game.getPreferences().isEffectsEnabled()) {
-            fireNoise.play(screen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
+            fireNoise.play(GameScreen.game.getPreferences().getEffectsVolume());
         }
     }
 
@@ -75,12 +84,12 @@ public class CannonFire extends Sprite {
         //Sets collision boundaries
         FixtureDef fDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(5 / PirateGame.PPM);
+        shape.setRadius(5 / PPM);
 
         // setting BIT identifier
-        fDef.filter.categoryBits = PirateGame.CANNON_BIT;
+        fDef.filter.categoryBits = CANNON_BIT;
         // determining what this BIT can collide with
-        fDef.filter.maskBits = PirateGame.ENEMY_BIT | PirateGame.PLAYER_BIT | PirateGame.COLLEGE_BIT;
+        fDef.filter.maskBits = ENEMY_BIT | PLAYER_BIT | COLLEGE_BIT;
         fDef.shape = shape;
         fDef.isSensor = true;
         b2body.createFixture(fDef).setUserData(this);

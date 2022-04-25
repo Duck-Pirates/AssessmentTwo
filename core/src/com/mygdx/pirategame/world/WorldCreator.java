@@ -1,10 +1,11 @@
 package com.mygdx.pirategame.world;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.pirategame.college.CollegeWalls;
 import com.mygdx.pirategame.college.CollegeWalls2;
 import com.mygdx.pirategame.college.CollegeWalls3;
@@ -13,8 +14,6 @@ import com.mygdx.pirategame.college.CollegeWalls5;
 import com.mygdx.pirategame.college.CollegeWalls6;
 import com.mygdx.pirategame.college.CollegeWalls7;
 import com.mygdx.pirategame.screens.GameScreen;
-
-import java.util.ArrayList;
 
 /**
  * This is the class where all boundaries and collisions are created for the map.

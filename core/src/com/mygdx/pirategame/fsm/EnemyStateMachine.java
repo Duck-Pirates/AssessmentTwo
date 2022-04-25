@@ -1,6 +1,6 @@
 package com.mygdx.pirategame.fsm;
 
-import static com.mygdx.pirategame.PirateGame.PPM;
+import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,6 @@ import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.steer.behaviors.Flee;
 import com.badlogic.gdx.ai.steer.behaviors.Pursue;
-import com.badlogic.gdx.ai.steer.behaviors.ReachOrientation;
 import com.badlogic.gdx.ai.steer.behaviors.Seek;
 import com.badlogic.gdx.ai.steer.behaviors.Wander;
 import com.badlogic.gdx.math.Vector2;

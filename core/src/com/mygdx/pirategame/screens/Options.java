@@ -9,7 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.pirategame.PirateGame;
@@ -66,7 +71,7 @@ public class Options implements Screen {
             @Override
             public boolean handle(Event event) {
                 PirateGame.getPreferences().setMusicVolume(volumeMusicSlider.getValue());  //Change music value in options to slider
-                PirateGame.song.setVolume(PirateGame.getPreferences().getMusicVolume()); //Change the volume
+                PirateGame.getSong().setVolume(PirateGame.getPreferences().getMusicVolume()); //Change the volume
 
                 return false;
             }
@@ -76,7 +81,6 @@ public class Options implements Screen {
 
         //Check if it should be checked or unchecked by default
         musicCheckbox.setChecked( PirateGame.getPreferences().isMusicEnabled() );
-
         musicCheckbox.addListener( new EventListener() {
             @Override
             public boolean handle(Event event) {
@@ -84,10 +88,10 @@ public class Options implements Screen {
                 PirateGame.getPreferences().setMusicEnabled( enabled ); //Set
 
                 if(PirateGame.getPreferences().isMusicEnabled()){ //Play or don't
-                    PirateGame.song.play();
+                    PirateGame.getSong().play();
                 }
                 else {
-                    PirateGame.song.pause();}
+                    PirateGame.getSong().pause();}
 
                 return false;
             }
@@ -123,9 +127,7 @@ public class Options implements Screen {
                 PirateGame.setScreen(parent);
             }
         });
-
-
-
+        
         Label titleLabel = new Label("Options", skin);
         Label musicLabel = new Label("Music Volume", skin);
         Label effectLabel = new Label("Effect Volume", skin);
@@ -150,6 +152,7 @@ public class Options implements Screen {
         table.add(backButton);
 
     }
+    
     /**
      * Renders the visual data for all objects
      * @param delta Delta Time
@@ -167,6 +170,7 @@ public class Options implements Screen {
 
 
     }
+    
     /**
      * Changes the camera size, Scales the hud to match the camera
      *
@@ -195,11 +199,11 @@ public class Options implements Screen {
     public void resume() {
         // TODO Auto-generated method stub
     }
+    
     /**
      * (Not Used)
      * Hides game
      */
-
     @Override
     public void hide() {
         // TODO Auto-generated method stub

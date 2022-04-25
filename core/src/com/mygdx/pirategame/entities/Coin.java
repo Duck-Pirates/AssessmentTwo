@@ -1,19 +1,23 @@
 package com.mygdx.pirategame.entities;
 
+import static com.mygdx.pirategame.configs.Constants.COIN_BIT;
+import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
+import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
+import static com.mygdx.pirategame.configs.Constants.NOSPAWNAREA_BIT;
+import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
+import static com.mygdx.pirategame.configs.Constants.PPM;
+
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
-
-import java.util.Random;
 
 /**
  * Coin
@@ -42,11 +46,11 @@ public class Coin extends Entity {
         //Set coin image
         coin = new Texture("coin.png");
         //Set the position and size of the coin
-        setBounds(0,0,48 / PirateGame.PPM, 48 / PirateGame.PPM);
+        setBounds(0,0,48 / PPM, 48 / PPM);
         //Set the texture
         setRegion(coin);
         //Sets origin of the coin
-        setOrigin(24 / PirateGame.PPM,24 / PirateGame.PPM);
+        setOrigin(24 / PPM,24 / PPM);
         coinPickup = Gdx.audio.newSound(Gdx.files.internal("coin-pickup.mp3"));
     }
 
@@ -79,11 +83,11 @@ public class Coin extends Entity {
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(24 / PirateGame.PPM);
+        shape.setRadius(24 / PPM);
         // setting BIT identifier
-        fdef.filter.categoryBits = PirateGame.COIN_BIT;
+        fdef.filter.categoryBits = COIN_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PirateGame.DEFAULT_BIT | PirateGame.PLAYER_BIT | PirateGame.ENEMY_BIT | PirateGame.NOSPAWNAREA_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT | NOSPAWNAREA_BIT;
         fdef.shape = shape;
         fdef.isSensor = true;
         body.createFixture(fdef).setUserData(this);
@@ -95,12 +99,12 @@ public class Coin extends Entity {
     @Override
     public void onContact() {
         //Add a coin
-        Hud.changeCoins((rand.nextInt(screen.difficulty.getMaxGoldXCoin()) + 1) * screen.difficulty.getGoldCoinMulti());
+        Hud.changeCoins((rand.nextInt(GameScreen.difficulty.getMaxGoldXCoin()) + 1) * GameScreen.difficulty.getGoldCoinMulti());
         //Set to destroy
         setToDestroyed = true;
         //Play pickup sound
-        if (screen.game.getPreferences().isEffectsEnabled()) {
-            coinPickup.play(screen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
+            coinPickup.play(GameScreen.game.getPreferences().getEffectsVolume());
         }
 
     }

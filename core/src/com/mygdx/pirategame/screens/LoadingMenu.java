@@ -1,5 +1,8 @@
 package com.mygdx.pirategame.screens;
 
+import static com.mygdx.pirategame.configs.Constants.GAME;
+import static com.mygdx.pirategame.configs.Constants.MENU;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -13,10 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.configs.Difficulty;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
  * Main menu is the first screen the player sees. Allows them to navigate where they want to go to
@@ -125,39 +128,30 @@ public class LoadingMenu implements Screen {
         table.add(powerupInfo3).padBottom((40));
         table.center();
 
-
-
-
-
-
-
-
-
-
         //add listeners to the buttons
 
         //Set difficulty
         EASY.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                PirateGame.difficulty = Difficulty.EASY;
-                parent.changeScreen(PirateGame.GAME);
+                PirateGame.setDifficulty(Difficulty.EASY);
+                parent.changeScreen(GAME);
             }
         });
 
         MEDIUM.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                PirateGame.difficulty = Difficulty.MEDIUM;
-                parent.changeScreen(PirateGame.GAME);
+            	PirateGame.setDifficulty(Difficulty.MEDIUM);
+                parent.changeScreen(GAME);
             }
         });
 
         HARD.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                PirateGame.difficulty = Difficulty.HARD;
-                parent.changeScreen(PirateGame.GAME);
+            	PirateGame.setDifficulty(Difficulty.HARD);
+                parent.changeScreen(GAME);
             }
         });
 
@@ -167,7 +161,6 @@ public class LoadingMenu implements Screen {
                 parent.load();
             }
         });
-
 
         //Quit game
         exit.addListener(new ChangeListener() {
@@ -180,7 +173,7 @@ public class LoadingMenu implements Screen {
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                parent.changeScreen(PirateGame.MENU);
+                parent.changeScreen(MENU);
             }
         });
     }

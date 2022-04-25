@@ -1,5 +1,10 @@
 package com.mygdx.pirategame.screens;
 
+import static com.mygdx.pirategame.configs.Constants.DEATH;
+import static com.mygdx.pirategame.configs.Constants.PPM;
+import static com.mygdx.pirategame.configs.Constants.SKILL;
+import static com.mygdx.pirategame.configs.Constants.VICTORY;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,7 +72,6 @@ public class GameScreen implements Screen {
     private Box2DDebugRenderer b2dr;
 
     public static Player player;
-    public static HashMap<String, Integer> name2college = new HashMap<String, Integer>(){{put("Alcuin", 0); put("Anne Lister", 1); put("Constantine", 2); put("Goodricke", 3);}};
     public static ArrayList<College> colleges = new ArrayList<>();
     public static ArrayList<SteerableEntity> ships = new ArrayList<>();
     public static ArrayList<Coin> coins = new ArrayList<>();
@@ -96,9 +100,9 @@ public class GameScreen implements Screen {
      */
     public GameScreen(PirateGame game, Difficulty difficulty){
         gameStatus = GAME_RUNNING;
-        this.game = game;
+        GameScreen.game = game;
         // Setting the difficulty, that will be changed based on the player's choice at the start of the game
-        this.difficulty = difficulty;
+        GameScreen.difficulty = difficulty;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.0155f;
@@ -106,7 +110,7 @@ public class GameScreen implements Screen {
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
         // Initialize a hud
-        hud = new Hud(game.batch, this);
+        hud = new Hud(game.getBatch(), this);
 
         // Initialising box2d physics
         world = new World(new Vector2(0,0), true);
@@ -116,26 +120,26 @@ public class GameScreen implements Screen {
         // making the Tiled tmx file render as a map
         maploader = new TmxMapLoader();
         map = maploader.load("map.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map, 1 / PirateGame.PPM);
+        renderer = new OrthogonalTiledMapRenderer(map, 1 / PPM);
         new WorldCreator(this);
 
         // Setting up contact listener for collisions
         world.setContactListener(new WorldContactListener(this));
 
         // Spawning enemy ship and coin. x and y is spawn location
-        colleges.add(new College(this, "Alcuin", 3872 / PirateGame.PPM, 4230 / PirateGame.PPM,
+        colleges.add(new College(this, "Alcuin", 3872 / PPM, 4230 / PPM,
                 "alcuin_flag.png", "alcuin_ship.png", 0, invalidSpawn));
-        colleges.add(new College(this, "Anne Lister", 5855 / PirateGame.PPM, 6470 / PirateGame.PPM,
+        colleges.add(new College(this, "Anne Lister", 5855 / PPM, 6470 / PPM,
                 "anne_lister_flag.png", "anne_lister_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "Constantine", 9055 / PirateGame.PPM, 9860 / PirateGame.PPM,
+        colleges.add(new College(this, "Constantine", 9055 / PPM, 9860 / PPM,
                 "constantine_flag.png", "constantine_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "Goodricke", 4128 / PirateGame.PPM, 12936 / PirateGame.PPM,
+        colleges.add(new College(this, "Goodricke", 4128 / PPM, 12936 / PPM,
                 "goodricke_flag.png", "goodricke_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "Halifax", 12768 / PirateGame.PPM, 14408 / PirateGame.PPM,
+        colleges.add(new College(this, "Halifax", 12768 / PPM, 14408 / PPM,
                 "halifax_flag.png", "halifax_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "Langwith", 12576 / PirateGame.PPM, 6920 / PirateGame.PPM,
+        colleges.add(new College(this, "Langwith", 12576 / PPM, 6920 / PPM,
                 "langwith_flag.png", "langwith_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "Vanbrugh", 12896 / PirateGame.PPM, 3783 / PirateGame.PPM,
+        colleges.add(new College(this, "Vanbrugh", 12896 / PPM, 3783 / PPM,
                 "vanbrugh_flag.png", "vanbrugh_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
 
         ships = new ArrayList<>();
@@ -297,14 +301,14 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor){
                 pauseTable.setVisible(false);
-                game.changeScreen(PirateGame.SKILL);
+                game.changeScreen(SKILL);
             }
         });
         skill.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
                 pauseTable.setVisible(false);
-                game.changeScreen(PirateGame.SKILL);
+                game.changeScreen(SKILL);
             }
         });
         start.addListener(new ChangeListener() {
@@ -514,30 +518,30 @@ public class GameScreen implements Screen {
         // b2dr is the hitbox shapes, can be commented out to hide
         b2dr.render(world, camera.combined);
 
-        game.batch.setProjectionMatrix(camera.combined);
-        game.batch.begin();
+        game.getBatch().setProjectionMatrix(camera.combined);
+        game.getBatch().begin();
         // Order determines layering
 
         //Renders coins
         for(Coin coin: coins) {
-            coin.draw(game.batch);
+            coin.draw(game.getBatch());
         }
 
         //Renders powerups
         for(Powerup powerup: powerups) {
-            powerup.draw(game.batch);
+            powerup.draw(game.getBatch());
         }
 
 
         //Renders colleges
-        player.draw(game.batch);
+        player.draw(game.getBatch());
 
         for (College college: colleges) {
-            college.draw(game.batch);
+            college.draw(game.getBatch());
         }
 
         for(int i = 0; i< Tornadoes.size(); i++) {
-            Tornadoes.get(i).draw(game.batch);
+            Tornadoes.get(i).draw(game.getBatch());
         }
 
         //Updates all ships
@@ -549,15 +553,15 @@ public class GameScreen implements Screen {
                     ship.updateTexture("Alcuin", "alcuin_ship.png");
                 }
             }
-            ship.draw(game.batch);
+            ship.draw(game.getBatch());
         }
 
         // Renders all the clouds on top of eerything else
         for(int i = 0; i <clouds.size(); i++){
-            clouds.get(i).draw(game.batch);
+            clouds.get(i).draw(game.getBatch());
         }
 
-        game.batch.end();
+        game.getBatch().end();
         //player.SlowDownBoat();
         Hud.stage.draw();
         stage.act();
@@ -621,12 +625,12 @@ public class GameScreen implements Screen {
     public void gameOverCheck(){
         //Lose game if ship on 0 health or Alcuin is destroyed
         if (Hud.getHealth() <= 0 || getCollege("Alcuin").destroyed) {
-            game.changeScreen(PirateGame.DEATH);
+            game.changeScreen(DEATH);
             game.killGame();
         }
         //Win game if all colleges destroyed
         else if (getCollege("Anne Lister").destroyed && getCollege("Constantine").destroyed && getCollege("Goodricke").destroyed){
-            game.changeScreen(PirateGame.VICTORY);
+            game.changeScreen(VICTORY);
             game.killGame();
         }
     }
@@ -694,7 +698,7 @@ public class GameScreen implements Screen {
     }
 
     public void SetGoldCoinMulti(int num){
-        this.difficulty.SetGoldCoinMulti(num);
+        GameScreen.difficulty.SetGoldCoinMulti(num);
     }
 
     // ----------------------------------
