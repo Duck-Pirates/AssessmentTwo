@@ -81,6 +81,7 @@ public class PirateGame extends Game {
 			case MENU:
 				if (menuScreen == null) menuScreen = new MainMenu(this);
 				this.setScreen(menuScreen);
+				//todo EXIT TO MENU
 				break;
 
 			case GAME:

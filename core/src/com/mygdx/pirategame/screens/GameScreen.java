@@ -1,10 +1,5 @@
 package com.mygdx.pirategame.screens;
 
-import static com.mygdx.pirategame.configs.Constants.DEATH;
-import static com.mygdx.pirategame.configs.Constants.PPM;
-import static com.mygdx.pirategame.configs.Constants.SKILL;
-import static com.mygdx.pirategame.configs.Constants.VICTORY;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,6 +38,8 @@ import com.mygdx.pirategame.entities.Tornado;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
+
+import static com.mygdx.pirategame.configs.Constants.*;
 
 
 /**
@@ -337,7 +334,7 @@ public class GameScreen implements Screen {
         exit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
+                game.changeScreen(MENU);
             }
         });
     }
@@ -612,9 +609,11 @@ public class GameScreen implements Screen {
     public static College getCollege(String collegeName) {
     	for (College college : colleges) {
     		if (college.currentCollege == collegeName) {
+                Gdx.app.log("wall", collegeName);
     			return college;
     		}
     	}
+        //Gdx.app.log("wall", collegeName);
         return colleges.get(0);
     }
 
@@ -624,6 +623,7 @@ public class GameScreen implements Screen {
      */
     public void gameOverCheck(){
         //Lose game if ship on 0 health or Alcuin is destroyed
+        //Gdx.app.log("enemy", String.valueOf(Hud.getHealth()));
         if (Hud.getHealth() <= 0 || getCollege("Alcuin").destroyed) {
             game.changeScreen(DEATH);
             game.killGame();

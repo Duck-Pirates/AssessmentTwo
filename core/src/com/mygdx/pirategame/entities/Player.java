@@ -171,17 +171,24 @@ public class Player extends SteerableEntity {
      * Called when E is pushed. Causes 1 cannon ball to spawn on both sides of the ships with their relative velocity
      */
     public void fire() {
+
+        cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, 5F, body.getAngle() - (float)Math.toRadians(180)));
+        cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, -5, body.getAngle() - (float)Math.toRadians(-180)));
+        if (GameScreen.difficulty.GetConeMec() == true){
+            cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, 5F, body.getAngle() - (float)Math.toRadians(45)));
+            cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, -5, body.getAngle() - (float)Math.toRadians(-45)));
+
+            cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, 5F,  body.getAngle() -(float)Math.toRadians(225)));
+            cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, -5, body.getAngle() - (float)Math.toRadians(-225)));
+        }
+
         // Fires cannons
-        cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, 5));
-        cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, -5));
+
+
+
 
         // Cone fire below
-        /*cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() - Math.PI / 6), -5, b2body.getLinearVelocity()));
-        cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() - Math.PI / 6), 5, b2body.getLinearVelocity()));
-        cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() + Math.PI / 6), -5, b2body.getLinearVelocity()));
-        cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() + Math.PI / 6), 5, b2body.getLinearVelocity()));
-        }
-         */
+
     }
     
     @Override

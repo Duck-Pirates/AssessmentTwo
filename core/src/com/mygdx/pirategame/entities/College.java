@@ -171,8 +171,11 @@ public class College extends SteerableEntity {
         Gdx.app.log("enemy", "collision");
 
         // Damage to college by cannon ball?
-        health -= GameScreen.difficulty.getDamageDealt();
-        bar.changeHealth(GameScreen.difficulty.getDamageDealt());
+        Gdx.app.log("hp lost", String.valueOf(GameScreen.difficulty.getDamageDealt()));
+        Gdx.app.log("health", String.valueOf(health));
+
+        //health -= GameScreen.difficulty.getDamageDealt();
+        //bar.changeHealth(GameScreen.difficulty.getDamageDealt());
     }
     
     /**

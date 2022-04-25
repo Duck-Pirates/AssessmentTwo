@@ -33,6 +33,6 @@ public class Islands extends InteractiveTileObject {
     public void onContact() {
         Gdx.app.log("island", "collision");
         //Deal damage to the boat
-        Hud.changeHealth(-10);
+        //Hud.changeHealth(-10);
     }
 }

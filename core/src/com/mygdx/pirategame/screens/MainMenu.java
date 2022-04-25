@@ -57,13 +57,16 @@ public class MainMenu implements Screen {
 
         //create buttons
         TextButton newGame = new TextButton("New Game", skin);
+        TextButton LoadSaved = new TextButton("Load Saved Game", skin);
         TextButton help = new TextButton("Help", skin);
         TextButton options = new TextButton("Options", skin);
         TextButton exit = new TextButton("Exit", skin);
 
         //add buttons to table
         table.add(newGame).fillX().uniformX();
-        table.row().pad(10, 0, 10, 0);
+        table.row();
+        table.add(LoadSaved).fillX().uniformX();
+        table.row();
         table.add(help).fillX().uniformX();
         table.row();
         table.add(options).fillX().uniformX();
@@ -96,6 +99,12 @@ public class MainMenu implements Screen {
             }
         });
 
+        LoadSaved.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor){
+                parent.load();
+            }
+        });
 
         //Quit game
         exit.addListener(new ChangeListener() {

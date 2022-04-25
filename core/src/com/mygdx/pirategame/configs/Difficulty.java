@@ -13,6 +13,8 @@ public enum Difficulty {
     private float prevMaxSpeed, prevTraverseSpeed, prevspeedReduction;
     private int prevDamageReceived, prevDamageDealt, prevGoldCoinMulti;
 
+    private boolean ConeMec = false;
+
     //TODO Add skill cost variable
     //TODO Add AI accuracy
     //TODO Add base radius for colleges
@@ -155,6 +157,13 @@ public enum Difficulty {
         damageReceived = prevDamageReceived;
         traverseSpeed = prevTraverseSpeed;
         speedReduction = prevspeedReduction;
+    }
+
+    public void SetConeMec (boolean val){
+        ConeMec = val;
+    }
+    public boolean GetConeMec (){
+        return ConeMec;
     }
 
 
