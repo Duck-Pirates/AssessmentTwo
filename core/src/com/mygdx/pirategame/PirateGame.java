@@ -1,6 +1,12 @@
 package com.mygdx.pirategame;
 
-import static com.mygdx.pirategame.configs.Constants.*;
+import static com.mygdx.pirategame.configs.Constants.DEATH;
+import static com.mygdx.pirategame.configs.Constants.GAME;
+import static com.mygdx.pirategame.configs.Constants.HELP;
+import static com.mygdx.pirategame.configs.Constants.LOADING;
+import static com.mygdx.pirategame.configs.Constants.MENU;
+import static com.mygdx.pirategame.configs.Constants.SKILL;
+import static com.mygdx.pirategame.configs.Constants.VICTORY;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

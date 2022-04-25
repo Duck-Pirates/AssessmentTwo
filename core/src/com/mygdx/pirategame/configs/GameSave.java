@@ -341,7 +341,8 @@ public class GameSave {
      * Reads the data from a saved game and loads the game and changes the Screens in the Game's main class (PirateGame)
      * @param game
      */
-    public void load(PirateGame game){
+    @SuppressWarnings("unchecked")
+	public void load(PirateGame game){
         ArrayList<Object> loaded_data = json.fromJson(ArrayList.class, String.valueOf(Base64Coder.decode(file.readString())));
 
         GameScreen gameScreen = new GameScreen(game, (Difficulty) loaded_data.get(0));
@@ -379,7 +380,7 @@ public class GameSave {
         }
         GameScreen.powerups = powerups;
         gameScreen.TempTime = (Float) loaded_data.get(8);
-        SkillTree.states = new ArrayList(Arrays.asList(((Array<Integer>) loaded_data.get(9)).toArray()));
+        SkillTree.states = new ArrayList<Integer>(Arrays.asList(((Array<Integer>) loaded_data.get(9)).toArray()));
         
         game.setGameScreen(gameScreen);
         game.setSkillTreeScreen(shop);
