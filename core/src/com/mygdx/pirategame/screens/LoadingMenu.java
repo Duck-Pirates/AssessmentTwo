@@ -68,7 +68,7 @@ public class LoadingMenu implements Screen {
         TextButton MEDIUM = new TextButton("Game Mode: Medium", skin);
         TextButton HARD = new TextButton("Game Mode: Hard", skin);
 
-        TextButton LoadSaved = new TextButton("Load Saved Game", skin);
+
 
         TextButton exit = new TextButton("Exit", skin);
         TextButton backButton = new TextButton("Return", skin);
@@ -82,8 +82,6 @@ public class LoadingMenu implements Screen {
         table.row();
         table.add(HARD).fillX().uniformX();
         table.row().pad(20, 0, 10, 0);
-        table.add(LoadSaved).fillX().uniformX();
-        table.row();
         table.add(exit).fillX().uniformX();
 
         table2.add(exit).fillX().uniformX();
@@ -155,12 +153,6 @@ public class LoadingMenu implements Screen {
             }
         });
 
-        LoadSaved.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor){
-                parent.load();
-            }
-        });
 
         //Quit game
         exit.addListener(new ChangeListener() {
