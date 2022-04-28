@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.fsm.StateMachine;
+import com.badlogic.gdx.ai.steer.SteeringAcceleration;
+import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.entities.*;
+import com.mygdx.pirategame.fsm.EnemyStateMachine;
 import com.mygdx.pirategame.screens.*;
 import com.mygdx.pirategame.world.AvailableSpawn;
 
@@ -188,6 +192,8 @@ public class GameSave {
         private float rotation;
         private int health;
         private boolean destroyed, setToDestroy;
+        private SteeringBehavior<Vector2> behavior;
+        private SteeringAcceleration<Vector2> steerOutput;
 
 
         public ShipSave(SteerableEntity steerableEntity){
@@ -197,8 +203,7 @@ public class GameSave {
             health = steerableEntity.health;
             destroyed = steerableEntity.destroyed;
             setToDestroy = steerableEntity.setToDestroy;
-
-
+            behavior = steerableEntity.getBehavior();
 
         }
 
@@ -220,6 +225,7 @@ public class GameSave {
             result.health = this.health;
             result.destroyed = this.destroyed;
             result.setToDestroy = this.setToDestroy;
+            result.setBehavior(this.behavior);
             return result;
         }
     }
