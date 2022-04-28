@@ -133,7 +133,6 @@ public class EnemyShip extends SteerableEntity {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(20 / PPM, 50 / PPM);
         fdef.shape = shape;
-        shape.dispose();
         
         // setting BIT identifier
         fdef.filter.categoryBits = ENEMY_BIT;
