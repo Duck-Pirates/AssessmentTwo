@@ -77,7 +77,7 @@ public class VictoryScreen implements Screen {
                 public void changed(ChangeEvent event, Actor actor) {
 
                     //Return to main screen
-                    parent.changeScreen(MENU);
+                    parent.changeScreen(MENU, false);
                     parent.killEndScreen();
                 }
             });

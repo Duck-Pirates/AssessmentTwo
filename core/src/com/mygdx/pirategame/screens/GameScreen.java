@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.pirategame.PirateGame;
@@ -298,14 +300,14 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor){
                 pauseTable.setVisible(false);
-                game.changeScreen(SKILL);
+                game.changeScreen(SKILL, false);
             }
         });
         skill.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
                 pauseTable.setVisible(false);
-                game.changeScreen(SKILL);
+                game.changeScreen(SKILL, false);
             }
         });
         start.addListener(new ChangeListener() {
@@ -334,7 +336,7 @@ public class GameScreen implements Screen {
         exit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.changeScreen(MENU);
+                game.changeScreen(MENU, false);
             }
         });
     }
@@ -601,6 +603,19 @@ public class GameScreen implements Screen {
     }
 
     /**
+     * Destroys all the bodies in world
+     */
+    public void destroyBodies(){
+        Array<Body> bodies = new Array<>();
+        world.getBodies(bodies);
+        for (Body body:
+                bodies) {
+            if(!world.isLocked())
+                world.destroyBody(body);
+        }
+    }
+
+    /**
      * Returns the college from the colleges hashmap
      *
      * @param collegeName uses a college name as an index
@@ -624,12 +639,12 @@ public class GameScreen implements Screen {
         //Lose game if ship on 0 health or Alcuin is destroyed
         //Gdx.app.log("enemy", String.valueOf(Hud.getHealth()));
         if (Hud.getHealth() <= 0 || getCollege("Alcuin").destroyed) {
-            game.changeScreen(DEATH);
+            game.changeScreen(DEATH, false);
             game.killGame();
         }
         //Win game if all colleges destroyed
         else if (getCollege("Anne Lister").destroyed && getCollege("Constantine").destroyed && getCollege("Goodricke").destroyed){
-            game.changeScreen(VICTORY);
+            game.changeScreen(VICTORY, false);
             game.killGame();
         }
     }

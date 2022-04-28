@@ -165,6 +165,7 @@ public class Player extends SteerableEntity {
         float horizontalVelocity = -newVelocity * MathUtils.sin(getOrientation());
         float verticalVelocity = newVelocity * MathUtils.cos(getOrientation());
         body.setLinearVelocity(horizontalVelocity, verticalVelocity);
+        velocity = newVelocity;
     }
 
     /**
@@ -216,6 +217,6 @@ public class Player extends SteerableEntity {
 	}
 
 	public void setVelocity(float velocity) {
-		this.velocity = velocity;
+        setLinearVelocity(velocity);
 	}
 }

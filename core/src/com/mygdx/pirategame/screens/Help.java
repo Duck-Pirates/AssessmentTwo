@@ -78,7 +78,7 @@ public class Help implements Screen {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                parent.changeScreen(MENU);
+                parent.changeScreen(MENU, false);
             }
         });
 

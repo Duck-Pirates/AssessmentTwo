@@ -80,14 +80,14 @@ public class MainMenu implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor){
                 //parent.changeScreen(GAME);
-                parent.changeScreen(LOADING);
+                parent.changeScreen(LOADING, false);
             }
         });
         //Help Screen
         help.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
-                parent.changeScreen(HELP);
+                parent.changeScreen(HELP, false);
             }
         });
 

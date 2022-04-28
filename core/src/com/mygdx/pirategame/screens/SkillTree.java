@@ -495,7 +495,7 @@ public class SkillTree implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
-                parent.changeScreen(GAME); //Return to game
+                parent.changeScreen(GAME, false); //Return to game
             }
         });
 

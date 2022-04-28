@@ -133,7 +133,7 @@ public class LoadingMenu implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor){
                 PirateGame.setDifficulty(Difficulty.EASY);
-                parent.changeScreen(GAME);
+                parent.changeScreen(GAME, true);
             }
         });
 
@@ -141,7 +141,7 @@ public class LoadingMenu implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor){
             	PirateGame.setDifficulty(Difficulty.MEDIUM);
-                parent.changeScreen(GAME);
+                parent.changeScreen(GAME, true);
             }
         });
 
@@ -149,7 +149,7 @@ public class LoadingMenu implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor){
             	PirateGame.setDifficulty(Difficulty.HARD);
-                parent.changeScreen(GAME);
+                parent.changeScreen(GAME, true);
             }
         });
 
@@ -165,7 +165,7 @@ public class LoadingMenu implements Screen {
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                parent.changeScreen(MENU);
+                parent.changeScreen(MENU, false);
             }
         });
     }

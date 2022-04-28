@@ -74,8 +74,9 @@ public class PirateGame extends Game {
 	 * Changes the screen without killing the prior screen. Allows for the screens to be returned to without making new ones
 	 *
 	 * @param screen the number of the screen that the user wants to swap to
+	 * @param newScreen This boolean is passed to make creating a new game after loading one possible
 	 */
-	public void changeScreen(int screen) {
+	public void changeScreen(int screen, boolean newScreen) {
 		//Depending on which value given, change the screen
 		switch (screen) {
 			case MENU:
@@ -85,8 +86,8 @@ public class PirateGame extends Game {
 				break;
 
 			case GAME:
-				if (getGameScreen() == null) gameScreen = new GameScreen(this, difficulty);
-				if (getSkillTreeScreen() == null) skillTreeScreen = new SkillTree(this);
+				if (getGameScreen() == null || newScreen) gameScreen = new GameScreen(this, difficulty);
+				if (getSkillTreeScreen() == null ||  newScreen) skillTreeScreen = new SkillTree(this);
 				this.setScreen(getGameScreen());
 				break;
 
@@ -168,7 +169,7 @@ public class PirateGame extends Game {
 	public void load(){
 		GameSave gameInstance = new GameSave();
 		gameInstance.load(this);
-		this.changeScreen(GAME);
+		this.changeScreen(GAME, false);
 	}
 	
 	public static void setDifficulty(Difficulty difficulty) {

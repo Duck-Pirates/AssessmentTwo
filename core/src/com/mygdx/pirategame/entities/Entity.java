@@ -33,7 +33,7 @@ public abstract class Entity extends Sprite implements Location<Vector2> {
     public Entity(GameScreen screen, float x, float y) {
         this.world = screen.getWorld();
         this.screen = screen;
-        setPosition(x, y);
+        super.setPosition(x, y);
         defineEntity(x, y);
     }
 
@@ -50,6 +50,14 @@ public abstract class Entity extends Sprite implements Location<Vector2> {
 	public Vector2 getPosition() {
 		return body.getPosition();
 	}
+
+	public void setPosition(Vector2 position, float angle){
+		body.setTransform(position, (float) Math.toRadians(angle));
+		super.setPosition(position.x, position.y);
+		super.setRotation(angle);
+	}
+
+	public void setPosition(float x, float y, float angle){ setPosition(new Vector2(x, y), angle);}
 	
 	@Override
 	public float getOrientation() {
