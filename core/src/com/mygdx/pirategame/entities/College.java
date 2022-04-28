@@ -49,11 +49,11 @@ public class College extends SteerableEntity {
      * @param ship_no Number of college ships to produce
      * @param invalidSpawn Spawn data to check spawn validity when generating ships
      */
-    public College(GameScreen screen, String college, float x, float y, String flag, String ship, int ship_no, AvailableSpawn invalidSpawn) {
+    public College(GameScreen screen, String college, float x, float y, int ship_no, AvailableSpawn invalidSpawn) {
         super(screen, x, y);
         noSpawn = invalidSpawn;
-        currentCollege = flag;
-        texture = new Texture(flag);
+        currentCollege = college + "_flag.png";
+        texture = new Texture(currentCollege);
         //Set the position and size of the college
         setBounds(0,0,64 / PPM, 110 / PPM);
         setRegion(texture);
@@ -74,7 +74,7 @@ public class College extends SteerableEntity {
                 ranY = (int)Math.floor(y + (ranY / PPM));
                 spawnIsValid = AvailableSpawn.add(ranX, ranY);
             }
-            fleet.add(new EnemyShip(screen, ranX, ranY, ship, college));
+            fleet.add(new EnemyShip(screen, ranX, ranY, college + "_ship.png", college));
         }
     }
 

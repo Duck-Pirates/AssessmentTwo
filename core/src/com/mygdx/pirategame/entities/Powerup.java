@@ -25,7 +25,7 @@ import com.mygdx.pirategame.screens.Hud;
  * @version 2.0
  */
 
-public class Powerup extends Entity{
+public class Powerup extends Entity {
     public Texture powerup;
     public boolean setToDestroyed;
     public boolean destroyed;

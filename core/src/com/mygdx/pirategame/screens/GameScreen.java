@@ -128,20 +128,13 @@ public class GameScreen implements Screen {
         // Creates the player
         player = new Player(this);
         // Spawning enemy ship and coin. x and y is spawn location
-        colleges.add(new College(this, "Alcuin", 3872 / PPM, 4230 / PPM,
-                "alcuin_flag.png", "alcuin_ship.png", 0, invalidSpawn));
-        colleges.add(new College(this, "Anne Lister", 5855 / PPM, 6470 / PPM,
-                "anne_lister_flag.png", "anne_lister_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "Constantine", 9055 / PPM, 9860 / PPM,
-                "constantine_flag.png", "constantine_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "Goodricke", 4128 / PPM, 12936 / PPM,
-                "goodricke_flag.png", "goodricke_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "Halifax", 12768 / PPM, 14408 / PPM,
-                "halifax_flag.png", "halifax_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "Langwith", 12576 / PPM, 6920 / PPM,
-                "langwith_flag.png", "langwith_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "Vanbrugh", 12896 / PPM, 3783 / PPM,
-                "vanbrugh_flag.png", "vanbrugh_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
+        colleges.add(new College(this, "alcuin", 3872 / PPM, 4230 / PPM, 0, invalidSpawn));
+        colleges.add(new College(this, "anne_lister", 5855 / PPM, 6470 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
+        colleges.add(new College(this, "constantine", 9055 / PPM, 9860 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
+        colleges.add(new College(this, "goodricke", 4128 / PPM, 12936 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
+        colleges.add(new College(this, "halifax", 12768 / PPM, 14408 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
+        colleges.add(new College(this, "langwith", 12576 / PPM, 6920 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
+        colleges.add(new College(this, "vanbrugh", 12896 / PPM, 3783 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
 
         ships = new ArrayList<>();
         ships.add(player);

@@ -25,7 +25,7 @@ import com.mygdx.pirategame.screens.GameScreen;
  * @version 1.0
  */
 
-public class Cloud extends Entity{
+public class Cloud extends Entity {
 
     private float state;
     private Texture cloud;

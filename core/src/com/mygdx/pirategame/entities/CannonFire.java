@@ -9,14 +9,12 @@ import static com.mygdx.pirategame.configs.Constants.PPM;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.pirategame.screens.GameScreen;
 
 /**
@@ -28,17 +26,15 @@ import com.mygdx.pirategame.screens.GameScreen;
  *@author Ethan Alabaster
  *@version 1.0
  */
-public class CannonFire extends Sprite {
-    private World world;
-    private Texture cannonBall;
+public class CannonFire extends Entity {
     private float stateTime;
     private boolean destroyed;
     private boolean setToDestroy;
-    private Body b2body;
     private float angle;
     private float velocity;
-    private Vector2 bodyVel;
     private Sound fireNoise;
+    private Vector2 bodyVel;
+    private boolean fired = false;
 
     /**
      * Instantiates cannon fire
@@ -52,18 +48,16 @@ public class CannonFire extends Sprite {
      * @param velocity velocity of the cannon ball
      */
     public CannonFire(GameScreen screen, float x, float y, Body body, float velocity) {
+    	super(screen, x, y);
         this.velocity = velocity;
         this.world = screen.getWorld();
         //sets the angle and velocity
-        bodyVel = body.getLinearVelocity();
         angle = body.getAngle() - (float) Math.PI / 2;
-
+        bodyVel = body.getLinearVelocity();
         //set cannonBall dimensions for the texture
-        cannonBall = new Texture("cannonBall.png");
-        setRegion(cannonBall);
+        texture = new Texture("cannonBall.png");
+        setRegion(texture);
         setBounds(x, y, 10 / PPM, 10 / PPM);
-        //set collision bounds
-        defineCannonBall();
         //set sound for fire and play if on
         fireNoise = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
         if (GameScreen.game.getPreferences().isEffectsEnabled()) {
@@ -74,12 +68,12 @@ public class CannonFire extends Sprite {
     /**
      * Defines the existance, direction, shape and size of a cannonball
      */
-    public void defineCannonBall() {
+    public void defineEntity(float x, float y) {
         //sets the body definitions
         BodyDef bDef = new BodyDef();
-        bDef.position.set(getX(), getY());
+        bDef.position.set(x, y);
         bDef.type = BodyDef.BodyType.DynamicBody;
-        b2body = world.createBody(bDef);
+        body = world.createBody(bDef);
 
         //Sets collision boundaries
         FixtureDef fDef = new FixtureDef();
@@ -92,12 +86,7 @@ public class CannonFire extends Sprite {
         fDef.filter.maskBits = ENEMY_BIT | PLAYER_BIT | COLLEGE_BIT;
         fDef.shape = shape;
         fDef.isSensor = true;
-        b2body.createFixture(fDef).setUserData(this);
-
-        //Velocity maths
-        float velX = MathUtils.cos(angle) * velocity + bodyVel.x;
-        float velY = MathUtils.sin(angle) * velocity + bodyVel.y;
-        b2body.applyLinearImpulse(new Vector2(velX, velY), b2body.getWorldCenter(), true);
+        body.createFixture(fDef).setUserData(this);
     }
 
     /**
@@ -106,14 +95,23 @@ public class CannonFire extends Sprite {
      *
      * @param dt Delta time (elapsed time since last game tick)
      */
-    public void update(float dt){
-        stateTime += dt;
+    public void update(float delta){
+    	
+    	if(!fired) {
+    		//Velocity maths
+            float velX = MathUtils.cos(angle) * velocity + bodyVel.x;
+            float velY = MathUtils.sin(angle) * velocity + bodyVel.y;
+            body.applyLinearImpulse(new Vector2(velX, velY), body.getWorldCenter(), true);
+            fired = true;
+    	}
+    	
+        stateTime += delta;
         //Update position of ball
-        setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
 
         //If ball is set to destroy and isnt, destroy it
         if((setToDestroy) && !destroyed) {
-            world.destroyBody(b2body);
+            world.destroyBody(body);
             destroyed = true;
         }
         // determines cannonball range
@@ -135,4 +133,10 @@ public class CannonFire extends Sprite {
     public boolean isDestroyed(){
         return destroyed;
     }
+
+	@Override
+	public void onContact() {
+		// TODO Auto-generated method stub
+		
+	}
 }
