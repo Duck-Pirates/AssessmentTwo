@@ -3,9 +3,9 @@ package com.mygdx.pirategame.configs;
 import com.badlogic.gdx.Gdx;
 
 public enum Difficulty {
-    EASY(0.95f, 5, 15,100, 5, 8, 1, 14f, 40),
-    MEDIUM(0.93f, 5, 15,80, 3, 10, 1, 12f, 35),
-    HARD(0.91f, 10, 15,80, 2, 12, 1, 10f, 30);
+    EASY(0.95f, 10, 15,100, 5, 8, 1, 14f, 40),
+    MEDIUM(0.93f, 10, 15,80, 3, 10, 1, 12f, 35),
+    HARD(0.91f, 15, 15,80, 2, 12, 1, 10f, 30);
 
     private float speedReduction, maxSpeed, traverseSpeed;
     private int damageReceived, damageDealt, HP, maxGoldXCoin, maxCollegeShips, goldCoinMulti;

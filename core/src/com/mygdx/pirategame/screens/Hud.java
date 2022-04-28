@@ -30,6 +30,7 @@ public class Hud implements Disposable {
 
     public float timeCount;
     public float Constant_timeCount;
+    public float hpConstant_Time;
     public static Integer score;
     public static Integer health;
     public Texture hp;
@@ -148,14 +149,18 @@ public class Hud implements Disposable {
     public void update(float dt) {
         timeCount += dt;
         Constant_timeCount += dt;
+        hpConstant_Time += dt;
         //Gdx.app.log("dt", String.valueOf(dt));
         //Gdx.app.log("time", String.valueOf(Constant_timeCount));
         coinLabel.setText(String.format("%03d", coins));
         if(timeCount >= 1) {
             //Regen health every second
-            if(health != GameScreen.difficulty.getHP()) {
-                health += 1;
-                healthLabel.setText(String.format("%02d", health));
+            if(hpConstant_Time >= 3) {
+                if (health != GameScreen.difficulty.getHP()) {
+                    health += 1;
+                    healthLabel.setText(String.format("%02d", health));
+                    hpConstant_Time = 0;
+                }
             }
             //Gain point every second
             score += 5;
