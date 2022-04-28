@@ -14,14 +14,14 @@ import com.mygdx.pirategame.world.InteractiveTileObject;
  *@author Ethan Alabaster, Sam Pearson
  *@version 1.0
  */
-public class CollegeWalls extends InteractiveTileObject {
+public class CollegeWallsAlcuin extends InteractiveTileObject {
     /**
      * Sets bounds of college walls
      *
      * @param screen Visual data
      * @param bounds Wall bounds
      */
-    public CollegeWalls(GameScreen screen, Rectangle bounds) {
+    public CollegeWallsAlcuin(GameScreen screen, Rectangle bounds) {
         super(screen, bounds);
         fixture.setUserData(this);
         //Set the category bit

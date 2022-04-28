@@ -1,6 +1,6 @@
 package com.mygdx.pirategame.college;
 
-import static com.mygdx.pirategame.configs.Constants.*;
+import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
@@ -8,20 +8,20 @@ import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.world.InteractiveTileObject;
 
 /**
- * College Walls (Halifax)
+ * College Walls (Langwith)
  * Checks interaction with walls from map
  *
- *@author Ethan Alabaster, Sam Pearson
- *@version 1.0
+ *@author Harry Swift
+ *@version 2.0
  */
-public class CollegeWalls5 extends InteractiveTileObject {
+public class CollegeWallsLangwith extends InteractiveTileObject {
     /**
      * Sets bounds of college walls
      *
      * @param screen Visual data
      * @param bounds Wall bounds
      */
-    public CollegeWalls5(GameScreen screen, Rectangle bounds) {
+    public CollegeWallsLangwith(GameScreen screen, Rectangle bounds) {
         super(screen, bounds);
         fixture.setUserData(this);
         //Set the category bit
@@ -33,8 +33,8 @@ public class CollegeWalls5 extends InteractiveTileObject {
      */
     @Override
     public void onContact() {
-        Gdx.app.log("wall", "Halifax");
+        Gdx.app.log("wall", "Langwith");
         //Deal damage to the assigned college
-        GameScreen.getCollege("Halifax").onContact();
+        GameScreen.getCollege("Langwith").onContact();
     }
 }

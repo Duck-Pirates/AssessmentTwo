@@ -8,20 +8,20 @@ import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.world.InteractiveTileObject;
 
 /**
- * College Walls (Alcuin)
+ * College Walls (Constantine)
  * Checks interaction with walls from map
  *
  *@author Ethan Alabaster, Sam Pearson
  *@version 1.0
  */
-public class CollegeWalls7 extends InteractiveTileObject {
+public class CollegeWallsConstantine extends InteractiveTileObject {
     /**
      * Sets bounds of college walls
      *
      * @param screen Visual data
      * @param bounds Wall bounds
      */
-    public CollegeWalls7(GameScreen screen, Rectangle bounds) {
+    public CollegeWallsConstantine(GameScreen screen, Rectangle bounds) {
         super(screen, bounds);
         fixture.setUserData(this);
         //Set the category bit
@@ -33,10 +33,8 @@ public class CollegeWalls7 extends InteractiveTileObject {
      */
     @Override
     public void onContact() {
-        Gdx.app.log("wall", "Vanbrugh");
+        Gdx.app.log("wall", "Constantine");
         //Deal damage to the assigned college
-        GameScreen.getCollege("Vanbrugh").onContact();
-
-
+        GameScreen.getCollege("Constantine").onContact();
     }
 }

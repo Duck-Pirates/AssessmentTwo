@@ -5,7 +5,6 @@ import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.pirategame.screens.GameScreen;
-import com.mygdx.pirategame.screens.Hud;
 import com.mygdx.pirategame.world.InteractiveTileObject;
 
 /**
@@ -15,14 +14,14 @@ import com.mygdx.pirategame.world.InteractiveTileObject;
  *@author Ethan Alabaster, Sam Pearson
  *@version 1.0
  */
-public class CollegeWalls4 extends InteractiveTileObject {
+public class CollegeWallsAnneLister extends InteractiveTileObject {
     /**
      * Sets bounds of college walls
      *
      * @param screen Visual data
      * @param bounds Wall bounds
      */
-    public CollegeWalls4(GameScreen screen, Rectangle bounds) {
+    public CollegeWallsAnneLister(GameScreen screen, Rectangle bounds) {
         super(screen, bounds);
         fixture.setUserData(this);
         //Set the category bit
