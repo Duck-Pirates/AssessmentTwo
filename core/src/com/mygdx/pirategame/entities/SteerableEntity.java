@@ -50,11 +50,11 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
         bar = new HealthBar(this);
         
         zeroLinearSpeedThreshold = 0.1f;
-	    maxLinearSpeed = 50f;
-	    maxLinearAcceleration = 10f;
-	    maxAngularSpeed = 50f;
-	    maxAngularAcceleration = 10f;
-	    boundingRadius = 55 / PPM;
+	    maxLinearSpeed = 302.5f / PPM;
+	    maxLinearAcceleration = 55f / PPM;
+	    maxAngularSpeed = (float) Math.PI / 4;
+	    maxAngularAcceleration = (float) Math.PI / 16;
+	    boundingRadius = 55f / PPM;
 	    tagged = false;
 	    steerOutput = new SteeringAcceleration<Vector2>(new Vector2());
     }
@@ -71,8 +71,6 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
     public void changeDamageReceived(int value){
         damage += value;
     }
-    
-
 
     /**
      * Updates the ship image. Particularly change texture on college destruction

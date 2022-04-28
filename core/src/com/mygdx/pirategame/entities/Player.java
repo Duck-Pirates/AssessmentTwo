@@ -11,15 +11,15 @@ import static com.mygdx.pirategame.configs.Constants.POWERUP_BIT;
 import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.screens.GameScreen;
 
@@ -31,9 +31,6 @@ import com.mygdx.pirategame.screens.GameScreen;
 public class Player extends SteerableEntity {
     private Sound breakSound;
     private Array<CannonFire> cannonBalls;
-    public float velocity = 0;
-    public float maxVelocity = 50;
-    public float maxAngularVelocity = 2;
     
     /**
      * Instantiates a new Player. Constructor only called once per game
@@ -63,15 +60,93 @@ public class Player extends SteerableEntity {
      * @param delta Delta Time
      */
     public void update(float delta) {
+    	updateMovement();
+    	
+        setRotation((float) Math.toDegrees(body.getAngle()) - 90);
         setPosition(getPosition().x - getWidth() / 2f, getPosition().y - getHeight()/2f);
-        setRotation((float) (getOrientation() * 180 / Math.PI));
-
+        
+        // Cannon fire on 'Space'
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            fire();
+        }
+        
         // Updates cannonball data
         for(CannonFire ball : cannonBalls) {
             ball.update(delta);
-            if(ball.isDestroyed())
+            if(ball.isDestroyed()) {
                 cannonBalls.removeValue(ball, true);
+            }
         }
+    }
+    
+    /**
+     * updates the force applied to the player using the equation f = (a - cu)
+     * f - Force
+     * a - Maximum acceleration
+     * c - Constant
+     * u - Current velocity of the player
+     * 
+     * NOTE: this equation is using f = ma as its base assuming m = 1
+     * 
+     * @param delta
+     */
+    public void updateMovement(){
+
+    	int linearDirection = 0;
+    	int angularDirection = 0;
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        	linearDirection++;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        	linearDirection--;
+        }
+    	if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+    		angularDirection++;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        	angularDirection--;
+        }
+        
+    	float lf;
+        float af;
+        
+        if(linearDirection != 0) {
+        	lf  = maxLinearAcceleration * linearDirection;
+        } else {
+        	lf = -1f * maxLinearAcceleration * body.getLinearVelocity().len() / maxLinearSpeed;
+        }
+        
+        if(angularDirection != 0) {
+        	af = maxAngularAcceleration * angularDirection;
+        } else {
+        	af = -1f * maxAngularAcceleration * body.getAngularVelocity() / maxAngularSpeed;
+        }
+        
+    	body.applyForceToCenter(lf * (float) Math.cos(body.getAngle()), lf * (float) Math.sin(body.getAngle()), true);
+        body.applyTorque(af, true);
+    	
+    	if(body.getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
+    		// Int x and y are used to preserve direction of travel
+    		int x = 1;
+    		int y = 1;
+    		if(body.getLinearVelocity().x < 0) {
+    			x = -1;
+    		}
+    		if(body.getLinearVelocity().y < 0) {
+    			y = -1;
+    		}
+    		body.setLinearVelocity(maxLinearSpeed * (float) Math.cos(body.getAngle()) * x, 
+    							   maxLinearSpeed * (float) Math.sin(body.getAngle()) * y);
+    	}
+        if(body.getAngularVelocity() > maxAngularSpeed) {
+    		body.setAngularVelocity(maxAngularSpeed);
+    	} else if (body.getAngularVelocity() < -maxAngularSpeed) {
+    		body.setAngularVelocity(-maxAngularSpeed);
+    	}
+        
+        body.setLinearVelocity(body.getLinearVelocity().len() * (float) Math.cos(body.getAngle()),
+        					   body.getLinearVelocity().len() * (float) Math.sin(body.getAngle()));
+    	
     }
 
     /**
@@ -93,14 +168,16 @@ public class Player extends SteerableEntity {
         BodyDef bdef = new BodyDef();
         bdef.position.set(new Vector2(x, y)); // Default Pos: 1800,2500
         bdef.type = BodyDef.BodyType.DynamicBody;
-
-        // Defines a player's shape and contact borders
+        
+        //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(50 / PPM);
+        fdef.density = 1;
+        
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(50 / PPM, 20 / PPM);
         fdef.shape = shape;
         shape.dispose();
-
+        
         // setting BIT identifier
         fdef.filter.categoryBits = PLAYER_BIT;
         // determining what this BIT can collide with
@@ -110,61 +187,9 @@ public class Player extends SteerableEntity {
 
         body = world.createBody(bdef);
         body.createFixture(fdef).setUserData(this);
-    }
-
-
-
-    public void updateVelocity(int linearAcceleration, float delta){
-
-        setVelocity((getVelocity() +  (linearAcceleration * delta) * (1 - getVelocity() / maxVelocity)) * GameScreen.difficulty.getSpeedReduction());
-        //Gdx.app.log("powerup1", Float.toString(velocity));
-        //Gdx.app.log("powerup2", Float.toString(screen.difficulty.getMaxSpeed()));
-        if (getVelocity() < -1.5f) {
-            setVelocity(-1.5f);
-        }
-        else if (getVelocity() > GameScreen.difficulty.getMaxSpeed()){
-            setVelocity(GameScreen.difficulty.getMaxSpeed());
-        }
-        setLinearVelocity(getVelocity());
-    }
-
-    public void slowDown(float delta){
-        setVelocity((float) (getVelocity() * Math.pow(0.95f, delta * 20.0f)));
-        //Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
-        setLinearVelocity(getVelocity());
-        //TODO slow down reverse
-    }
-
-
-    public void updateRotation(float angularAcceleration, float delta) {
-
-        float angularVelocity = getAngularVelocity() + (angularAcceleration * delta) * (getVelocity() / maxAngularVelocity);
-        if (angularVelocity < -5f) {
-            angularVelocity = -5f;
-        }
-        // Increase rotation
-        if (angularVelocity > 5f) {
-            angularVelocity = 5;
-        }
-
-        if (angularVelocity > 0) {
-            angularVelocity -= (angularVelocity / GameScreen.difficulty.getTraverseSpeed()); // change to update rotation
-        } else if (angularVelocity < 0) {
-            angularVelocity -= (angularVelocity / GameScreen.difficulty.getTraverseSpeed()); // change to update rotation
-        }
-
-
-        body.setAngularVelocity(angularVelocity);
-    }
-
-    public void updateRotation(int angularAcceleration, float delta) {
-        updateRotation((float) angularAcceleration, delta);
-    }
-
-    public void setLinearVelocity(float newVelocity){
-        float horizontalVelocity = -newVelocity * MathUtils.sin(getOrientation());
-        float verticalVelocity = newVelocity * MathUtils.cos(getOrientation());
-        body.setLinearVelocity(horizontalVelocity, verticalVelocity);
+        
+        body.setAngularDamping(maxAngularAcceleration);
+        body.setLinearDamping(maxLinearAcceleration);
     }
 
     /**
@@ -205,10 +230,6 @@ public class Player extends SteerableEntity {
 	}
 
 	public float getVelocity() {
-		return velocity;
-	}
-
-	public void setVelocity(float velocity) {
-		this.velocity = velocity;
+		return this.getLinearVelocity().len();
 	}
 }

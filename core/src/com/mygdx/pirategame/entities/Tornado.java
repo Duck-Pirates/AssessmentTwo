@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -32,9 +31,10 @@ import com.mygdx.pirategame.screens.Hud;
 public class Tornado extends Entity {
 
     private float state = 0;
-    private Animation swirl;
+    private Animation<Object> swirl;
     private Texture tornado;
-    private Sound windSound;
+    @SuppressWarnings("unused")
+	private Sound windSound;
     public SpriteBatch batch;
     private Random rand = new Random();
     public boolean inContact;
@@ -58,7 +58,7 @@ public class Tornado extends Entity {
         tornado =new Texture(Gdx.files.internal("TornadoSwirls.png"));
         TextureRegion[][] tmp = new TextureRegion(tornado).split(150, 221);
         setRegion(tmp[0][0]);
-        swirl = new Animation(0.25f, tmp[0]);
+        swirl = new Animation<Object>(0.25f, tmp[0]);
     }
 
     /**
@@ -118,20 +118,19 @@ public class Tornado extends Entity {
      * Creates a vector force applied on the player if it's close to a tornado. This method also makes the boat turn
      * @param player The player's instance
      */
-
     public void tornadoImpulse(Player player, float dt){
-        Vector2 pos = player.body.getWorldCenter();
-        Vector2 moverPos = body.getWorldCenter();
-        Vector2 fr = pos.sub(moverPos);
-        float d = fr.len();
-        float strength = 50f / (d*d);
-        if(strength > 10){
-            strength = Math.min(5*strength, 30);
-            player.updateRotation(-strength/12, dt);
-        }
-        fr = fr.nor();
-        fr = fr.scl(-strength);
-        player.body.applyForce(fr, player.body.getPosition(), true);
+//        Vector2 pos = player.body.getWorldCenter();
+//        Vector2 moverPos = body.getWorldCenter();
+//        Vector2 fr = pos.sub(moverPos);
+//        float d = fr.len();
+//        float strength = 50f / (d*d);
+//        if(strength > 10){
+//            strength = Math.min(5*strength, 30);
+//            player.body.applyTorque(strength, true);
+//        }
+//        fr = fr.nor();
+//        fr = fr.scl(-strength);
+//        player.body.applyForce(fr, player.body.getPosition(), true);
     }
 
     public void tornadoDamage(float dt){

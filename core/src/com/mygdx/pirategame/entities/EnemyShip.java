@@ -90,15 +90,13 @@ public class EnemyShip extends SteerableEntity {
             
         	stateMachine.update();
         	
-        	GdxAI.getTimepiece().update(delta);
         	if (behavior != null) {
     			behavior.calculateSteering(steerOutput);
     			applySteering(steerOutput, delta);
     		}
         	
-        	//Sets sprite location/orientation
-        	setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight() / 2f);
-            setRotation((float) (Math.toDegrees(body.getAngle())));
+            setRotation((float) Math.toDegrees(body.getAngle()) - 90);
+            setPosition(getPosition().x - getWidth() / 2f, getPosition().y - getHeight()/2f);
             
             bar.update();
         }
@@ -109,8 +107,38 @@ public class EnemyShip extends SteerableEntity {
     
     private void applySteering(SteeringAcceleration<Vector2> steering, float delta) {
 		
-		body.setAngularVelocity(steering.angular * delta);
-		body.setLinearVelocity(steering.linear.scl(delta));
+    	float hf = steering.linear.x;
+    	float vf = steering.linear.y;
+        float af = steering.angular;
+        
+    	body.applyForceToCenter(hf, vf, true);
+        body.applyTorque(af, true);
+        
+        body.setLinearVelocity(body.getLinearVelocity().len() * (float) Math.cos(body.getAngle()),
+        					   body.getLinearVelocity().len() * (float) Math.sin(body.getAngle()));
+    	
+//    	if(body.getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
+//    		// Int x and y are used to preserve direction of travel
+//    		int x = 1;
+//    		int y = 1;
+//    		if(body.getLinearVelocity().x < 0) {
+//    			x = -1;
+//    		}
+//    		if(body.getLinearVelocity().y < 0) {
+//    			y = -1;
+//    		}
+//    		body.setLinearVelocity(maxLinearSpeed * (float) Math.cos(body.getAngle()) * x, 
+//    							   maxLinearSpeed * (float) Math.sin(body.getAngle()) * y);
+//    	}
+//        if(body.getAngularVelocity() > maxAngularSpeed) {
+//    		body.setAngularVelocity(maxAngularSpeed);
+//    	} else if (body.getAngularVelocity() < -maxAngularSpeed) {
+//    		body.setAngularVelocity(-maxAngularSpeed);
+//    	}
+//        
+//        body.setLinearVelocity(body.getLinearVelocity().len() * (float) Math.cos(body.getAngle()),
+//        					   body.getLinearVelocity().len() * (float) Math.sin(body.getAngle()));
+    	
 	}
     
     public void fire() {}
@@ -121,19 +149,17 @@ public class EnemyShip extends SteerableEntity {
      */
     @Override
     protected void defineEntity(float x, float y) {
-    	
         //sets the body definitions
         BodyDef bdef = new BodyDef();
         bdef.position.set(x, y);
         bdef.type = BodyDef.BodyType.DynamicBody;
-        body = world.createBody(bdef);
 
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
         fdef.density = 1;
         
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(20 / PPM, 50 / PPM);
+        shape.setAsBox(50 / PPM, 20 / PPM);
         fdef.shape = shape;
         shape.dispose();
         
@@ -142,6 +168,7 @@ public class EnemyShip extends SteerableEntity {
         // determining what this BIT can collide with
         fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT | CANNON_BIT;
         
+        body = world.createBody(bdef);
         body.createFixture(fdef).setUserData(this);
     }
 

@@ -101,12 +101,10 @@ public class GameSave {
      */
     public static class PlayerSave{
 
-        private float velocity, maxVelocity, maxAngularVelocity;
+    	private Vector2 velocity;
         public PlayerSave(Player player) {
-            velocity = player.velocity;
+            velocity = player.getBody().getLinearVelocity();
             player.getRotation();
-            maxVelocity = player.getVelocity();
-            maxAngularVelocity = player.getAngularVelocity();
             player.body.getPosition();
         }
 
@@ -123,9 +121,7 @@ public class GameSave {
          */
         public void createPlayer(GameScreen game){
             Player result = new Player(game);
-            result.velocity = this.velocity;
-            result.maxVelocity = this.maxVelocity;
-            result.maxAngularVelocity = this.maxAngularVelocity;
+            result.getBody().setLinearVelocity(this.velocity);
             GameScreen.player = result;
         }
     }

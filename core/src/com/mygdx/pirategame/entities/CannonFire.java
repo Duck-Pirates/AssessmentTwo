@@ -56,7 +56,7 @@ public class CannonFire extends Sprite {
         this.world = screen.getWorld();
         //sets the angle and velocity
         bodyVel = body.getLinearVelocity();
-        angle = body.getAngle();
+        angle = body.getAngle() - (float) Math.PI / 2;
 
         //set cannonBall dimensions for the texture
         cannonBall = new Texture("cannonBall.png");

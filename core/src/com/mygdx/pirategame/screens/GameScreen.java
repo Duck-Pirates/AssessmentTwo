@@ -115,7 +115,6 @@ public class GameScreen implements Screen {
         // Initialising box2d physics
         world = new World(new Vector2(0,0), true);
         b2dr = new Box2DDebugRenderer();
-        player = new Player(this);
 
         // making the Tiled tmx file render as a map
         maploader = new TmxMapLoader();
@@ -126,6 +125,8 @@ public class GameScreen implements Screen {
         // Setting up contact listener for collisions
         world.setContactListener(new WorldContactListener(this));
 
+        // Creates the player
+        player = new Player(this);
         // Spawning enemy ship and coin. x and y is spawn location
         colleges.add(new College(this, "Alcuin", 3872 / PPM, 4230 / PPM,
                 "alcuin_flag.png", "alcuin_ship.png", 0, invalidSpawn));
@@ -143,6 +144,7 @@ public class GameScreen implements Screen {
                 "vanbrugh_flag.png", "vanbrugh_ship.png", difficulty.getMaxCollegeShips(), invalidSpawn));
 
         ships = new ArrayList<>();
+        ships.add(player);
         ships.addAll(colleges.get(0).fleet);
         ships.addAll(colleges.get(1).fleet);
         ships.addAll(colleges.get(2).fleet);
@@ -226,6 +228,190 @@ public class GameScreen implements Screen {
         stage = new Stage(new ScreenViewport());
     }
 
+    /**
+     * Updates the state of each object with delta time
+     *
+     * @param delta Delta time (elapsed time since last game tick)
+     */
+    public void update(float delta) {
+    	// Stepping the physics engine by time of 1 frame
+        world.step(1 / 60f, 6, 2);
+        GdxAI.getTimepiece().update(delta);
+        
+    	stateTime += delta;
+        TempTime += delta;
+
+        handleInput();
+        for(College college: colleges){
+            college.update(delta);
+        }
+
+        //Update ships
+        for (SteerableEntity ship : ships) {
+            ship.update(delta);
+        }
+
+        //Updates coin
+        for (Coin coin: coins) {
+            coin.update();
+        }
+
+        //Updates powerups
+        for (Powerup powerup: powerups) {
+            powerup.update();
+        }
+
+        //Gdx.app.log("powerup", String.valueOf(ConstantTime));
+        //Add new powerup
+        //Gdx.app.log("x", String.valueOf(TempTime));
+
+        if (TempTime >= 29f){
+            Boolean validLoc;
+            int a = 0;
+            int b = 0;
+            Gdx.app.log("PowerUps", "Spawn More PowerUps");
+            for (int i = 0; i < 5; i++) {
+                validLoc = false;
+                while (!validLoc) {
+                    //Get random x and y coords
+                    a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
+                    b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                    validLoc = AvailableSpawn.add(a, b);
+                }
+                powerups.add(new Powerup(this, a, b, i));
+            }
+            TempTime = 0f;
+        }
+        
+        //Updates clouds
+        for (int i = 0; i < clouds.size(); i++) {
+            clouds.get(i).update(delta);
+            if ((player.getX() >= clouds.get(i).getX() - 2 && player.getX() <= clouds.get(i).getX() + 2) && (player.getY() >= clouds.get(i).getY() - 2 && player.getY() <= clouds.get(i).getY() + 2)){
+                clouds.get(i).changeAlpha();
+            }
+            else{
+                clouds.get(i).resetAlpha();
+            }
+        }
+
+        for (int i = 0; i < Tornadoes.size(); i++) {
+            Tornado tornado = Tornadoes.get(i);
+            tornado.update(delta);
+            tornado.tornadoImpulse(player, delta);
+        }
+        //After a delay check if a college is destroyed. If not, it can fire
+        if (stateTime > 1) {
+            for(College college: colleges){
+                if(!college.destroyed && !(college.getCurrentCollegeName().equals("Alcuin"))){
+                    college.fire();
+                }
+            }
+        stateTime = 0;
+        }
+
+        hud.update(delta);
+
+        // Centre camera on player boat
+        camera.position.x = player.getPosition().x;
+        camera.position.y = player.getPosition().y;
+        camera.update();
+        renderer.setView(camera);
+    }
+    
+    /**
+     * Checks for input and performs an action
+     * Applies to keys "W" "A" "S" "D" "E" "Esc"
+     *
+     * Caps player velocity
+     *
+     * @param delta Delta time (elapsed time since last game tick)
+     */
+    public void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            if(gameStatus == GAME_PAUSED) {
+                resume();
+                table.setVisible(true);
+                pauseTable.setVisible(false);
+            }
+            else {
+                table.setVisible(false);
+                pauseTable.setVisible(true);
+                pause();
+            }
+        }
+    }
+
+    /**
+     * Renders the visual data for all objects
+     * Changes and renders new visual data for ships
+     *
+     * @param delta Delta time (elapsed time since last game tick)
+     */
+    @Override
+    public void render(float delta) {
+        if (gameStatus == GAME_RUNNING) {
+            update(delta);
+        }
+        else{ handleInput(); }
+
+        Gdx.gl.glClearColor(46/255f, 204/255f, 113/255f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        renderer.render();
+        // b2dr is the hitbox shapes, can be commented out to hide
+        b2dr.render(world, camera.combined);
+
+        game.getBatch().setProjectionMatrix(camera.combined);
+        game.getBatch().begin();
+        // Order determines layering
+
+        //Renders coins
+        for(Coin coin: coins) {
+            coin.draw(game.getBatch());
+        }
+
+        //Renders powerups
+        for(Powerup powerup: powerups) {
+            powerup.draw(game.getBatch());
+        }
+
+
+        //Renders colleges
+        player.draw(game.getBatch());
+
+        for (College college: colleges) {
+            college.draw(game.getBatch());
+        }
+
+        for(int i = 0; i< Tornadoes.size(); i++) {
+            Tornadoes.get(i).draw(game.getBatch());
+        }
+
+        //Updates all ships
+        for (SteerableEntity ship: ships){
+            if (!ship.college.equals("Unaligned")) {
+                //Flips a colleges allegence if their college is destroyed
+                if (getCollege(ship.college).destroyed) {
+
+                    ship.updateTexture("Alcuin", "alcuin_ship.png");
+                }
+            }
+            ship.draw(game.getBatch());
+        }
+
+        // Renders all the clouds on top of eerything else
+        for(int i = 0; i <clouds.size(); i++){
+            clouds.get(i).draw(game.getBatch());
+        }
+
+        game.getBatch().end();
+        //player.SlowDownBoat();
+        Hud.stage.draw();
+        stage.act();
+        stage.draw();
+        //Checks game over conditions
+        gameOverCheck();
+    }
+    
     /**
      * Makes this the current screen for the game.
      * Generates the buttons to be able to interact with what screen is being displayed.
@@ -340,234 +526,6 @@ public class GameScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-    }
-
-    /**
-     * Checks for input and performs an action
-     * Applies to keys "W" "A" "S" "D" "E" "Esc"
-     *
-     * Caps player velocity
-     *
-     * @param delta Delta time (elapsed time since last game tick)
-     */
-    public void handleInput(float delta) {
-        if (gameStatus == GAME_RUNNING) {
-
-            int angularAcceleration = 0;
-            int linearAcceleration = 0;
-
-            // Left physics impulse on 'A'
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                angularAcceleration += 3;
-            }
-            // Right physics impulse on 'D'
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                angularAcceleration -= 3;
-            }
-            // Up physics impulse on 'W'
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                linearAcceleration += 20;
-            }
-            // Down physics impulse on 'S'
-            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                linearAcceleration -= 10;
-            }
-            // Cannon fire on 'Spacce'
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-                player.fire();
-            }
-
-            if (!(Gdx.input.isKeyPressed(Input.Keys.W) | Gdx.input.isKeyPressed(Input.Keys.S))){
-
-                if(player.getVelocity() > 0.1f || player.getVelocity() < -0.1f){ // this is a check so the game doesn't just loop for ever trying to lower the speed down
-                    player.slowDown(delta);
-                } else{
-                    player.setVelocity(0f);
-                    player.updateVelocity(0, delta);
-                }
-            }
-            else {
-                player.updateVelocity(linearAcceleration, delta);
-            }
-            player.updateRotation(angularAcceleration, delta);
-            // Gdx.app.log("vel", String.valueOf(player.velocity));
-            // Checking if player at max velocity, and keeping them below max
-
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if(gameStatus == GAME_PAUSED) {
-                resume();
-                table.setVisible(true);
-                pauseTable.setVisible(false);
-            }
-            else {
-                table.setVisible(false);
-                pauseTable.setVisible(true);
-                pause();
-            }
-        }
-    }
-
-    /**
-     * Updates the state of each object with delta time
-     *
-     * @param delta Delta time (elapsed time since last game tick)
-     */
-    public void update(float delta) {
-    	stateTime += delta;
-        TempTime += delta;
-
-        handleInput(delta);
-        // Stepping the physics engine by time of 1 frame
-        world.step(1 / 60f, 6, 2);
-        GdxAI.getTimepiece().update(delta);
-        // Update all players and entities
-        player.update(delta);
-        for(College college: colleges){
-            college.update(delta);
-        }
-
-        //Update ships
-        for (SteerableEntity ship : ships) {
-            ship.update(delta);
-        }
-
-        //Updates coin
-        for (Coin coin: coins) {
-            coin.update();
-        }
-
-        //Updates powerups
-        for (Powerup powerup: powerups) {
-            powerup.update();
-        }
-
-        //Gdx.app.log("powerup", String.valueOf(ConstantTime));
-        //Add new powerup
-        //Gdx.app.log("x", String.valueOf(TempTime));
-
-        if (TempTime >= 29f){
-            Boolean validLoc;
-            int a = 0;
-            int b = 0;
-            Gdx.app.log("PowerUps", "Spawn More PowerUps");
-            for (int i = 0; i < 5; i++) {
-                validLoc = false;
-                while (!validLoc) {
-                    //Get random x and y coords
-                    a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                    b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
-                    validLoc = AvailableSpawn.add(a, b);
-                }
-                powerups.add(new Powerup(this, a, b, i));
-            }
-            TempTime = 0f;
-        }
-        
-        //Updates clouds
-        for (int i = 0; i < clouds.size(); i++) {
-            clouds.get(i).update(delta);
-            if ((player.getX() >= clouds.get(i).getX() - 2 && player.getX() <= clouds.get(i).getX() + 2) && (player.getY() >= clouds.get(i).getY() - 2 && player.getY() <= clouds.get(i).getY() + 2)){
-                clouds.get(i).changeAlpha();
-            }
-            else{
-                clouds.get(i).resetAlpha();
-            }
-        }
-
-        for (int i = 0; i < Tornadoes.size(); i++) {
-            Tornado tornado = Tornadoes.get(i);
-            tornado.update(delta);
-            tornado.tornadoImpulse(player, delta);
-        }
-        //After a delay check if a college is destroyed. If not, if can fire
-        if (stateTime > 1) {
-            for(College college: colleges){
-                if(!college.destroyed && !(college.getCurrentCollegeName().equals("Alcuin"))){
-                    college.fire();
-                }
-            }
-        stateTime = 0;
-        }
-
-        hud.update(delta);
-
-        // Centre camera on player boat
-        camera.position.x = player.getPosition().x;
-        camera.position.y = player.getPosition().y;
-        camera.update();
-        renderer.setView(camera);
-    }
-
-    /**
-     * Renders the visual data for all objects
-     * Changes and renders new visual data for ships
-     *
-     * @param delta Delta time (elapsed time since last game tick)
-     */
-    @Override
-    public void render(float delta) {
-        if (gameStatus == GAME_RUNNING) {
-            update(delta);
-        }
-        else{handleInput(delta);}
-
-        Gdx.gl.glClearColor(46/255f, 204/255f, 113/255f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        renderer.render();
-        // b2dr is the hitbox shapes, can be commented out to hide
-        b2dr.render(world, camera.combined);
-
-        game.getBatch().setProjectionMatrix(camera.combined);
-        game.getBatch().begin();
-        // Order determines layering
-
-        //Renders coins
-        for(Coin coin: coins) {
-            coin.draw(game.getBatch());
-        }
-
-        //Renders powerups
-        for(Powerup powerup: powerups) {
-            powerup.draw(game.getBatch());
-        }
-
-
-        //Renders colleges
-        player.draw(game.getBatch());
-
-        for (College college: colleges) {
-            college.draw(game.getBatch());
-        }
-
-        for(int i = 0; i< Tornadoes.size(); i++) {
-            Tornadoes.get(i).draw(game.getBatch());
-        }
-
-        //Updates all ships
-        for (SteerableEntity ship: ships){
-            if (!ship.college.equals("Unaligned")) {
-                //Flips a colleges allegence if their college is destroyed
-                if (getCollege(ship.college).destroyed) {
-
-                    ship.updateTexture("Alcuin", "alcuin_ship.png");
-                }
-            }
-            ship.draw(game.getBatch());
-        }
-
-        // Renders all the clouds on top of eerything else
-        for(int i = 0; i <clouds.size(); i++){
-            clouds.get(i).draw(game.getBatch());
-        }
-
-        game.getBatch().end();
-        //player.SlowDownBoat();
-        Hud.stage.draw();
-        stage.act();
-        stage.draw();
-        //Checks game over conditions
-        gameOverCheck();
     }
 
     /**
@@ -694,17 +652,12 @@ public class GameScreen implements Screen {
         getCollege("Halifax").changeDamageReceived(value);
         getCollege("Langwith").changeDamageReceived(value);
         getCollege("Vanbrugh").changeDamageReceived(value);
-
     }
 
     public void SetGoldCoinMulti(int num){
         GameScreen.difficulty.SetGoldCoinMulti(num);
     }
-
-    // ----------------------------------
-
-
-
+    
     /**
      * Test if a cloud has already been spawned near these coordinates
      * @param x random x value
