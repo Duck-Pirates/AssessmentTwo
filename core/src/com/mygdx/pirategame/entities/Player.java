@@ -93,13 +93,14 @@ public class Player extends SteerableEntity {
         BodyDef bdef = new BodyDef();
         bdef.position.set(new Vector2(x, y)); // Default Pos: 1800,2500
         bdef.type = BodyDef.BodyType.DynamicBody;
+        body = world.createBody(bdef);
 
         // Defines a player's shape and contact borders
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(50 / PPM);
         fdef.shape = shape;
-        shape.dispose();
+        fdef.restitution = 0f;
 
         // setting BIT identifier
         fdef.filter.categoryBits = PLAYER_BIT;
@@ -108,7 +109,6 @@ public class Player extends SteerableEntity {
         		| COLLEGE_BIT | COLLEGESENSOR_BIT | COLLEGEFIRE_BIT 
         		| POWERUP_BIT;
 
-        body = world.createBody(bdef);
         body.createFixture(fdef).setUserData(this);
     }
 

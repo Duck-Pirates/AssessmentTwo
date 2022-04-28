@@ -1,5 +1,6 @@
 package com.mygdx.pirategame.world;
 
+import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
 import static com.mygdx.pirategame.configs.Constants.NOSPAWNAREA_BIT;
 
 import com.badlogic.gdx.Gdx;
@@ -18,12 +19,18 @@ public class Islands extends InteractiveTileObject {
      *
      * @param screen visual data
      * @param bounds Rectangle boundary (world boundary)
+     * @param bounding It's a check to know if the Island instance is used as no spawn areas
      */
-    public Islands(GameScreen screen, Rectangle bounds) {
+    public Islands(GameScreen screen, Rectangle bounds, boolean bounding) {
         super(screen, bounds);
         fixture.setUserData(this);
         //Set the category bit
-        setCategoryFilter(NOSPAWNAREA_BIT);
+        if(bounding) {
+            setCategoryFilter(NOSPAWNAREA_BIT);
+        }
+        else{
+            setCategoryFilter(DEFAULT_BIT);
+        }
     }
 
     /**
@@ -33,6 +40,6 @@ public class Islands extends InteractiveTileObject {
     public void onContact() {
         Gdx.app.log("island", "collision");
         //Deal damage to the boat
-        Hud.changeHealth(-10);
+        Hud.changeHealth(-5);
     }
 }

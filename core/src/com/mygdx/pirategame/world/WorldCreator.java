@@ -34,14 +34,18 @@ public class WorldCreator {
         // Object class is islands, stuff for boat to collide with
         for(MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Islands(screen, rect);
+            new Islands(screen, rect, true);
         }
         for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            new Islands(screen, rect, false);
+        }
+        for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new CollegeWalls(screen, rect);
         }
-        for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
+        for(MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new CollegeWalls2(screen, rect);
@@ -51,7 +55,7 @@ public class WorldCreator {
 
             new CollegeWalls3(screen, rect);
         }
-        for(MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
+        for(MapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new CollegeWalls4(screen, rect);
@@ -61,12 +65,12 @@ public class WorldCreator {
 
             new CollegeWalls5(screen, rect);
         }
-        for(MapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
+        for(MapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new CollegeWalls6(screen, rect);
         }
-        for(MapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
+        for(MapObject object : map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             new CollegeWalls7(screen, rect);

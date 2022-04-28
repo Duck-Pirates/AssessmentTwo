@@ -1,10 +1,6 @@
 package com.mygdx.pirategame.entities;
 
-import static com.mygdx.pirategame.configs.Constants.CANNON_BIT;
-import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
-import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
-import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
-import static com.mygdx.pirategame.configs.Constants.PPM;
+
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.GdxAI;
@@ -21,6 +17,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.pirategame.fsm.EnemyStateMachine;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
+
+import static com.mygdx.pirategame.configs.Constants.*;
 
 /**
  * Enemy Ship
@@ -140,7 +138,7 @@ public class EnemyShip extends SteerableEntity {
         // setting BIT identifier
         fdef.filter.categoryBits = ENEMY_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT | CANNON_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT | CANNON_BIT | NOSPAWNAREA_BIT;
         
         body.createFixture(fdef).setUserData(this);
     }
