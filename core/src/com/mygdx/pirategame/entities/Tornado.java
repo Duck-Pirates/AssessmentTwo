@@ -31,14 +31,18 @@ import com.mygdx.pirategame.screens.Hud;
  */
 public class Tornado extends Entity {
 
-    private float state = 0;
+    public float state = 0;
     private Animation swirl;
+    public int dimension;
+
     private Texture tornado;
     private Sound windSound;
     public SpriteBatch batch;
     private Random rand = new Random();
+
     public boolean inContact;
-    private float damage = 1, timeElapsed = 0f;
+    public float damage = 1;
+    public float timeElapsed = 0f;
 
     /**
      * Instantiates a new Tornado.
@@ -47,11 +51,10 @@ public class Tornado extends Entity {
      * @param x      the x value to be placed at
      * @param y      the y value to be placed at
      */
-    public Tornado(GameScreen screen, float x, float y) {
+    public Tornado(GameScreen screen, float x, float y, int dimension) {
         super(screen, x, y);
         // Set posistion and size of the tornado
-        int dimension = rand.nextInt(257-128)+128;
-        // The float number used for the height is to keep the ration of the texture image intact
+        // The int number used for the height is to keep the ration of the texture image intact
         setBounds(0,0, dimension / PPM, dimension * 1.473333333f / PPM);
         //Sets origin of the tornado
         setOrigin(24 / PPM,24 / PPM);

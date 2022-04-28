@@ -217,7 +217,7 @@ public class GameScreen implements Screen {
                 validLoc = AvailableSpawn.add(a, b);
             }
             //Add a coins at the random coords
-            Tornadoes.add(new Tornado(this, a, b));
+            Tornadoes.add(new Tornado(this, a, b, rand.nextInt(257-128)+128));
         }
 
 

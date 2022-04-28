@@ -6,7 +6,6 @@ import java.util.Arrays;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.*;
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.entities.*;
@@ -38,6 +37,7 @@ public class GameSave {
     private ArrayList<CoinSave> coinSaves = new ArrayList<>();
     private HudSave hudSave;
     private ArrayList<PowerUpSave> powerUpSaves = new ArrayList<>();
+    private ArrayList<TornadoSave> tornadoesSaves = new ArrayList<>();
 
     private float tempTimeSave;
 
@@ -72,12 +72,16 @@ public class GameSave {
             powerUpSaves.add(new PowerUpSave(powerup));
         }
 
+        for (Tornado tornado: game.Tornadoes){
+            tornadoesSaves.add(new TornadoSave(tornado));
+        }
+
         tempTimeSave = game.TempTime;
 
         statesSave = shop.states;
 
         json.setOutputType(JsonWriter.OutputType.json);
-        ArrayList<Object> parameters2Save = new ArrayList<>(Arrays.asList(difficultySave, invalidSpawnSave, playerSave, collegesSaves, shipsSaves, coinSaves, hudSave, powerUpSaves, tempTimeSave, statesSave));
+        ArrayList<Object> parameters2Save = new ArrayList<>(Arrays.asList(difficultySave, invalidSpawnSave, playerSave, collegesSaves, shipsSaves, coinSaves, hudSave, powerUpSaves, tornadoesSaves, tempTimeSave, statesSave));
         file.writeString(json.prettyPrint(parameters2Save), false);
     }
 
@@ -293,13 +297,13 @@ public class GameSave {
      * PowerUpSave
      * Auxiliary class to save data about the PowerUps
      */
-    public static class PowerUpSave{
+    public static class PowerUpSave {
 
         private Vector2 position;
         private Integer type;
         private boolean destroyed, setToDestroyed;
 
-        public PowerUpSave(Powerup powerup){
+        public PowerUpSave(Powerup powerup) {
             position = powerup.getPosition();
             type = powerup.powerupType;
             destroyed = powerup.destroyed;
@@ -309,7 +313,7 @@ public class GameSave {
         /**
          * Only used by the LibGDX's Json library
          */
-        public PowerUpSave(){
+        public PowerUpSave() {
 
         }
 
@@ -318,11 +322,44 @@ public class GameSave {
          * @param game
          * @return PowerUp Object
          */
-        public Powerup createPowerUp(GameScreen game){
+        public Powerup createPowerUp(GameScreen game) {
             Powerup result = new Powerup(game, this.position.x, this.position.y, this.type);
             result.destroyed = this.destroyed;
             result.setToDestroyed = this.setToDestroyed;
             result.setPosition(this.position.x, this.position.y, 0);
+            return result;
+        }
+    }
+    /**
+     * TornadoSave
+     * Auxiliary class to save data about the Tornadoes
+     */
+    public static class TornadoSave{
+
+        private float state;
+        private int dimension;
+        private Vector2 position;
+        private boolean inContact;
+        private float damage, timeElapsed;
+
+        public TornadoSave(Tornado tornado){
+            state = tornado.state;
+            dimension = tornado.dimension;
+            position = tornado.getPosition();
+            inContact = tornado.inContact;
+            damage = tornado.damage;
+            timeElapsed = tornado.timeElapsed;
+        }
+
+        public TornadoSave(){}
+
+        public Tornado createTornado(GameScreen game){
+            Tornado result = new Tornado(game, this.position.x, this.position.y, this.dimension);
+            result.state = this.state;
+            result.setPosition(this.position, 0);
+            result.inContact = this.inContact;
+            result.damage = this.damage;
+            result.timeElapsed = this.timeElapsed;
             return result;
         }
     }
@@ -340,10 +377,13 @@ public class GameSave {
 
         gameScreen.invalidSpawn = (AvailableSpawn) loaded_data.get(1);
         ((PlayerSave) loaded_data.get(2)).createPlayer(gameScreen);
+
         ArrayList<College> colleges = new ArrayList<>();
         ArrayList<SteerableEntity> ships = new ArrayList<>();
         ArrayList<Coin> coins = new ArrayList<>();
         ArrayList<Powerup> powerups = new ArrayList<>();
+        ArrayList<Tornado> tornadoes = new ArrayList<>();
+
         for (CollegeSave college: (Array<CollegeSave>) loaded_data.get(3)) {
             colleges.add(college.createCollege(gameScreen));
             ships.addAll(colleges.get(colleges.size()-1).fleet);
@@ -354,8 +394,6 @@ public class GameSave {
             }
             ships.add(ship.createEnemyShip(gameScreen));
         }
-        gameScreen.colleges = colleges;
-        gameScreen.ships = ships;
         for (CoinSave coin: (Array<CoinSave>) loaded_data.get(5)){
             Coin newcoin = new Coin(gameScreen, coin.position.x, coin.position.y);
             newcoin.destroyed = coin.destroyed;
@@ -363,12 +401,19 @@ public class GameSave {
             newcoin.setPosition(coin.position, 0);
             coins.add(newcoin);
         }
-        gameScreen.coins = coins;
-        ((HudSave) loaded_data.get(6)).createHud(gameScreen);
         for(PowerUpSave powerUp: (Array<PowerUpSave>) loaded_data.get(7)){
             powerups.add(powerUp.createPowerUp(gameScreen));
         }
+        for(TornadoSave tornado: tornadoesSaves){
+            tornadoes.add(tornado.createTornado(gameScreen));
+        }
+        gameScreen.colleges = colleges;
+        gameScreen.ships = ships;
+        gameScreen.coins = coins;
         gameScreen.powerups = powerups;
+        gameScreen.Tornadoes = tornadoes;
+
+        ((HudSave) loaded_data.get(6)).createHud(gameScreen);
         gameScreen.TempTime = (Float) loaded_data.get(8);
         SkillTree.states = new ArrayList<>(Arrays.asList(((Array<Integer>) loaded_data.get(9)).toArray()));
         
