@@ -609,7 +609,6 @@ public class GameScreen implements Screen {
     public static College getCollege(String collegeName) {
     	for (College college : colleges) {
     		if (college.currentCollege == collegeName) {
-                Gdx.app.log("wall", collegeName);
     			return college;
     		}
     	}

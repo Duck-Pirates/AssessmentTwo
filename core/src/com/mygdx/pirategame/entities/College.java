@@ -52,7 +52,7 @@ public class College extends SteerableEntity {
     public College(GameScreen screen, String college, float x, float y, String flag, String ship, int ship_no, AvailableSpawn invalidSpawn) {
         super(screen, x, y);
         noSpawn = invalidSpawn;
-        currentCollege = flag;
+        currentCollege = college;
         texture = new Texture(flag);
         //Set the position and size of the college
         setBounds(0,0,64 / PPM, 110 / PPM);
@@ -96,11 +96,11 @@ public class College extends SteerableEntity {
             destroyed = true;
 
             //If it is the player ally college, end the game for the player
-            if (currentCollege.equals("alcuin_flag.png")){
+            if (currentCollege.equals("Alcuin")){
                 screen.gameOverCheck();
             }
             //Award the player coins and points for destroying a college
-            if (!currentCollege.equals("alcuin_flag.png")){
+            if (!currentCollege.equals("Alcuin")){
                 Hud.changePoints(100);
                 Hud.changeCoins(rand.nextInt(10 - 1) + 1);
             }
@@ -174,8 +174,8 @@ public class College extends SteerableEntity {
         Gdx.app.log("hp lost", String.valueOf(GameScreen.difficulty.getDamageDealt()));
         Gdx.app.log("health", String.valueOf(health));
 
-        //health -= GameScreen.difficulty.getDamageDealt();
-        //bar.changeHealth(GameScreen.difficulty.getDamageDealt());
+        health -= GameScreen.difficulty.getDamageDealt();
+        bar.changeHealth(GameScreen.difficulty.getDamageDealt());
     }
     
     /**
