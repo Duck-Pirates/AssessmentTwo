@@ -1,15 +1,5 @@
 package com.mygdx.pirategame.entities;
 
-import static com.mygdx.pirategame.configs.Constants.COIN_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGEFIRE_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGESENSOR_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
-import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
-import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
-import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
-import static com.mygdx.pirategame.configs.Constants.POWERUP_BIT;
-import static com.mygdx.pirategame.configs.Constants.PPM;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -22,6 +12,8 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.screens.GameScreen;
+
+import static com.mygdx.pirategame.configs.Constants.*;
 
 /**
  * Creates the class of the player. Everything that involves actions coming from the player boat
@@ -107,7 +99,7 @@ public class Player extends SteerableEntity {
         // determining what this BIT can collide with
         fdef.filter.maskBits = DEFAULT_BIT | COIN_BIT | ENEMY_BIT 
         		| COLLEGE_BIT | COLLEGESENSOR_BIT | COLLEGEFIRE_BIT 
-        		| POWERUP_BIT;
+        		| POWERUP_BIT | CLOUDS_BIT;
 
         body.createFixture(fdef).setUserData(this);
     }

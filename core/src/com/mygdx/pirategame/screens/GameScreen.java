@@ -466,12 +466,6 @@ public class GameScreen implements Screen {
         //Updates clouds
         for (int i = 0; i < clouds.size(); i++) {
             clouds.get(i).update(delta);
-            if ((player.getX() >= clouds.get(i).getX() - 2 && player.getX() <= clouds.get(i).getX() + 2) && (player.getY() >= clouds.get(i).getY() - 2 && player.getY() <= clouds.get(i).getY() + 2)){
-                clouds.get(i).changeAlpha();
-            }
-            else{
-                clouds.get(i).resetAlpha();
-            }
         }
 
         for (int i = 0; i < Tornadoes.size(); i++) {

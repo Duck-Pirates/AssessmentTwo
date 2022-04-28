@@ -1,15 +1,5 @@
 package com.mygdx.pirategame.world;
 
-import static com.mygdx.pirategame.configs.Constants.CANNON_BIT;
-import static com.mygdx.pirategame.configs.Constants.COIN_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGEFIRE_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
-import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
-import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
-import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
-import static com.mygdx.pirategame.configs.Constants.POWERUP_BIT;
-import static com.mygdx.pirategame.configs.Constants.TORNADO_BIT;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -17,13 +7,10 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.pirategame.college.CollegeFire;
-import com.mygdx.pirategame.entities.CannonFire;
-import com.mygdx.pirategame.entities.Entity;
-import com.mygdx.pirategame.entities.Player;
-import com.mygdx.pirategame.entities.SteerableEntity;
-import com.mygdx.pirategame.entities.Tornado;
-import com.mygdx.pirategame.screens.GameScreen;
-import com.mygdx.pirategame.screens.Hud;
+import com.mygdx.pirategame.entities.*;
+import com.mygdx.pirategame.screens.*;
+
+import static com.mygdx.pirategame.configs.Constants.*;
 
 /**
  * Tells the game what to do when certain entities come into contact with each other
@@ -134,6 +121,14 @@ public class WorldContactListener implements ContactListener {
                     ((Tornado) fixB.getUserData()).inContact = true;
                 }
                 break;
+            case CLOUDS_BIT | PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == CLOUDS_BIT) {
+                    ((Entity) fixA.getUserData()).onContact();
+                }
+                else {
+                    ((Entity) fixB.getUserData()).onContact();
+                }
+                break;
         }
     }
 
@@ -147,15 +142,22 @@ public class WorldContactListener implements ContactListener {
         Fixture fixB = contact.getFixtureB();
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
-        // Displays contact message
 
-        Gdx.app.log("End Contact", "");
         if(cDef == (TORNADO_BIT | PLAYER_BIT)){
             if(fixA.getFilterData().categoryBits == TORNADO_BIT) {
                 ((Tornado) fixA.getUserData()).reset();
             }
             else {
                 ((Tornado) fixB.getUserData()).reset();
+            }
+        }
+
+        if(cDef == (CLOUDS_BIT | PLAYER_BIT)){
+            if(fixA.getFilterData().categoryBits == CLOUDS_BIT) {
+                ((Cloud) fixA.getUserData()).resetAlpha();
+            }
+            else {
+                ((Cloud) fixB.getUserData()).resetAlpha();
             }
         }
     }

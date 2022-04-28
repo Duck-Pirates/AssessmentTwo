@@ -1,7 +1,5 @@
 package com.mygdx.pirategame.entities;
 
-import static com.mygdx.pirategame.configs.Constants.PPM;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +11,12 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.pirategame.screens.GameScreen;
+
+import static com.mygdx.pirategame.configs.Constants.*;
 
 
 /**
@@ -32,6 +35,8 @@ public class Cloud extends Entity{
     private Animation cloudAnimation;
     private float alpha;
     Random rand = new Random();
+    private int dimension;
+    private boolean inContact = false, endReset = true;
 
     /**
      * Instantiates a new Cloud.
@@ -53,8 +58,6 @@ public class Cloud extends Entity{
         state = (startIndex * 0.25f) + 0.1f;
         cloudAnimation = new Animation(0.25f,  list.toArray());
         //Set the position and size of the cloud
-        int dimension = 0;
-        dimension = rand.nextInt(301-200)+200;
         setBounds(0,0,dimension / PPM, dimension * (0.61328125f) / PPM);
         //Sets origin of the cloud
         setOrigin(24 / PPM,24 / PPM);
@@ -72,6 +75,20 @@ public class Cloud extends Entity{
         bdef.position.set(x, y);
         bdef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bdef);
+
+        //Sets collision boundaries
+        FixtureDef fdef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        Random rand = new Random();
+        dimension = rand.nextInt(301-200)+200;
+        shape.setAsBox(dimension/2/PPM, dimension * (0.61328125f) /2/PPM);
+        // setting BIT identifier
+        fdef.filter.categoryBits = CLOUDS_BIT;
+        // determining what this BIT can collide with
+        fdef.filter.maskBits = PLAYER_BIT;
+        fdef.shape = shape;
+        fdef.isSensor = true;
+        body.createFixture(fdef).setUserData(this);
     }
 
     /**
@@ -81,7 +98,9 @@ public class Cloud extends Entity{
      */
 
     @Override
-    public void onContact() {}
+    public void onContact() {
+        inContact = true;
+    }
 
     /**
      * Updates the position and the animation frame of the cloud
@@ -94,6 +113,12 @@ public class Cloud extends Entity{
             this.body.applyForce(new Vector2(-0.03f,-0.03f), this.body.getWorldCenter(), false);
         }
         setRegion(getFrame(dt));
+        if(inContact){
+            changeAlpha();
+        }
+        else if(!endReset){
+            resetAlpha();
+        }
     }
 
     /**
@@ -103,6 +128,7 @@ public class Cloud extends Entity{
     public void changeAlpha() {
         this.alpha = this.alpha*0.99f;
         if (this.alpha < 0.5f){
+            inContact = false;
             this.alpha = 0.5f;
         }
     }
@@ -112,8 +138,11 @@ public class Cloud extends Entity{
      */
 
     public void resetAlpha(){
+        inContact = false;
+        endReset = false;
         this.alpha = this.alpha*1.005f;
         if (this.alpha > 0.9f){
+            endReset = true;
             this.alpha = 0.9f;
         }
     }
