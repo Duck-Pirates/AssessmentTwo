@@ -5,6 +5,7 @@ import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.pirategame.screens.GameScreen;
+import com.mygdx.pirategame.screens.Hud;
 import com.mygdx.pirategame.world.InteractiveTileObject;
 
 /**
@@ -33,9 +34,8 @@ public class CollegeWalls4 extends InteractiveTileObject {
      */
     @Override
     public void onContact() {
-        Gdx.app.log("wall", "collision");
+        Gdx.app.log("wall", "Anne Lister");
         //Deal damage to the assigned college
         GameScreen.getCollege("Anne Lister").onContact();
-
     }
 }

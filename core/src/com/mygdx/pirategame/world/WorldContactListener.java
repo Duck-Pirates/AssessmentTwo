@@ -48,8 +48,10 @@ public class WorldContactListener implements ContactListener {
         // Finds contact
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
+        //Hud.changeHealth(-5);
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
+
 
         // Fixes contact to an entity
         switch (cDef){
@@ -146,6 +148,7 @@ public class WorldContactListener implements ContactListener {
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
         // Displays contact message
+
         Gdx.app.log("End Contact", "");
         if(cDef == (TORNADO_BIT | PLAYER_BIT)){
             if(fixA.getFilterData().categoryBits == TORNADO_BIT) {

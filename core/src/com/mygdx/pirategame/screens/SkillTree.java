@@ -455,6 +455,7 @@ public class SkillTree implements Screen {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     //TODO insert cone shoot function
+                    GameScreen.difficulty.SetConeMec(true);
                     states.set(13, 2);
                     Hud.SubtractCoin(Cone1Cost);
                     GoldMulti1.setDisabled(true);
