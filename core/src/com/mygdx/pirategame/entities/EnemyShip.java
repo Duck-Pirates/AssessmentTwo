@@ -7,7 +7,6 @@ import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
 import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
@@ -56,9 +55,9 @@ public class EnemyShip extends SteerableEntity {
         destroy = Gdx.audio.newSound(Gdx.files.internal("ship-explosion-2.wav"));
         hit = Gdx.audio.newSound(Gdx.files.internal("ship-hit.wav"));
         //Set the position and size of the college
-        setBounds(0,0,64 / PPM, 110 / PPM);
+        setBounds(0, 0, 64 / PPM, 110 / PPM);
         setRegion(texture);
-        setOrigin(32 /PPM,55 / PPM);
+        setOrigin(32 /PPM, 55 / PPM);
 
         damage = GameScreen.difficulty.getDamageDealt();
     }
@@ -96,7 +95,7 @@ public class EnemyShip extends SteerableEntity {
     		}
         	
             setRotation((float) Math.toDegrees(body.getAngle()) - 90);
-            setPosition(getPosition().x - getWidth() / 2f, getPosition().y - getHeight()/2f);
+            setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight()/2f);
             
             bar.update();
         }
@@ -107,41 +106,40 @@ public class EnemyShip extends SteerableEntity {
     
     private void applySteering(SteeringAcceleration<Vector2> steering, float delta) {
 		
-    	float hf = steering.linear.x;
-    	float vf = steering.linear.y;
-        float af = steering.angular;
+    	Vector2 la = steering.linear;
+        float aa = steering.angular;
         
-    	body.applyForceToCenter(hf, vf, true);
-        body.applyTorque(af, true);
+        body.setTransform(body.getPosition(), body.getAngle() + aa * delta);
+        body.setLinearVelocity((body.getLinearVelocity().len() + la.len() * delta) * (float) Math.cos(body.getAngle()),
+        					   (body.getLinearVelocity().len() + la.len() * delta) * (float) Math.sin(body.getAngle()));
         
-        body.setLinearVelocity(body.getLinearVelocity().len() * (float) Math.cos(body.getAngle()),
-        					   body.getLinearVelocity().len() * (float) Math.sin(body.getAngle()));
-    	
-//    	if(body.getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
-//    		// Int x and y are used to preserve direction of travel
-//    		int x = 1;
-//    		int y = 1;
-//    		if(body.getLinearVelocity().x < 0) {
-//    			x = -1;
-//    		}
-//    		if(body.getLinearVelocity().y < 0) {
-//    			y = -1;
-//    		}
-//    		body.setLinearVelocity(maxLinearSpeed * (float) Math.cos(body.getAngle()) * x, 
-//    							   maxLinearSpeed * (float) Math.sin(body.getAngle()) * y);
-//    	}
-//        if(body.getAngularVelocity() > maxAngularSpeed) {
-//    		body.setAngularVelocity(maxAngularSpeed);
-//    	} else if (body.getAngularVelocity() < -maxAngularSpeed) {
-//    		body.setAngularVelocity(-maxAngularSpeed);
-//    	}
-//        
-//        body.setLinearVelocity(body.getLinearVelocity().len() * (float) Math.cos(body.getAngle()),
-//        					   body.getLinearVelocity().len() * (float) Math.sin(body.getAngle()));
-    	
+        if(body.getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
+    		// Int x and y are used to preserve direction of travel
+    		int x = 1;
+    		int y = 1;
+    		if(body.getLinearVelocity().x < 0) {
+    			x = -1;
+    		}
+    		if(body.getLinearVelocity().y < 0) {
+    			y = -1;
+    		}
+    		body.setLinearVelocity(maxLinearSpeed * (float) Math.cos(body.getAngle()) * x, 
+    							   maxLinearSpeed * (float) Math.sin(body.getAngle()) * y);
+    	}
+        if(body.getAngularVelocity() > maxAngularSpeed) {
+    		body.setAngularVelocity(maxAngularSpeed);
+    	} else if (body.getAngularVelocity() < -maxAngularSpeed) {
+    		body.setAngularVelocity(-maxAngularSpeed);
+    	}
 	}
     
-    public void fire() {}
+    public void fire() {
+        cannonBalls.add(new CannonFire(screen, body, body.getPosition().x, body.getPosition().y,
+        		body.getAngle() - (float) Math.PI / 2, 5));
+        cannonBalls.add(new CannonFire(screen, body, body.getPosition().x, body.getPosition().y,
+        		body.getAngle() - (float) Math.PI / 2, -5));
+    	
+    }
 
     /**
      * Defines the ship as an enemy

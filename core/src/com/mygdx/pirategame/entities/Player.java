@@ -20,7 +20,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.screens.GameScreen;
 
 /**
@@ -30,7 +29,6 @@ import com.mygdx.pirategame.screens.GameScreen;
  */
 public class Player extends SteerableEntity {
     private Sound breakSound;
-    private Array<CannonFire> cannonBalls;
     
     /**
      * Instantiates a new Player. Constructor only called once per game
@@ -49,8 +47,6 @@ public class Player extends SteerableEntity {
         // Sound effect for damage
         breakSound = Gdx.audio.newSound(Gdx.files.internal("wood-bump.mp3"));
 
-        // Sets cannonball array
-        cannonBalls = new Array<CannonFire>();
         college = "Alcuin";
     }
 
@@ -124,6 +120,9 @@ public class Player extends SteerableEntity {
         
     	body.applyForceToCenter(lf * (float) Math.cos(body.getAngle()), lf * (float) Math.sin(body.getAngle()), true);
         body.applyTorque(af, true);
+        
+        body.setLinearVelocity(body.getLinearVelocity().len() * (float) Math.cos(body.getAngle()),
+        					   body.getLinearVelocity().len() * (float) Math.sin(body.getAngle()));
     	
     	if(body.getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
     		// Int x and y are used to preserve direction of travel
@@ -143,10 +142,6 @@ public class Player extends SteerableEntity {
     	} else if (body.getAngularVelocity() < -maxAngularSpeed) {
     		body.setAngularVelocity(-maxAngularSpeed);
     	}
-        
-        body.setLinearVelocity(body.getLinearVelocity().len() * (float) Math.cos(body.getAngle()),
-        					   body.getLinearVelocity().len() * (float) Math.sin(body.getAngle()));
-    	
     }
 
     /**
@@ -187,9 +182,6 @@ public class Player extends SteerableEntity {
 
         body = world.createBody(bdef);
         body.createFixture(fdef).setUserData(this);
-        
-        body.setAngularDamping(maxAngularAcceleration);
-        body.setLinearDamping(maxLinearAcceleration);
     }
 
     /**
@@ -197,16 +189,10 @@ public class Player extends SteerableEntity {
      */
     public void fire() {
         // Fires cannons
-        cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, 5));
-        cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, -5));
-
-        // Cone fire below
-        /*cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() - Math.PI / 6), -5, b2body.getLinearVelocity()));
-        cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() - Math.PI / 6), 5, b2body.getLinearVelocity()));
-        cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() + Math.PI / 6), -5, b2body.getLinearVelocity()));
-        cannonBalls.add(new CannonFire(screen, b2body.getPosition().x, b2body.getPosition().y, (float) (b2body.getAngle() + Math.PI / 6), 5, b2body.getLinearVelocity()));
-        }
-         */
+        cannonBalls.add(new CannonFire(screen, body, body.getPosition().x, body.getPosition().y,
+        		body.getAngle() - (float) Math.PI / 2, 5));
+        cannonBalls.add(new CannonFire(screen, body, body.getPosition().x, body.getPosition().y,
+        		body.getAngle() - (float) Math.PI / 2, -5));
     }
     
     @Override

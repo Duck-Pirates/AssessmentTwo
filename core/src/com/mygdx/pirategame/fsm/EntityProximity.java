@@ -2,13 +2,12 @@ package com.mygdx.pirategame.fsm;
 
 import java.util.ArrayList;
 
-import com.mygdx.pirategame.entities.EnemyShip;
 import com.mygdx.pirategame.entities.Entity;
 import com.mygdx.pirategame.entities.SteerableEntity;
 
 public class EntityProximity {
 	
-	public static ArrayList<Entity> findAgents(EnemyShip owner, Iterable<? extends Entity> agents, float radius) {
+	public static ArrayList<Entity> findAgents(SteerableEntity owner, Iterable<? extends Entity> agents, float radius) {
 		
 		ArrayList<Entity> targets = new ArrayList<>();
 		for (Entity currentAgent : agents) {

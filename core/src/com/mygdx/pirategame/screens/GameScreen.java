@@ -71,7 +71,6 @@ public class GameScreen implements Screen {
     public static Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
 
-    public static Player player;
     public static ArrayList<College> colleges = new ArrayList<>();
     public static ArrayList<SteerableEntity> ships = new ArrayList<>();
     public static ArrayList<Coin> coins = new ArrayList<>();
@@ -88,7 +87,7 @@ public class GameScreen implements Screen {
 
     private Table pauseTable;
     private Table table;
-
+    
     public Random rand = new Random();
     public Float TempTime;
 
@@ -101,7 +100,7 @@ public class GameScreen implements Screen {
     public GameScreen(PirateGame game, Difficulty difficulty){
         gameStatus = GAME_RUNNING;
         GameScreen.game = game;
-        // Setting the difficulty, that will be changed based on the player's choice at the start of the game
+        // Setting the difficulty, that will be changed based on the getPlayer()'s choice at the start of the game
         GameScreen.difficulty = difficulty;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
@@ -111,7 +110,7 @@ public class GameScreen implements Screen {
 
         // Initialize a hud
         hud = new Hud(game.getBatch(), this);
-
+        
         // Initialising box2d physics
         world = new World(new Vector2(0,0), true);
         b2dr = new Box2DDebugRenderer();
@@ -124,9 +123,7 @@ public class GameScreen implements Screen {
 
         // Setting up contact listener for collisions
         world.setContactListener(new WorldContactListener(this));
-
-        // Creates the player
-        player = new Player(this);
+        
         // Spawning enemy ship and coin. x and y is spawn location
         colleges.add(new College(this, "alcuin", 3872 / PPM, 4230 / PPM, 0, invalidSpawn));
         colleges.add(new College(this, "anne_lister", 5855 / PPM, 6470 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
@@ -135,9 +132,9 @@ public class GameScreen implements Screen {
         colleges.add(new College(this, "halifax", 12768 / PPM, 14408 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
         colleges.add(new College(this, "langwith", 12576 / PPM, 6920 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
         colleges.add(new College(this, "vanbrugh", 12896 / PPM, 3783 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
-
+        
         ships = new ArrayList<>();
-        ships.add(player);
+        ships.add(new Player(this));
         ships.addAll(colleges.get(0).fleet);
         ships.addAll(colleges.get(1).fleet);
         ships.addAll(colleges.get(2).fleet);
@@ -279,7 +276,7 @@ public class GameScreen implements Screen {
         //Updates clouds
         for (int i = 0; i < clouds.size(); i++) {
             clouds.get(i).update(delta);
-            if ((player.getX() >= clouds.get(i).getX() - 2 && player.getX() <= clouds.get(i).getX() + 2) && (player.getY() >= clouds.get(i).getY() - 2 && player.getY() <= clouds.get(i).getY() + 2)){
+            if ((getPlayer().getX() >= clouds.get(i).getX() - 2 && getPlayer().getX() <= clouds.get(i).getX() + 2) && (getPlayer().getY() >= clouds.get(i).getY() - 2 && getPlayer().getY() <= clouds.get(i).getY() + 2)){
                 clouds.get(i).changeAlpha();
             }
             else{
@@ -290,7 +287,7 @@ public class GameScreen implements Screen {
         for (int i = 0; i < Tornadoes.size(); i++) {
             Tornado tornado = Tornadoes.get(i);
             tornado.update(delta);
-            tornado.tornadoImpulse(player, delta);
+            tornado.tornadoImpulse(getPlayer(), delta);
         }
         //After a delay check if a college is destroyed. If not, it can fire
         if (stateTime > 1) {
@@ -305,8 +302,8 @@ public class GameScreen implements Screen {
         hud.update(delta);
 
         // Centre camera on player boat
-        camera.position.x = player.getPosition().x;
-        camera.position.y = player.getPosition().y;
+        camera.position.x = getPlayer().getPosition().x;
+        camera.position.y = getPlayer().getPosition().y;
         camera.update();
         renderer.setView(camera);
     }
@@ -369,7 +366,7 @@ public class GameScreen implements Screen {
 
 
         //Renders colleges
-        player.draw(game.getBatch());
+        getPlayer().draw(game.getBatch());
 
         for (College college: colleges) {
             college.draw(game.getBatch());
@@ -397,7 +394,6 @@ public class GameScreen implements Screen {
         }
 
         game.getBatch().end();
-        //player.SlowDownBoat();
         Hud.stage.draw();
         stage.act();
         stage.draw();
@@ -598,8 +594,12 @@ public class GameScreen implements Screen {
 
     // TODO delete
     
-    public Player getPlayer() {
-    	return player;
+    public static Player getPlayer() {
+    	return (Player) ships.get(0);
+    }
+    
+    public static void setPlayer(Player player) {
+    	ships.set(0, player);
     }
     
     /**
@@ -608,7 +608,7 @@ public class GameScreen implements Screen {
      * @return position vector : returns the position of the player
      */
     public Vector2 getPlayerPos(){
-        return new Vector2(player.getPosition().x, player.getPosition().y);
+        return new Vector2(getPlayer().getPosition().x, getPlayer().getPosition().y);
     }
 
     /**

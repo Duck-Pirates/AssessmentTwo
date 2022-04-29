@@ -79,12 +79,15 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 			} else if(entity.getPosition().dst(((Pursue<Vector2>) entity.getBehavior()).getTarget().getPosition()) >= 1000 / PPM) {
 				entity.stateMachine.changeState(WANDER);
 			}
+			
+			entity.fire();
 		}
 	},
 	
 	FLEE() {
 		public void enter(EnemyShip entity) {
-			Flee<Vector2> flee = new Flee<Vector2>(entity);
+			Flee<Vector2> flee = new Flee<Vector2>(entity)
+					.setTarget(GameScreen.coins.get(0));
 			entity.setBehavior(flee);
 		}
 		

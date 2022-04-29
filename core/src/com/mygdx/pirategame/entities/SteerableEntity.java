@@ -7,6 +7,7 @@ import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.screens.GameScreen;
 
 /**
@@ -33,7 +34,8 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
     protected boolean tagged;
     protected SteeringBehavior<Vector2> behavior;
     protected SteeringAcceleration<Vector2> steerOutput;
-
+    
+    protected Array<CannonFire> cannonBalls;
 
     /**
      * Instantiates an enemy
@@ -57,6 +59,8 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 	    boundingRadius = 55f / PPM;
 	    tagged = false;
 	    steerOutput = new SteeringAcceleration<Vector2>(new Vector2());
+	    
+        cannonBalls = new Array<CannonFire>();
     }
     
     public abstract void update(float delta);

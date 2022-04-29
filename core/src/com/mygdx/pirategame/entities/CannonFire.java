@@ -47,12 +47,12 @@ public class CannonFire extends Entity {
      * @param body body of origin
      * @param velocity velocity of the cannon ball
      */
-    public CannonFire(GameScreen screen, float x, float y, Body body, float velocity) {
+    public CannonFire(GameScreen screen, Body body, float x, float y, float angle, float velocity) {
     	super(screen, x, y);
         this.velocity = velocity;
         this.world = screen.getWorld();
         //sets the angle and velocity
-        angle = body.getAngle() - (float) Math.PI / 2;
+        this.angle = angle;
         bodyVel = body.getLinearVelocity();
         //set cannonBall dimensions for the texture
         texture = new Texture("cannonBall.png");

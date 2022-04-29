@@ -47,8 +47,8 @@ public class HealthBar {
     public void update(){
         if (owner != null) {
             //Update location
-            healthBar.setX( (owner.getPosition().x - 0.68f));
-            healthBar.setY(owner.getPosition().y + owner.getHeight() / 2);
+            healthBar.setX(owner.body.getPosition().x - 0.68f);
+            healthBar.setY(owner.body.getPosition().y + 60);
         }
     }
 

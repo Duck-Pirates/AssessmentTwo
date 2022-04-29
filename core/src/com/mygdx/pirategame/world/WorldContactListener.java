@@ -10,7 +10,6 @@ import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
 import static com.mygdx.pirategame.configs.Constants.POWERUP_BIT;
 import static com.mygdx.pirategame.configs.Constants.TORNADO_BIT;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -145,8 +144,6 @@ public class WorldContactListener implements ContactListener {
         Fixture fixB = contact.getFixtureB();
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
-        // Displays contact message
-        Gdx.app.log("End Contact", "");
         if(cDef == (TORNADO_BIT | PLAYER_BIT)){
             if(fixA.getFilterData().categoryBits == TORNADO_BIT) {
                 ((Tornado) fixA.getUserData()).reset();

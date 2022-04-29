@@ -13,8 +13,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.utils.Array;
-import com.mygdx.pirategame.college.CollegeFire;
+import com.mygdx.pirategame.fsm.EntityProximity;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
 import com.mygdx.pirategame.world.AvailableSpawn;
@@ -32,7 +31,6 @@ import com.mygdx.pirategame.world.AvailableSpawn;
 public class College extends SteerableEntity {
     public Random rand = new Random();
     public String currentCollege, currentCollegePath;
-    private Array<CollegeFire> cannonBalls;
     private AvailableSpawn noSpawn;
     public ArrayList<EnemyShip> fleet = new ArrayList<>();
     private float timeLastAttacked;
@@ -52,6 +50,7 @@ public class College extends SteerableEntity {
     public College(GameScreen screen, String college, float x, float y, int ship_no, AvailableSpawn invalidSpawn) {
         super(screen, x, y);
         noSpawn = invalidSpawn;
+        this.college = college;
         currentCollege = college + "_flag.png";
         texture = new Texture(currentCollege);
         //Set the position and size of the college
@@ -59,7 +58,6 @@ public class College extends SteerableEntity {
         setRegion(texture);
         setOrigin(32 / PPM, 55 / PPM);
         damage = 10;
-        cannonBalls = new Array<>();
         int ranX = 0;
         int ranY = 0;
         boolean spawnIsValid;
@@ -116,7 +114,7 @@ public class College extends SteerableEntity {
         bar.update();
         
         //Update cannon balls
-        for(CollegeFire ball : cannonBalls) {
+        for(CannonFire ball : cannonBalls) {
             ball.update(dt);
             if(ball.isDestroyed())
                 cannonBalls.removeValue(ball, true);
@@ -133,7 +131,7 @@ public class College extends SteerableEntity {
             bar.render(batch);
 
             //Render balls
-            for(CollegeFire ball : cannonBalls)
+            for(CannonFire ball : cannonBalls)
                 ball.draw(batch);
         }
     }
@@ -179,7 +177,11 @@ public class College extends SteerableEntity {
      * Fires cannonballs
      */
     public void fire() {
-        cannonBalls.add(new CollegeFire(screen, body.getPosition().x, body.getPosition().y));
+    	ArrayList<Entity> ships = EntityProximity.findAgents(this, GameScreen.getShips(), 600 / PPM);
+    	if(ships != null) {
+    		cannonBalls.add(new CannonFire(screen, body, body.getPosition().x, body.getPosition().y,
+    				body.getPosition().dst(ships.get(0).body.getPosition()), 5));
+    	}
     }
 
     /**

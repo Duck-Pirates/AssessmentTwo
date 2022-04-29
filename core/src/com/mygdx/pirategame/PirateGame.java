@@ -130,6 +130,8 @@ public class PirateGame extends Game {
 	 * Kills the game screen and skill tree so they can be refreshed on next game start
 	 */
 	public void killGame(){
+		gameScreen.dispose();
+		skillTreeScreen.dispose();
 		gameScreen = null;
 		skillTreeScreen = null;
 	}
@@ -138,6 +140,8 @@ public class PirateGame extends Game {
 	 * Kill end screens so they can be made again.
 	 */
 	public void killEndScreen(){
+		deathScreen.dispose();
+		victoryScreen.dispose();
 		deathScreen = null;
 		victoryScreen = null;
 	}
@@ -155,13 +159,14 @@ public class PirateGame extends Game {
 	 */
 	@Override
 	public void dispose () {
+		song.dispose();
 		batch.dispose();
 		super.dispose();
 	}
 
 	public void save() {
 		GameSave gameInstance = new GameSave();
-		gameInstance.save(getGameScreen(), getSkillTreeScreen());
+		gameInstance.save(gameScreen, skillTreeScreen);
 	}
 
 	public void load(){

@@ -64,7 +64,7 @@ public class GameSave {
         difficultySave = GameScreen.difficulty;
         invalidSpawnSave = game.invalidSpawn;
 
-        playerSave = new PlayerSave(GameScreen.player);
+        playerSave = new PlayerSave(GameScreen.getPlayer());
         for (College college: GameScreen.colleges) {
             CollegeSave collegeSave = new CollegeSave(college);
             collegesSaves.add(collegeSave);
@@ -122,7 +122,7 @@ public class GameSave {
         public void createPlayer(GameScreen game){
             Player result = new Player(game);
             result.getBody().setLinearVelocity(this.velocity);
-            GameScreen.player = result;
+            GameScreen.setPlayer(result);
         }
     }
 
@@ -163,7 +163,7 @@ public class GameSave {
          * @return College Object
          */
         public College createCollege(GameScreen game){
-            College result = new College(game, collegeName, this.position.x, this.position.y, String.format("%s_flag.png", collegeName.toLowerCase()).replace(' ', '_'), String.format("%s_ship.png", collegeName.toLowerCase()).replace(' ', '_'), collegeName.equals("Alcuin") ? 0 : GameScreen.difficulty.getMaxCollegeShips(), game.invalidSpawn);
+            College result = new College(game, collegeName, this.position.x, this.position.y, collegeName.equals("Alcuin") ? 0 : GameScreen.difficulty.getMaxCollegeShips(), game.invalidSpawn);
             ArrayList<EnemyShip> newfleet = new ArrayList<>();
             for(int i = 0; i < this.fleet.size(); i++){
                 newfleet.add(this.fleet.get(i).createEnemyShip(game));
@@ -198,9 +198,6 @@ public class GameSave {
             health = steerableEntity.health;
             destroyed = steerableEntity.destroyed;
             setToDestroy = steerableEntity.setToDestroy;
-
-
-
         }
 
         /**
