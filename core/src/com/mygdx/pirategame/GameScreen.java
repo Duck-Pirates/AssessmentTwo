@@ -755,4 +755,39 @@ public class GameScreen implements Screen {
 
         assertTrue(testCollege.destroyed);
     }
+
+    @Test
+    public void testGamePause() {
+        resume();
+        pause();
+
+        assertEquals(GAME_PAUSED, gameStatus);
+    }
+
+    @Test
+    public void testGameResume() {
+        pause();
+        resume();
+
+        assertEquals(GAME_RUNNING, gameStatus);
+    }
+
+    @Test
+    public void testChangeDamage() {
+        College testCollege = new College(this, "Test College", 100 / PirateGame.PPM, 200 / PirateGame.PPM,
+                "alcuin_flag.png", "alcuin_ship.png", 5, invalidSpawn);
+
+        int previousDamage = ships.get(0).damage;
+
+        changeDamage(15);
+
+        for (int i = 0; i < ships.size(); i++){
+            assertEquals(previousDamage + 15, ships.get(i).damage)
+        }
+
+        assertEquals(previousDamage + 15, colleges.get("Anne Lister").damage);
+        assertEquals(previousDamage + 15, colleges.get("Constantine").damage);
+        assertEquals(previousDamage + 15, colleges.get("Goodricke").damage);
+        assertEquals(previousDamage + 15, colleges.get("Test College").damage);
+    }
 }
