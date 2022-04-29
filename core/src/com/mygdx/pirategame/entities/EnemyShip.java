@@ -1,13 +1,5 @@
 package com.mygdx.pirategame.entities;
 
-import static com.mygdx.pirategame.configs.Constants.COIN_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGEFIRE_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGESENSOR_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
-import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
-import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
-import static com.mygdx.pirategame.configs.Constants.PPM;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
@@ -163,8 +155,9 @@ public class EnemyShip extends SteerableEntity {
         // setting BIT identifier
         fdef.filter.categoryBits = ENEMY_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | COIN_BIT | ENEMY_BIT | NOSPAWNAREA_BIT
-        					 | COLLEGE_BIT | COLLEGESENSOR_BIT | COLLEGEFIRE_BIT;
+        fdef.filter.maskBits = PLAYER_BIT | DEFAULT_BIT | COIN_BIT | COLLEGE_BIT | POWERUP_BIT
+        					 | COLLEGESENSOR_BIT | COLLEGEFIRE_BIT | CLOUDS_BIT;
+        					 
         
         setBody(world.createBody(bdef));
         getBody().createFixture(fdef).setUserData(this);
@@ -175,10 +168,10 @@ public class EnemyShip extends SteerableEntity {
      *
      * @param batch The batch of visual data of the ship
      */
+    @Override
     public void draw(Batch batch) {
         if(!isDestroyed()) {
             super.draw(batch);
-            //Render health bar
             bar.render(batch);
         }
     }

@@ -189,19 +189,6 @@ public class Player extends SteerableEntity {
     
     @Override
     public void onContact() {}
-
-    /**
-     * Draws the player using batch
-     * Draws cannonballs using batch
-     *
-     * @param batch The batch of the program
-     */
-    public void draw(Batch batch){
-        // Draws player and cannonballs
-        super.draw(batch);
-        for(CannonFire ball : cannonBalls)
-            ball.draw(batch);
-    }
     
 	public Body getBody() {
 		return body;

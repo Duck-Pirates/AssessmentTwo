@@ -119,15 +119,12 @@ public class College extends SteerableEntity {
     /**
      * Draws the batch of cannonballs
      */
+    @Override
     public void draw(Batch batch) {
         if(!isDestroyed()) {
             super.draw(batch);
             //Render health bar
-            bar.render(batch);
-
-            //Render balls
-            for(CannonFire ball : cannonBalls)
-                ball.draw(batch);
+            bar.render(batch);;
         }
     }
 

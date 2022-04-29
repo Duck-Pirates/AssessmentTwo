@@ -6,6 +6,7 @@ import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.screens.GameScreen;
@@ -198,6 +199,19 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 	public void setSetToDestroy(boolean setToDestroy) {
 		this.setToDestroy = setToDestroy;
 	}
+	
+	/**
+     * Draws the entity using batch
+     * Draws cannonballs using batch
+     *
+     * @param batch The batch of the program
+     */
+    public void draw(Batch batch){
+        // Draws player and cannonballs
+        super.draw(batch);
+        for(CannonFire ball : cannonBalls)
+            ball.draw(batch);
+    }
 	
 	@Override
 	public void dispose() {
