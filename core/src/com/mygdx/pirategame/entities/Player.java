@@ -12,10 +12,10 @@ import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -37,8 +37,10 @@ public class Player extends SteerableEntity {
      */
     public Player(GameScreen screen) {
     	super(screen, 1200  / PPM, 2500 / PPM);
-        // Creates ship texture
-        texture = new Texture("player_ship.png");
+        
+    	college = "alcuin";
+    	// Creates ship texture
+        texture = new Texture(college + "_ship.png");
         
         setBounds(0,0,64 / PPM, 110 / PPM);
         setRegion(texture);
@@ -46,8 +48,6 @@ public class Player extends SteerableEntity {
 	    
         // Sound effect for damage
         breakSound = Gdx.audio.newSound(Gdx.files.internal("wood-bump.mp3"));
-
-        college = "Alcuin";
     }
 
     /**
@@ -58,12 +58,13 @@ public class Player extends SteerableEntity {
     public void update(float delta) {
     	updateMovement();
     	
-        setRotation((float) Math.toDegrees(body.getAngle()) - 90);
+        setRotation((float) Math.toDegrees(getOrientation()) - 90);
         setPosition(getPosition().x - getWidth() / 2f, getPosition().y - getHeight()/2f);
         
         // Cannon fire on 'Space'
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && GdxAI.getTimepiece().getTime() - getTimeFired() > 1f) {
             fire();
+            setTimeFired(GdxAI.getTimepiece().getTime());
         }
         
         // Updates cannonball data
@@ -71,6 +72,7 @@ public class Player extends SteerableEntity {
             ball.update(delta);
             if(ball.isDestroyed()) {
                 cannonBalls.removeValue(ball, true);
+            	ball.dispose();
             }
         }
     }
@@ -109,38 +111,30 @@ public class Player extends SteerableEntity {
         if(linearDirection != 0) {
         	lf  = maxLinearAcceleration * linearDirection;
         } else {
-        	lf = -1f * maxLinearAcceleration * body.getLinearVelocity().len() / maxLinearSpeed;
+        	lf = -1f * maxLinearAcceleration * getBody().getLinearVelocity().len() / maxLinearSpeed;
         }
         
         if(angularDirection != 0) {
         	af = maxAngularAcceleration * angularDirection;
         } else {
-        	af = -1f * maxAngularAcceleration * body.getAngularVelocity() / maxAngularSpeed;
+        	af = -1f * maxAngularAcceleration * getBody().getAngularVelocity() / maxAngularSpeed;
         }
+
+        getBody().applyTorque(af, true);
+        getBody().applyForceToCenter(lf * (float) Math.cos(getBody().getAngle()), lf * (float) Math.sin(getBody().getAngle()), true);
         
-    	body.applyForceToCenter(lf * (float) Math.cos(body.getAngle()), lf * (float) Math.sin(body.getAngle()), true);
-        body.applyTorque(af, true);
-        
-        body.setLinearVelocity(body.getLinearVelocity().len() * (float) Math.cos(body.getAngle()),
-        					   body.getLinearVelocity().len() * (float) Math.sin(body.getAngle()));
-    	
-    	if(body.getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
-    		// Int x and y are used to preserve direction of travel
-    		int x = 1;
-    		int y = 1;
-    		if(body.getLinearVelocity().x < 0) {
-    			x = -1;
-    		}
-    		if(body.getLinearVelocity().y < 0) {
-    			y = -1;
-    		}
-    		body.setLinearVelocity(maxLinearSpeed * (float) Math.cos(body.getAngle()) * x, 
-    							   maxLinearSpeed * (float) Math.sin(body.getAngle()) * y);
+    	if(getBody().getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
+    		getBody().setLinearVelocity(maxLinearSpeed * (float) Math.cos(getBody().getAngle()), 
+    							   		maxLinearSpeed * (float) Math.sin(getBody().getAngle()));
+    	} else {
+        	getBody().setLinearVelocity(getBody().getLinearVelocity().len() * (float) Math.cos(getBody().getAngle()),
+    									getBody().getLinearVelocity().len() * (float) Math.sin(getBody().getAngle()));
     	}
-        if(body.getAngularVelocity() > maxAngularSpeed) {
-    		body.setAngularVelocity(maxAngularSpeed);
-    	} else if (body.getAngularVelocity() < -maxAngularSpeed) {
-    		body.setAngularVelocity(-maxAngularSpeed);
+    	
+        if(getBody().getAngularVelocity() > maxAngularSpeed) {
+    		getBody().setAngularVelocity(maxAngularSpeed);
+    	} else if (getBody().getAngularVelocity() < -maxAngularSpeed) {
+    		getBody().setAngularVelocity(-maxAngularSpeed);
     	}
     }
 
@@ -149,8 +143,8 @@ public class Player extends SteerableEntity {
      */
     public void playBreakSound() {
         // Plays damage sound effect
-        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
-            breakSound.play(GameScreen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.getGame().getPreferences().isEffectsEnabled()) {
+            breakSound.play(GameScreen.getGame().getPreferences().getEffectsVolume());
         }
     }
 
@@ -161,7 +155,7 @@ public class Player extends SteerableEntity {
     protected void defineEntity(float x, float y) {
         // Defines a players position
         BodyDef bdef = new BodyDef();
-        bdef.position.set(new Vector2(x, y)); // Default Pos: 1800,2500
+        bdef.position.set(x, y); // Default Pos: 1800,2500
         bdef.type = BodyDef.BodyType.DynamicBody;
         
         //Sets collision boundaries
@@ -171,7 +165,7 @@ public class Player extends SteerableEntity {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(50 / PPM, 20 / PPM);
         fdef.shape = shape;
-        shape.dispose();
+        //shape.dispose();
         
         // setting BIT identifier
         fdef.filter.categoryBits = PLAYER_BIT;
@@ -180,8 +174,8 @@ public class Player extends SteerableEntity {
         		| COLLEGE_BIT | COLLEGESENSOR_BIT | COLLEGEFIRE_BIT 
         		| POWERUP_BIT;
 
-        body = world.createBody(bdef);
-        body.createFixture(fdef).setUserData(this);
+        setBody(world.createBody(bdef));
+        getBody().createFixture(fdef).setUserData(this);
     }
 
     /**
@@ -189,10 +183,8 @@ public class Player extends SteerableEntity {
      */
     public void fire() {
         // Fires cannons
-        cannonBalls.add(new CannonFire(screen, body, body.getPosition().x, body.getPosition().y,
-        		body.getAngle() - (float) Math.PI / 2, 5));
-        cannonBalls.add(new CannonFire(screen, body, body.getPosition().x, body.getPosition().y,
-        		body.getAngle() - (float) Math.PI / 2, -5));
+        cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI / 2, 5));
+        cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI / 2, 5));
     }
     
     @Override
@@ -217,5 +209,11 @@ public class Player extends SteerableEntity {
 
 	public float getVelocity() {
 		return this.getLinearVelocity().len();
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		breakSound.dispose();
 	}
 }

@@ -4,6 +4,7 @@ import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.steer.behaviors.Flee;
@@ -20,34 +21,34 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 	
 	SLEEP() {
 		public void update(EnemyShip entity) {
-			entity.stateMachine.changeState(WANDER);
+			entity.getStateMachine().changeState(WANDER);
 		}
 	},
 	
 	WANDER() {
 		public void enter(EnemyShip entity) {
 			Wander<Vector2> wander = new Wander<Vector2>(entity)
-					.setAlignTolerance(0.0174533f)
+					.setAlignTolerance((float) Math.PI / 32)
 					.setEnabled(true)
 					.setFaceEnabled(true)
-					.setWanderOffset(0f)
+					.setWanderOffset(100f / PPM)
 					.setWanderRadius(50f / PPM)
-					.setWanderRate((float) Math.PI / 2);
+					.setWanderRate((float) Math.PI);
 			entity.setBehavior(wander);
 		}
 		
 		public void update(EnemyShip entity) {
-			if (EntityProximity.findAgents(entity, GameScreen.getShips(), 600 / PPM) != null) { 
-				entity.stateMachine.changeState(PERSUE); 
-			} else if (EntityProximity.findAgents(entity, GameScreen.getCoins(), 600 / PPM) != null) {
-				entity.stateMachine.changeState(SEEK);
+			if (EntityProximity.findAgents(entity, GameScreen.getShips(), 1000 / PPM) != null) { 
+				entity.getStateMachine().changeState(PERSUE); 
+			} else if (EntityProximity.findAgents(entity, GameScreen.getCoins(), 1000 / PPM) != null) {
+				entity.getStateMachine().changeState(SEEK);
 			}
 		}
 	},
 	
 	SEEK() {
 		public void enter(EnemyShip entity) {
-			ArrayList<Entity> coins = EntityProximity.findAgents(entity, GameScreen.getCoins(), 600 / PPM);
+			ArrayList<Entity> coins = EntityProximity.findAgents(entity, GameScreen.getCoins(), 1000 / PPM);
 			Seek<Vector2> seek = new Seek<Vector2>(entity)
 					.setEnabled(true)
 					.setTarget(coins.get(0));
@@ -55,17 +56,17 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		}
 		
 		public void update(EnemyShip entity) {
-			if (EntityProximity.findAgents(entity, GameScreen.getShips(), 600 / PPM) != null) { 
-				entity.stateMachine.changeState(PERSUE); 
+			if (EntityProximity.findAgents(entity, GameScreen.getShips(), 1000 / PPM) != null) { 
+				entity.getStateMachine().changeState(PERSUE); 
 			} else if (entity.getPosition() == ((Seek<Vector2>) entity.getBehavior()).getTarget()) {
-				entity.stateMachine.changeState(WANDER);
+				entity.getStateMachine().changeState(WANDER);
 			}
 		}
 	},
 	
 	PERSUE() {
 		public void enter(EnemyShip entity) {
-			ArrayList<Entity> ships = EntityProximity.findAgents(entity, GameScreen.getShips(), 600 / PPM);
+			ArrayList<Entity> ships = EntityProximity.findAgents(entity, GameScreen.getShips(), 1000 / PPM);
 			Pursue<Vector2> persue = new Pursue<Vector2>(entity, (SteerableEntity) ships.get(0))
 					.setEnabled(true)
 					.setMaxPredictionTime(0.01f);
@@ -74,26 +75,30 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		
 		public void update(EnemyShip entity) {
 			// attack enemy
-			if(entity.health <= 15) {
-				entity.stateMachine.changeState(FLEE);
+			if(entity.getHealth() <= 15) {
+				entity.getStateMachine().changeState(FLEE);
 			} else if(entity.getPosition().dst(((Pursue<Vector2>) entity.getBehavior()).getTarget().getPosition()) >= 1000 / PPM) {
-				entity.stateMachine.changeState(WANDER);
+				entity.getStateMachine().changeState(WANDER);
 			}
 			
-			entity.fire();
+			if(GdxAI.getTimepiece().getTime() - entity.getTimeFired() > 1f) {
+				entity.fire();
+				entity.setTimeFired(GdxAI.getTimepiece().getTime());
+			}
 		}
 	},
 	
 	FLEE() {
 		public void enter(EnemyShip entity) {
 			Flee<Vector2> flee = new Flee<Vector2>(entity)
-					.setTarget(GameScreen.coins.get(0));
+					// temp fix
+					.setTarget(GameScreen.getCoins().get(0));
 			entity.setBehavior(flee);
 		}
 		
 		public void update(EnemyShip entity) {
-			if(entity.health >= 70 && EntityProximity.findAgents(entity, GameScreen.getShips(), 600 / PPM) == null) {
-				entity.stateMachine.changeState(WANDER);
+			if(entity.getHealth() >= 70) {
+				entity.getStateMachine().changeState(WANDER);
 			}
 		}
 	};

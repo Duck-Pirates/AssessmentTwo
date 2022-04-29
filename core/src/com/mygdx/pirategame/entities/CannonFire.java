@@ -28,8 +28,6 @@ import com.mygdx.pirategame.screens.GameScreen;
  */
 public class CannonFire extends Entity {
     private float stateTime;
-    private boolean destroyed;
-    private boolean setToDestroy;
     private float angle;
     private float velocity;
     private Sound fireNoise;
@@ -60,8 +58,8 @@ public class CannonFire extends Entity {
         setBounds(x, y, 10 / PPM, 10 / PPM);
         //set sound for fire and play if on
         fireNoise = Gdx.audio.newSound(Gdx.files.internal("explosion.wav"));
-        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
-            fireNoise.play(GameScreen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.getGame().getPreferences().isEffectsEnabled()) {
+            fireNoise.play(GameScreen.getGame().getPreferences().getEffectsVolume());
         }
     }
 
@@ -73,7 +71,7 @@ public class CannonFire extends Entity {
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyDef.BodyType.DynamicBody;
-        body = world.createBody(bDef);
+        setBody(world.createBody(bDef));
 
         //Sets collision boundaries
         FixtureDef fDef = new FixtureDef();
@@ -86,7 +84,7 @@ public class CannonFire extends Entity {
         fDef.filter.maskBits = ENEMY_BIT | PLAYER_BIT | COLLEGE_BIT;
         fDef.shape = shape;
         fDef.isSensor = true;
-        body.createFixture(fDef).setUserData(this);
+        getBody().createFixture(fDef).setUserData(this);
     }
 
     /**
@@ -101,42 +99,27 @@ public class CannonFire extends Entity {
     		//Velocity maths
             float velX = MathUtils.cos(angle) * velocity + bodyVel.x;
             float velY = MathUtils.sin(angle) * velocity + bodyVel.y;
-            body.applyLinearImpulse(new Vector2(velX, velY), body.getWorldCenter(), true);
+            getBody().applyLinearImpulse(new Vector2(velX, velY), getBody().getWorldCenter(), true);
             fired = true;
     	}
     	
         stateTime += delta;
         //Update position of ball
-        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
+        setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2);
 
         //If ball is set to destroy and isnt, destroy it
-        if((setToDestroy) && !destroyed) {
-            world.destroyBody(body);
+        if(stateTime > 0.98f || isSetToDestroy()) {
+            world.destroyBody(getBody());
             destroyed = true;
         }
-        // determines cannonball range
-        if(stateTime > 0.98f) {
-            setToDestroy();
-        }
-    }
-
-    /**
-     * Changes destruction state
-     */
-    public void setToDestroy(){
-        setToDestroy = true;
-    }
-
-    /**
-     * Returns destruction status
-     */
-    public boolean isDestroyed(){
-        return destroyed;
     }
 
 	@Override
-	public void onContact() {
-		// TODO Auto-generated method stub
-		
+	public void onContact() {}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		fireNoise.dispose();
 	}
 }

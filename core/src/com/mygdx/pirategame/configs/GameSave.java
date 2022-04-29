@@ -61,11 +61,11 @@ public class GameSave {
 
     public void save(GameScreen game, SkillTree shop) {
 
-        difficultySave = GameScreen.difficulty;
-        invalidSpawnSave = game.invalidSpawn;
+        difficultySave = GameScreen.getDifficulty();
+        invalidSpawnSave = game.getInvalidSpawn();
 
         playerSave = new PlayerSave(GameScreen.getPlayer());
-        for (College college: GameScreen.colleges) {
+        for (College college: GameScreen.getColleges()) {
             CollegeSave collegeSave = new CollegeSave(college);
             collegesSaves.add(collegeSave);
             if(collegeSave.fleet != null){ // Checks if the college has a fleet (alcuin doesn't have any ships)
@@ -73,17 +73,17 @@ public class GameSave {
             }
         }
         for (int i = 20; i > 0; i--){ // Saves the unaligned ships
-            shipsSaves.add(new ShipSave(GameScreen.ships.get(GameScreen.ships.size() - i)));
+            shipsSaves.add(new ShipSave(GameScreen.getShips().get(GameScreen.getShips().size() - i)));
         }
-        for (Coin coin: GameScreen.coins) {
+        for (Coin coin: GameScreen.getCoins()) {
             coinSaves.add(new CoinSave(coin));
         }
-        hudSave = new HudSave(game.hud);
-        for (Powerup powerup: GameScreen.powerups){
+        hudSave = new HudSave(game.getHud());
+        for (Powerup powerup: GameScreen.getPowerups()){
             powerUpSaves.add(new PowerUpSave(powerup));
         }
 
-        tempTimeSave = game.TempTime;
+        tempTimeSave = game.getTempTime();
 
         statesSave = SkillTree.states;
 
@@ -105,7 +105,7 @@ public class GameSave {
         public PlayerSave(Player player) {
             velocity = player.getBody().getLinearVelocity();
             player.getRotation();
-            player.body.getPosition();
+            player.getBody().getPosition();
         }
 
         /**
@@ -140,14 +140,14 @@ public class GameSave {
         private boolean destroyed, setToDestroy;
 
         public CollegeSave(College college) {
-            collegeName = college.getCurrentCollegeName();
-            for(EnemyShip ship: college.fleet){
+            collegeName = college.getCollege();
+            for(EnemyShip ship: college.getFleet()){
                 fleet.add(new ShipSave(ship));
             }
-            position = college.body.getPosition();
-            health = college.health;
-            destroyed = college.destroyed;
-            setToDestroy = college.setToDestroy;
+            position = college.getBody().getPosition();
+            health = college.getHealth();
+            destroyed = college.isDestroyed();
+            setToDestroy = college.isSetToDestroy();
         }
 
         /**
@@ -163,16 +163,16 @@ public class GameSave {
          * @return College Object
          */
         public College createCollege(GameScreen game){
-            College result = new College(game, collegeName, this.position.x, this.position.y, collegeName.equals("Alcuin") ? 0 : GameScreen.difficulty.getMaxCollegeShips(), game.invalidSpawn);
+            College result = new College(game, collegeName, this.position.x, this.position.y, collegeName.equals("Alcuin") ? 0 : GameScreen.getDifficulty().getMaxCollegeShips(), game.getInvalidSpawn());
             ArrayList<EnemyShip> newfleet = new ArrayList<>();
             for(int i = 0; i < this.fleet.size(); i++){
                 newfleet.add(this.fleet.get(i).createEnemyShip(game));
             }
-            result.fleet = newfleet;
-            result.body.getPosition().set(this.position);
-            result.health = this.health;
-            result.destroyed = this.destroyed;
-            result.setToDestroy = this.setToDestroy;
+            result.setFleet(newfleet);
+            result.getBody().getPosition().set(this.position);
+            result.setHealth(this.health);
+            result.setDestroyed(this.destroyed);
+            result.setSetToDestroy(this.setToDestroy);
             return result;
         }
 
@@ -192,12 +192,12 @@ public class GameSave {
 
 
         public ShipSave(SteerableEntity steerableEntity){
-            college = steerableEntity.college;
-            position = steerableEntity.body.getPosition();
+            college = steerableEntity.getCollege();
+            position = steerableEntity.getBody().getPosition();
             rotation = steerableEntity.getRotation();
-            health = steerableEntity.health;
-            destroyed = steerableEntity.destroyed;
-            setToDestroy = steerableEntity.setToDestroy;
+            health = steerableEntity.getHealth();
+            destroyed = steerableEntity.isDestroyed();
+            setToDestroy = steerableEntity.isSetToDestroy();
         }
 
         /**
@@ -213,12 +213,12 @@ public class GameSave {
          * @return EnemyShip Object
          */
         public EnemyShip createEnemyShip(GameScreen game){
-            EnemyShip result = new EnemyShip(game, this.position.x, this.position.y, String.format("%s_ship.png", this.college.toLowerCase()).replace(' ', '_'), this.college);
-            result.body.getPosition().set(this.position);
+            EnemyShip result = new EnemyShip(game, this.position.x, this.position.y, this.college);
+            result.getBody().getPosition().set(this.position);
             result.setRotation(this.rotation);
-            result.health = this.health;
-            result.destroyed = this.destroyed;
-            result.setToDestroy = this.setToDestroy;
+            result.setHealth(this.health);
+            result.setDestroyed(this.destroyed);
+            result.setSetToDestroy(this.setToDestroy);
             return result;
         }
     }
@@ -233,9 +233,9 @@ public class GameSave {
         private boolean destroyed, setToDestroyed;
 
         public CoinSave(Coin coin){
-            position = coin.body.getPosition();
-            destroyed = coin.destroyed;
-            setToDestroyed = coin.setToDestroyed;
+            position = coin.getBody().getPosition();
+            destroyed = coin.isDestroyed();
+            setToDestroyed = coin.isDestroyed();
         }
 
         /**
@@ -279,14 +279,14 @@ public class GameSave {
          * @param game
          */
         public void createHud(GameScreen game){
-            Hud oldHud = game.hud;
+            Hud oldHud = game.getHud();
             oldHud.timeCount = this.timeCount;
             oldHud.Constant_timeCount = this.constantTimeCount;
             Hud.PowerupTimer = this.powerUpTimer;
             Hud.score = this.score;
             Hud.health = this.health;
             Hud.coins = this.coins;
-            Hud.coinMulti = GameScreen.difficulty.getGoldCoinMulti();
+            Hud.coinMulti = GameScreen.getDifficulty().getGoldCoinMulti();
             Hud.PowerUpType = this.powerUpType;
             Hud.PowerupTimerBool = this.powerUpTimerBool;
         }
@@ -303,10 +303,10 @@ public class GameSave {
         private boolean destroyed, setToDestroyed;
 
         public PowerUpSave(Powerup powerup){
-            position = powerup.body.getPosition();
-            type = powerup.powerupType;
-            destroyed = powerup.destroyed;
-            setToDestroyed = powerup.setToDestroyed;
+            position = powerup.getBody().getPosition();
+            type = powerup.getPowerupType();
+            destroyed = powerup.isDestroyed();
+            setToDestroyed = powerup.isSetToDestroyed();
         }
 
         /**
@@ -323,9 +323,9 @@ public class GameSave {
          */
         public Powerup createPowerUp(GameScreen game){
             Powerup result = new Powerup(game, this.position.x, this.position.y, this.type);
-            result.destroyed = this.destroyed;
-            result.setToDestroyed = this.setToDestroyed;
-            result.body.getPosition().set(this.position);
+            result.setDestroyed(this.destroyed);
+            result.setSetToDestroyed(this.setToDestroyed);
+            result.getBody().getPosition().set(this.position);
             return result;
         }
     }
@@ -341,7 +341,7 @@ public class GameSave {
         GameScreen gameScreen = new GameScreen(game, (Difficulty) loaded_data.get(0));
         SkillTree shop = new SkillTree(game);
 
-        gameScreen.invalidSpawn = (AvailableSpawn) loaded_data.get(1);
+        gameScreen.setInvalidSpawn((AvailableSpawn) loaded_data.get(1));
         ((PlayerSave) loaded_data.get(2)).createPlayer(gameScreen);
         ArrayList<College> colleges = new ArrayList<>();
         ArrayList<SteerableEntity> ships = new ArrayList<>();
@@ -349,7 +349,7 @@ public class GameSave {
         ArrayList<Powerup> powerups = new ArrayList<>();
         for (CollegeSave college: (Array<CollegeSave>) loaded_data.get(3)) {
             colleges.add(college.createCollege(gameScreen));
-            ships.addAll(colleges.get(colleges.size()-1).fleet);
+            ships.addAll(colleges.get(colleges.size()-1).getFleet());
         }
         for(ShipSave ship: (Array<ShipSave>) loaded_data.get(4)){
             if(!ship.college.equals("Unaligned")){
@@ -357,22 +357,22 @@ public class GameSave {
             }
             ships.add(ship.createEnemyShip(gameScreen));
         }
-        GameScreen.colleges = colleges;
-        GameScreen.ships = ships;
+        GameScreen.setColleges(colleges);
+        GameScreen.setShips(ships);
         for (CoinSave coin: (Array<CoinSave>) loaded_data.get(5)){
             Coin newcoin = new Coin(gameScreen, coin.position.x, coin.position.y);
-            newcoin.destroyed = coin.destroyed;
-            newcoin.setToDestroyed = coin.setToDestroyed;
-            newcoin.body.getPosition().set(coin.position);
+            newcoin.setDestroyed(coin.destroyed);
+            newcoin.setToDestroy(coin.setToDestroyed);
+            newcoin.getBody().getPosition().set(coin.position);
             coins.add(newcoin);
         }
-        GameScreen.coins = coins;
+        GameScreen.setCoins(coins);
         ((HudSave) loaded_data.get(6)).createHud(gameScreen);
         for(PowerUpSave powerUp: (Array<PowerUpSave>) loaded_data.get(7)){
             powerups.add(powerUp.createPowerUp(gameScreen));
         }
-        GameScreen.powerups = powerups;
-        gameScreen.TempTime = (Float) loaded_data.get(8);
+        GameScreen.setPowerups(powerups);
+        gameScreen.setTempTime((Float) loaded_data.get(8));
         SkillTree.states = new ArrayList<Integer>(Arrays.asList(((Array<Integer>) loaded_data.get(9)).toArray()));
         
         game.setGameScreen(gameScreen);

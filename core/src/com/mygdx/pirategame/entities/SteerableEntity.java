@@ -19,23 +19,26 @@ import com.mygdx.pirategame.screens.GameScreen;
  *@version 1.0
  */
 public abstract class SteerableEntity extends Entity implements Steerable<Vector2> {
-    public String college;
+    protected String college;
     
-	public boolean setToDestroy;
-    public boolean destroyed;
-    public int health;
-    public int damage;
+    protected boolean setToDestroy;
+    protected boolean destroyed;
+    protected int health;
+    protected int damage;
     protected HealthBar bar;
 
-    protected float zeroLinearSpeedThreshold = 0.01f;
-    protected float maxLinearSpeed, maxLinearAcceleration;
-    protected float maxAngularSpeed, maxAngularAcceleration;
-    protected float boundingRadius;
-    protected boolean tagged;
+    protected static float zeroLinearSpeedThreshold = 0.01f;
+    protected static float maxLinearSpeed = 302.5f / PPM;
+    protected static float maxLinearAcceleration = 55f / PPM;
+    protected static float maxAngularSpeed = (float) Math.PI / 4;
+    protected static float maxAngularAcceleration = (float) Math.PI / 16;
+    protected static float boundingRadius = 55f / PPM;
+    protected static boolean tagged = false;
     protected SteeringBehavior<Vector2> behavior;
     protected SteeringAcceleration<Vector2> steerOutput;
     
     protected Array<CannonFire> cannonBalls;
+    protected float timeFired;
 
     /**
      * Instantiates an enemy
@@ -46,18 +49,11 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
      */
     public SteerableEntity(GameScreen screen, float x, float y) {
     	super(screen, x, y);
-        this.setToDestroy = false;
-        this.destroyed = false;
-        this.health = 100;
+        this.setSetToDestroy(false);
+        this.setDestroyed(false);
+        this.setHealth(100);
         bar = new HealthBar(this);
         
-        zeroLinearSpeedThreshold = 0.1f;
-	    maxLinearSpeed = 302.5f / PPM;
-	    maxLinearAcceleration = 55f / PPM;
-	    maxAngularSpeed = (float) Math.PI / 4;
-	    maxAngularAcceleration = (float) Math.PI / 16;
-	    boundingRadius = 55f / PPM;
-	    tagged = false;
 	    steerOutput = new SteeringAcceleration<Vector2>(new Vector2());
 	    
         cannonBalls = new Array<CannonFire>();
@@ -89,7 +85,7 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
     }
 	
 	public Vector2 getPosition() {
-		return body.getPosition();
+		return getBody().getPosition();
 	}
 
 	@Override
@@ -109,7 +105,7 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
 	@Override
 	public void setMaxLinearSpeed(float maxLinearSpeed) {
-		this.maxLinearSpeed = maxLinearSpeed;
+		SteerableEntity.maxLinearSpeed = maxLinearSpeed;
 	}
 
 	@Override
@@ -119,7 +115,7 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
 	@Override
 	public void setMaxLinearAcceleration(float maxLinearAcceleration) {
-		this.maxLinearAcceleration = maxLinearAcceleration;
+		SteerableEntity.maxLinearAcceleration = maxLinearAcceleration;
 	}
 
 	@Override
@@ -129,7 +125,7 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
 	@Override
 	public void setMaxAngularSpeed(float maxAngularSpeed) {
-		this.maxAngularSpeed = maxAngularSpeed;
+		SteerableEntity.maxAngularSpeed = maxAngularSpeed;
 	}
 
 	@Override
@@ -139,17 +135,17 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
 	@Override
 	public void setMaxAngularAcceleration(float maxAngularAcceleration) {
-		this.maxAngularAcceleration = maxAngularAcceleration;
+		SteerableEntity.maxAngularAcceleration = maxAngularAcceleration;
 	}
 
 	@Override
 	public Vector2 getLinearVelocity() {
-		return body.getLinearVelocity();
+		return getBody().getLinearVelocity();
 	}
 
 	@Override
 	public float getAngularVelocity() {
-		return body.getAngularVelocity();
+		return getBody().getAngularVelocity();
 	}
 
 	@Override
@@ -164,7 +160,7 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
 	@Override
 	public void setTagged(boolean tagged) {
-		this.tagged = tagged;
+		SteerableEntity.tagged = tagged;
 	}
 	
 	public void setBehavior(SteeringBehavior<Vector2> behavior) {
@@ -173,5 +169,47 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 	
 	public SteeringBehavior<Vector2> getBehavior() {
 		return behavior;
+	}
+	
+	public String getCollege() {
+		return college;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
+
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+
+	public void setDestroyed(boolean destroyed) {
+		this.destroyed = destroyed;
+	}
+
+	public boolean isSetToDestroy() {
+		return setToDestroy;
+	}
+
+	public void setSetToDestroy(boolean setToDestroy) {
+		this.setToDestroy = setToDestroy;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		bar.dispose();
+	}
+
+	public float getTimeFired() {
+		return timeFired;
+	}
+
+	public void setTimeFired(float timeFired) {
+		this.timeFired = timeFired;
 	}
 }

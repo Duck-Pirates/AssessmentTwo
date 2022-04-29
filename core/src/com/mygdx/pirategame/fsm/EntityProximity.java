@@ -15,7 +15,7 @@ public class EntityProximity {
 				float squareDistance = owner.getPosition().dst2(currentAgent.getPosition());
 				if (squareDistance < radius * radius) {
 					if (currentAgent instanceof SteerableEntity) {
-						if (((SteerableEntity) currentAgent).college != owner.college) {
+						if (((SteerableEntity) currentAgent).getCollege() != owner.getCollege()) {
 							targets.add(currentAgent);
 						}
 					} else {

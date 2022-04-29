@@ -58,7 +58,7 @@ public class GameScreen implements Screen {
     private static float accel = 0.05f;
     private float stateTime;
 
-    public static PirateGame game;
+    private static PirateGame game;
     private OrthographicCamera camera;
     private Viewport viewport;
     private final Stage stage;
@@ -68,28 +68,28 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
 
     private World world;
-    public static Difficulty difficulty;
+    private static Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
 
-    public static ArrayList<College> colleges = new ArrayList<>();
-    public static ArrayList<SteerableEntity> ships = new ArrayList<>();
-    public static ArrayList<Coin> coins = new ArrayList<>();
-    public AvailableSpawn invalidSpawn = new AvailableSpawn();
-    public HashMap<Integer, ArrayList<Integer>> invalidSpawnClouds = new HashMap<>();
-    public Hud hud;
-    public static ArrayList<Powerup> powerups = new ArrayList<>();
-    public static ArrayList<Cloud> clouds = new ArrayList<>();
-    public static ArrayList<Tornado> Tornadoes = new ArrayList<>();
+    private static ArrayList<College> colleges = new ArrayList<>();
+    private static ArrayList<SteerableEntity> ships = new ArrayList<>();
+    private static ArrayList<Coin> coins = new ArrayList<>();
+    private AvailableSpawn invalidSpawn = new AvailableSpawn();
+    private HashMap<Integer, ArrayList<Integer>> invalidSpawnClouds = new HashMap<>();
+    private Hud hud;
+    private static ArrayList<Powerup> powerups = new ArrayList<>();
+    private static ArrayList<Cloud> clouds = new ArrayList<>();
+    private static ArrayList<Tornado> Tornadoes = new ArrayList<>();
 
-    public static final int GAME_RUNNING = 0;
-    public static final int GAME_PAUSED = 1;
+    private static final int GAME_RUNNING = 0;
+    private static final int GAME_PAUSED = 1;
     private static int gameStatus;
 
     private Table pauseTable;
     private Table table;
     
-    public Random rand = new Random();
-    public Float TempTime;
+    private Random rand = new Random();
+    private Float TempTime;
 
 
     /**
@@ -99,7 +99,7 @@ public class GameScreen implements Screen {
      */
     public GameScreen(PirateGame game, Difficulty difficulty){
         gameStatus = GAME_RUNNING;
-        GameScreen.game = game;
+        GameScreen.setGame(game);
         // Setting the difficulty, that will be changed based on the getPlayer()'s choice at the start of the game
         GameScreen.difficulty = difficulty;
         // Initialising camera and extendable viewport for viewing game
@@ -125,23 +125,23 @@ public class GameScreen implements Screen {
         world.setContactListener(new WorldContactListener(this));
         
         // Spawning enemy ship and coin. x and y is spawn location
-        colleges.add(new College(this, "alcuin", 3872 / PPM, 4230 / PPM, 0, invalidSpawn));
-        colleges.add(new College(this, "anne_lister", 5855 / PPM, 6470 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "constantine", 9055 / PPM, 9860 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "goodricke", 4128 / PPM, 12936 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "halifax", 12768 / PPM, 14408 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "langwith", 12576 / PPM, 6920 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
-        colleges.add(new College(this, "vanbrugh", 12896 / PPM, 3783 / PPM, difficulty.getMaxCollegeShips(), invalidSpawn));
+        colleges.add(new College(this, "alcuin", 3872 / PPM, 4230 / PPM, 0, getInvalidSpawn()));
+        colleges.add(new College(this, "anne_lister", 5855 / PPM, 6470 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
+        colleges.add(new College(this, "constantine", 9055 / PPM, 9860 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
+        colleges.add(new College(this, "goodricke", 4128 / PPM, 12936 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
+        colleges.add(new College(this, "halifax", 12768 / PPM, 14408 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
+        colleges.add(new College(this, "langwith", 12576 / PPM, 6920 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
+        colleges.add(new College(this, "vanbrugh", 12896 / PPM, 3783 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
         
         ships = new ArrayList<>();
         ships.add(new Player(this));
-        ships.addAll(colleges.get(0).fleet);
-        ships.addAll(colleges.get(1).fleet);
-        ships.addAll(colleges.get(2).fleet);
-        ships.addAll(colleges.get(3).fleet);
-        ships.addAll(colleges.get(4).fleet);
-        ships.addAll(colleges.get(5).fleet);
-        ships.addAll(colleges.get(6).fleet);
+        ships.addAll(colleges.get(0).getFleet());
+        ships.addAll(colleges.get(1).getFleet());
+        ships.addAll(colleges.get(2).getFleet());
+        ships.addAll(colleges.get(3).getFleet());
+        ships.addAll(colleges.get(4).getFleet());
+        ships.addAll(colleges.get(5).getFleet());
+        ships.addAll(colleges.get(6).getFleet());
 
         //Random ships
         Boolean validLoc;
@@ -157,9 +157,9 @@ public class GameScreen implements Screen {
                 validLoc = AvailableSpawn.add(a, b);
             }
             //Add a ship at the random coords
-            ships.add(new EnemyShip(this, a, b, "unaligned_ship.png", "Unaligned"));
+            getShips().add(new EnemyShip(this, a, b, "unaligned"));
         }
-        TempTime = 0f;
+        setTempTime(0f);
         //Random coins
         coins = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
@@ -229,37 +229,40 @@ public class GameScreen implements Screen {
         GdxAI.getTimepiece().update(delta);
         
     	stateTime += delta;
-        TempTime += delta;
+        setTempTime(getTempTime() + delta);
 
         handleInput();
-        for(College college: colleges){
-            college.update(delta);
+        for(College college: getColleges()){
+        	if(!college.isDestroyed())
+        		college.update(delta);
         }
 
         //Update ships
-        for (SteerableEntity ship : ships) {
-            ship.update(delta);
+        for (SteerableEntity ship : getShips()) {
+        	if(!ship.isDestroyed())
+        		ship.update(delta);
         }
 
         //Updates coin
-        for (Coin coin: coins) {
-            coin.update();
+        for (Coin coin: getCoins()) {
+        	if(!coin.isDestroyed())
+        		coin.update();
         }
 
         //Updates powerups
-        for (Powerup powerup: powerups) {
-            powerup.update();
+        for (Powerup powerup: getPowerups()) {
+        	if(!powerup.isDestroyed())
+        		powerup.update();
         }
 
         //Gdx.app.log("powerup", String.valueOf(ConstantTime));
         //Add new powerup
         //Gdx.app.log("x", String.valueOf(TempTime));
 
-        if (TempTime >= 29f){
+        if (getTempTime() >= 29f){
             Boolean validLoc;
             int a = 0;
             int b = 0;
-            Gdx.app.log("PowerUps", "Spawn More PowerUps");
             for (int i = 0; i < 5; i++) {
                 validLoc = false;
                 while (!validLoc) {
@@ -268,9 +271,9 @@ public class GameScreen implements Screen {
                     b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
                     validLoc = AvailableSpawn.add(a, b);
                 }
-                powerups.add(new Powerup(this, a, b, i));
+                getPowerups().add(new Powerup(this, a, b, i));
             }
-            TempTime = 0f;
+            setTempTime(0f);
         }
         
         //Updates clouds
@@ -291,15 +294,15 @@ public class GameScreen implements Screen {
         }
         //After a delay check if a college is destroyed. If not, it can fire
         if (stateTime > 1) {
-            for(College college: colleges){
-                if(!college.destroyed && !(college.getCurrentCollegeName().equals("Alcuin"))){
+            for(College college: getColleges()){
+                if(!college.isDestroyed() && !(college.getCollege().equals("alcuin"))){
                     college.fire();
                 }
             }
         stateTime = 0;
         }
 
-        hud.update(delta);
+        getHud().update(delta);
 
         // Centre camera on player boat
         camera.position.x = getPlayer().getPosition().x;
@@ -350,50 +353,49 @@ public class GameScreen implements Screen {
         // b2dr is the hitbox shapes, can be commented out to hide
         b2dr.render(world, camera.combined);
 
-        game.getBatch().setProjectionMatrix(camera.combined);
-        game.getBatch().begin();
+        getGame().getBatch().setProjectionMatrix(camera.combined);
+        getGame().getBatch().begin();
         // Order determines layering
 
         //Renders coins
-        for(Coin coin: coins) {
-            coin.draw(game.getBatch());
+        for(Coin coin: getCoins()) {
+            coin.draw(getGame().getBatch());
         }
 
         //Renders powerups
-        for(Powerup powerup: powerups) {
-            powerup.draw(game.getBatch());
+        for(Powerup powerup: getPowerups()) {
+            powerup.draw(getGame().getBatch());
         }
 
 
         //Renders colleges
-        getPlayer().draw(game.getBatch());
+        getPlayer().draw(getGame().getBatch());
 
-        for (College college: colleges) {
-            college.draw(game.getBatch());
+        for (College college: getColleges()) {
+            college.draw(getGame().getBatch());
         }
 
         for(int i = 0; i< Tornadoes.size(); i++) {
-            Tornadoes.get(i).draw(game.getBatch());
+            Tornadoes.get(i).draw(getGame().getBatch());
         }
 
         //Updates all ships
-        for (SteerableEntity ship: ships){
-            if (!ship.college.equals("Unaligned")) {
+        for (SteerableEntity ship: getShips()){
+            if (!ship.getCollege().equals("unaligned")) {
                 //Flips a colleges allegence if their college is destroyed
-                if (getCollege(ship.college).destroyed) {
-
-                    ship.updateTexture("Alcuin", "alcuin_ship.png");
+                if (getCollege(ship.getCollege()).isDestroyed()) {
+                    ship.updateTexture("alcuin", "alcuin_ship.png");
                 }
             }
-            ship.draw(game.getBatch());
+            ship.draw(getGame().getBatch());
         }
 
         // Renders all the clouds on top of eerything else
         for(int i = 0; i <clouds.size(); i++){
-            clouds.get(i).draw(game.getBatch());
+            clouds.get(i).draw(getGame().getBatch());
         }
 
-        game.getBatch().end();
+        getGame().getBatch().end();
         Hud.stage.draw();
         stage.act();
         stage.draw();
@@ -476,14 +478,14 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor){
                 pauseTable.setVisible(false);
-                game.changeScreen(SKILL);
+                getGame().changeScreen(SKILL);
             }
         });
         skill.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
                 pauseTable.setVisible(false);
-                game.changeScreen(SKILL);
+                getGame().changeScreen(SKILL);
             }
         });
         start.addListener(new ChangeListener() {
@@ -497,7 +499,7 @@ public class GameScreen implements Screen {
         save.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.save();
+                getGame().save();
             }
         }
         );
@@ -505,7 +507,7 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 pauseTable.setVisible(false);
-                game.setScreen(new Options(game,game.getScreen()));
+                getGame().setScreen(new Options(getGame(),getGame().getScreen()));
             }
         }
         );
@@ -557,12 +559,12 @@ public class GameScreen implements Screen {
      * @return college : returns the college fetched from colleges
      */
     public static College getCollege(String collegeName) {
-    	for (College college : colleges) {
-    		if (college.currentCollege == collegeName) {
+    	for (College college : getColleges()) {
+    		if (college.getCollege() == collegeName) {
     			return college;
     		}
     	}
-        return colleges.get(0);
+        return getColleges().get(0);
     }
 
     /**
@@ -571,14 +573,14 @@ public class GameScreen implements Screen {
      */
     public void gameOverCheck(){
         //Lose game if ship on 0 health or Alcuin is destroyed
-        if (Hud.getHealth() <= 0 || getCollege("Alcuin").destroyed) {
-            game.changeScreen(DEATH);
-            game.killGame();
+        if (Hud.getHealth() <= 0 || getColleges().get(0).getHealth() <= 0) {
+            getGame().changeScreen(DEATH);
+            getGame().killGame();
         }
         //Win game if all colleges destroyed
-        else if (getCollege("Anne Lister").destroyed && getCollege("Constantine").destroyed && getCollege("Goodricke").destroyed){
-            game.changeScreen(VICTORY);
-            game.killGame();
+        else if (getColleges().size() == 1 && getColleges().get(0).getCollege() == "alcuin"){
+            getGame().changeScreen(VICTORY);
+            getGame().killGame();
         }
     }
 
@@ -595,11 +597,11 @@ public class GameScreen implements Screen {
     // TODO delete
     
     public static Player getPlayer() {
-    	return (Player) ships.get(0);
+    	return (Player) getShips().get(0);
     }
     
     public static void setPlayer(Player player) {
-    	ships.set(0, player);
+    	getShips().set(0, player);
     }
     
     /**
@@ -636,19 +638,19 @@ public class GameScreen implements Screen {
      */
     public static void changeDamage(int value){
 
-        for (int i = 0; i < ships.size(); i++){
-            ships.get(i).changeDamageReceived(value);
+        for (int i = 0; i < getShips().size(); i++){
+            getShips().get(i).changeDamageReceived(value);
         }
-        getCollege("Anne Lister").changeDamageReceived(value);
-        getCollege("Constantine").changeDamageReceived(value);
-        getCollege("Goodricke").changeDamageReceived(value);
-        getCollege("Halifax").changeDamageReceived(value);
-        getCollege("Langwith").changeDamageReceived(value);
-        getCollege("Vanbrugh").changeDamageReceived(value);
+        getCollege("anne_lister").changeDamageReceived(value);
+        getCollege("constantine").changeDamageReceived(value);
+        getCollege("goodricke").changeDamageReceived(value);
+        getCollege("halifax").changeDamageReceived(value);
+        getCollege("langwith").changeDamageReceived(value);
+        getCollege("vanbrugh").changeDamageReceived(value);
     }
 
     public void SetGoldCoinMulti(int num){
-        GameScreen.difficulty.SetGoldCoinMulti(num);
+        GameScreen.getDifficulty().SetGoldCoinMulti(num);
     }
     
     /**
@@ -708,7 +710,7 @@ public class GameScreen implements Screen {
         renderer.dispose();
         world.dispose();
         b2dr.dispose();
-        hud.dispose();
+        getHud().dispose();
         stage.dispose();
     }
     
@@ -719,4 +721,60 @@ public class GameScreen implements Screen {
     public static ArrayList<Coin> getCoins() {
     	return coins;
     }
+
+	public static Difficulty getDifficulty() {
+		return difficulty;
+	}
+
+	public AvailableSpawn getInvalidSpawn() {
+		return invalidSpawn;
+	}
+
+	public static ArrayList<College> getColleges() {
+		return colleges;
+	}
+	
+	public static void setColleges(ArrayList<College> colleges) {
+		GameScreen.colleges = colleges;
+	}
+
+	public static ArrayList<Powerup> getPowerups() {
+		return powerups;
+	}
+
+	public Hud getHud() {
+		return hud;
+	}
+
+	public Float getTempTime() {
+		return TempTime;
+	}
+
+	public static void setShips(ArrayList<SteerableEntity> ships) {
+		GameScreen.ships = ships;
+	}
+
+	public static void setCoins(ArrayList<Coin> coins) {
+		GameScreen.coins = coins;
+	}
+
+	public static void setPowerups(ArrayList<Powerup> powerups) {
+		GameScreen.powerups = powerups;
+	}
+
+	public void setTempTime(Float tempTime) {
+		TempTime = tempTime;
+	}
+
+	public void setInvalidSpawn(AvailableSpawn invalidSpawn) {
+		this.invalidSpawn = invalidSpawn;
+	}
+
+	public static PirateGame getGame() {
+		return game;
+	}
+
+	public static void setGame(PirateGame game) {
+		GameScreen.game = game;
+	}
 }

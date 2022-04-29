@@ -32,10 +32,7 @@ import com.mygdx.pirategame.screens.Hud;
  */
 public class WorldContactListener implements ContactListener {
 
-    public static GameScreen screen;
-
     public WorldContactListener(GameScreen screen){
-        WorldContactListener.screen = screen;
     }
 
     /**
@@ -93,42 +90,42 @@ public class WorldContactListener implements ContactListener {
                 if(fixA.getFilterData().categoryBits == COLLEGE_BIT) {
                     if (fixA.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixA.getUserData().getClass())) {
                         ((InteractiveTileObject) fixA.getUserData()).onContact();
-                        ((CannonFire) fixB.getUserData()).setToDestroy();
+                        ((CannonFire) fixB.getUserData()).setToDestroy(true);
                     }
                 }
                 else {
                     if (fixB.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixB.getUserData().getClass())) {
                         ((InteractiveTileObject) fixB.getUserData()).onContact();
-                        ((CannonFire) fixA.getUserData()).setToDestroy();
+                        ((CannonFire) fixA.getUserData()).setToDestroy(true);
                     }
                 }
                 break;
             case ENEMY_BIT | CANNON_BIT:
                 if(fixA.getFilterData().categoryBits == ENEMY_BIT) {
                     ((SteerableEntity) fixA.getUserData()).onContact();
-                    ((CannonFire) fixB.getUserData()).setToDestroy();
+                    ((CannonFire) fixB.getUserData()).setToDestroy(true);
                 }
                 else {
                     ((SteerableEntity) fixB.getUserData()).onContact();
-                    ((CannonFire) fixA.getUserData()).setToDestroy();
+                    ((CannonFire) fixA.getUserData()).setToDestroy(true);
                 }
                 break;
             case COLLEGEFIRE_BIT | PLAYER_BIT:
                 if(fixA.getFilterData().categoryBits == COLLEGEFIRE_BIT) {
-                    Hud.changeHealth(-GameScreen.difficulty.getDamageReceived());
+                    Hud.changeHealth(-GameScreen.getDifficulty().getDamageReceived());
                     ((CollegeFire) fixA.getUserData()).setToDestroy();
                 }
                 else {
-                    Hud.changeHealth(-GameScreen.difficulty.getDamageReceived());
+                    Hud.changeHealth(-GameScreen.getDifficulty().getDamageReceived());
                     ((CollegeFire) fixB.getUserData()).setToDestroy();
                 }
                 break;
             case TORNADO_BIT | PLAYER_BIT:
                 if(fixA.getFilterData().categoryBits == TORNADO_BIT) {
-                    ((Tornado) fixA.getUserData()).inContact = true;
+                    ((Tornado) fixA.getUserData()).setInContact(true);
                 }
                 else {
-                    ((Tornado) fixB.getUserData()).inContact = true;
+                    ((Tornado) fixB.getUserData()).setInContact(true);
                 }
                 break;
         }

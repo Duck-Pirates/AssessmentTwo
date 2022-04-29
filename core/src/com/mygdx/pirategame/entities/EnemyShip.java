@@ -1,12 +1,15 @@
 package com.mygdx.pirategame.entities;
 
-import static com.mygdx.pirategame.configs.Constants.CANNON_BIT;
+import static com.mygdx.pirategame.configs.Constants.COIN_BIT;
+import static com.mygdx.pirategame.configs.Constants.COLLEGEFIRE_BIT;
+import static com.mygdx.pirategame.configs.Constants.COLLEGESENSOR_BIT;
+import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
 import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
 import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
-import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
 import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
@@ -33,7 +36,7 @@ public class EnemyShip extends SteerableEntity {
     private Sound destroy;
     private Sound hit;
     
-    public StateMachine<EnemyShip, EnemyStateMachine> stateMachine;
+    private StateMachine<EnemyShip, EnemyStateMachine> stateMachine;
     
     /**
      * Instantiates enemy ship
@@ -44,12 +47,12 @@ public class EnemyShip extends SteerableEntity {
      * @param path path of texture file
      * @param assignment College ship is assigned to
      */
-    public EnemyShip(GameScreen screen, float x, float y, String path, String assignment) {
+    public EnemyShip(GameScreen screen, float x, float y, String assignment) {
         super(screen, x, y);
-        texture = new Texture(path);
+        texture = new Texture(assignment + "_ship.png");
         college = assignment;
-        
-        stateMachine = new DefaultStateMachine<EnemyShip, EnemyStateMachine>(this, EnemyStateMachine.SLEEP);
+        setTimeFired(GdxAI.getTimepiece().getTime());
+        setStateMachine(new DefaultStateMachine<EnemyShip, EnemyStateMachine>(this, EnemyStateMachine.SLEEP));
         
         //Set audio
         destroy = Gdx.audio.newSound(Gdx.files.internal("ship-explosion-2.wav"));
@@ -59,7 +62,7 @@ public class EnemyShip extends SteerableEntity {
         setRegion(texture);
         setOrigin(32 /PPM, 55 / PPM);
 
-        damage = GameScreen.difficulty.getDamageDealt();
+        damage = GameScreen.getDifficulty().getDamageDealt();
     }
 
     /**
@@ -70,37 +73,41 @@ public class EnemyShip extends SteerableEntity {
      */
     public void update(float delta) {
         //If ship is set to destroy and isn't, destroy it
-        if(setToDestroy && !destroyed) {
+        if(isSetToDestroy()) {
             //Play death noise
-            if (GameScreen.game.getPreferences().isEffectsEnabled()) {
-                destroy.play(GameScreen.game.getPreferences().getEffectsVolume());
+            if (GameScreen.getGame().getPreferences().isEffectsEnabled()) {
+                destroy.play(GameScreen.getGame().getPreferences().getEffectsVolume());
             }
-            world.destroyBody(body);
-            destroyed = true;
+            world.destroyBody(getBody());
+            setDestroyed(true);
             
             //Change player coins and points
             Hud.changePoints(30);
             Hud.changeCoins(10);
-            
-            texture.dispose();
-            destroy.dispose();
-            hit.dispose();
-        } else if(!destroyed) {
-            
-        	stateMachine.update();
-        	
+        } else {
+        	getStateMachine().update();
+        	setHealth(1000);
         	if (behavior != null) {
     			behavior.calculateSteering(steerOutput);
     			applySteering(steerOutput, delta);
     		}
         	
-            setRotation((float) Math.toDegrees(body.getAngle()) - 90);
-            setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight()/2f);
+            setRotation((float) Math.toDegrees(getOrientation()) - 90);
+            setPosition(getPosition().x - getWidth() / 2f, getPosition().y - getHeight()/2f);
+            
+            // Updates cannonball data
+            for(CannonFire ball : cannonBalls) {
+                ball.update(delta);
+                if(ball.isDestroyed()) {
+                    cannonBalls.removeValue(ball, true);
+                	ball.dispose();
+                }
+            }
             
             bar.update();
         }
-        if(health <= 0) {
-            setToDestroy = true;
+        if(getHealth() <= 0) {
+            setSetToDestroy(true);
         }
     }
     
@@ -109,36 +116,26 @@ public class EnemyShip extends SteerableEntity {
     	Vector2 la = steering.linear;
         float aa = steering.angular;
         
-        body.setTransform(body.getPosition(), body.getAngle() + aa * delta);
-        body.setLinearVelocity((body.getLinearVelocity().len() + la.len() * delta) * (float) Math.cos(body.getAngle()),
-        					   (body.getLinearVelocity().len() + la.len() * delta) * (float) Math.sin(body.getAngle()));
+        getBody().setTransform(getPosition(), getOrientation() + aa * delta);
+        getBody().setLinearVelocity((getBody().getLinearVelocity().len() + la.len() * delta) * (float) Math.cos(getOrientation()),
+        					   		(getBody().getLinearVelocity().len() + la.len() * delta) * (float) Math.sin(getOrientation()));
         
-        if(body.getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
-    		// Int x and y are used to preserve direction of travel
-    		int x = 1;
-    		int y = 1;
-    		if(body.getLinearVelocity().x < 0) {
-    			x = -1;
-    		}
-    		if(body.getLinearVelocity().y < 0) {
-    			y = -1;
-    		}
-    		body.setLinearVelocity(maxLinearSpeed * (float) Math.cos(body.getAngle()) * x, 
-    							   maxLinearSpeed * (float) Math.sin(body.getAngle()) * y);
+        if(getBody().getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
+    		getBody().setLinearVelocity(maxLinearSpeed * (float) Math.cos(getBody().getAngle()), 
+    									maxLinearSpeed * (float) Math.sin(getBody().getAngle()));
     	}
-        if(body.getAngularVelocity() > maxAngularSpeed) {
-    		body.setAngularVelocity(maxAngularSpeed);
-    	} else if (body.getAngularVelocity() < -maxAngularSpeed) {
-    		body.setAngularVelocity(-maxAngularSpeed);
+        
+        if(getBody().getAngularVelocity() > maxAngularSpeed) {
+    		getBody().setAngularVelocity(maxAngularSpeed);
+    	} else if (getBody().getAngularVelocity() < -maxAngularSpeed) {
+    		getBody().setAngularVelocity(-maxAngularSpeed);
     	}
 	}
     
     public void fire() {
-        cannonBalls.add(new CannonFire(screen, body, body.getPosition().x, body.getPosition().y,
-        		body.getAngle() - (float) Math.PI / 2, 5));
-        cannonBalls.add(new CannonFire(screen, body, body.getPosition().x, body.getPosition().y,
-        		body.getAngle() - (float) Math.PI / 2, -5));
-    	
+        cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI / 2, 5));
+        cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI / 2, 5));
+   	
     }
 
     /**
@@ -159,15 +156,16 @@ public class EnemyShip extends SteerableEntity {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(50 / PPM, 20 / PPM);
         fdef.shape = shape;
-        shape.dispose();
+        //shape.dispose();
         
         // setting BIT identifier
         fdef.filter.categoryBits = ENEMY_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT | CANNON_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT | COIN_BIT | ENEMY_BIT 
+        		| COLLEGE_BIT | COLLEGESENSOR_BIT | COLLEGEFIRE_BIT;
         
-        body = world.createBody(bdef);
-        body.createFixture(fdef).setUserData(this);
+        setBody(world.createBody(bdef));
+        getBody().createFixture(fdef).setUserData(this);
     }
 
     /**
@@ -176,7 +174,7 @@ public class EnemyShip extends SteerableEntity {
      * @param batch The batch of visual data of the ship
      */
     public void draw(Batch batch) {
-        if(!destroyed) {
+        if(!isDestroyed()) {
             super.draw(batch);
             //Render health bar
             bar.render(batch);
@@ -189,14 +187,28 @@ public class EnemyShip extends SteerableEntity {
      */
     @Override
     public void onContact() {
-        Gdx.app.log("enemy", "collision");
         //Play collision sound
-        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
-            hit.play(GameScreen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.getGame().getPreferences().isEffectsEnabled()) {
+            hit.play(GameScreen.getGame().getPreferences().getEffectsVolume());
         }
         //Deal with the damage
-        health -= GameScreen.difficulty.getDamageDealt();
-        bar.changeHealth(GameScreen.difficulty.getDamageDealt());
+        setHealth(getHealth() - GameScreen.getDifficulty().getDamageDealt());
+        bar.changeHealth(GameScreen.getDifficulty().getDamageDealt());
         Hud.changePoints(5);
     }
+
+	public StateMachine<EnemyShip, EnemyStateMachine> getStateMachine() {
+		return stateMachine;
+	}
+
+	public void setStateMachine(StateMachine<EnemyShip, EnemyStateMachine> stateMachine) {
+		this.stateMachine = stateMachine;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		destroy.dispose();
+		hit.dispose();
+	}
 }

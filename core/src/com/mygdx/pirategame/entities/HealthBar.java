@@ -1,5 +1,6 @@
 package com.mygdx.pirategame.entities;
 
+import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -47,8 +48,8 @@ public class HealthBar {
     public void update(){
         if (owner != null) {
             //Update location
-            healthBar.setX(owner.body.getPosition().x - 0.68f);
-            healthBar.setY(owner.body.getPosition().y + 60);
+            healthBar.setX(owner.getBody().getPosition().x - 0.68f);
+            healthBar.setY(owner.getBody().getPosition().y + 60 / PPM);
         }
     }
 
@@ -68,8 +69,8 @@ public class HealthBar {
         //Changes bar size when damaged
         healthBar.setSize(healthBar.getWidth() - value, healthBar.getHeight());
     }
-
-    /**
-     * test
-     */
+    
+    public void dispose() {
+    	image.dispose();
+    }
 }
