@@ -28,15 +28,14 @@ import static com.mygdx.pirategame.configs.Constants.*;
  * @version 1.0
  */
 
-public class Cloud extends Entity{
+public class Cloud extends Entity {
 
     private float state;
-    private Texture cloud;
-    private Animation cloudAnimation;
+    private Animation<?> cloudAnimation;
     private float alpha;
-    Random rand = new Random();
     private int dimension;
     private boolean inContact = false, endReset = true;
+    private Random rand = new Random();
 
     /**
      * Instantiates a new Cloud.
@@ -49,14 +48,14 @@ public class Cloud extends Entity{
     public Cloud(GameScreen screen, float x, float y) {
         super(screen, x, y);
         //Set cloud image and animation
-        cloud = new Texture("clouds.png");
-        TextureRegion[][] tmp = new TextureRegion(cloud).split(2048, 1256);
+        texture = new Texture("clouds.png");
+        TextureRegion[][] tmp = new TextureRegion(texture).split(2048, 1256);
         List<TextureRegion> list = new ArrayList<TextureRegion>(Arrays.asList(tmp[0]));
         list.addAll(Arrays.asList(tmp[1]));
         int startIndex = rand.nextInt(4); // This is to randomize the cloud animation
         setRegion(list.get(startIndex));
         state = (startIndex * 0.25f) + 0.1f;
-        cloudAnimation = new Animation(0.25f,  list.toArray());
+        cloudAnimation = new Animation<Object>(0.25f,  list.toArray());
         //Set the position and size of the cloud
         setBounds(0,0,dimension / PPM, dimension * (0.61328125f) / PPM);
         //Sets origin of the cloud
@@ -108,9 +107,9 @@ public class Cloud extends Entity{
      */
 
     public void update(float dt){
-        setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight() / 2f);
+        setPosition(getBody().getPosition().x - getWidth() / 2f, getBody().getPosition().y - getHeight() / 2f);
         if(state % 0.15f < 0.10f){
-            this.body.applyForce(new Vector2(-0.03f,-0.03f), this.body.getWorldCenter(), false);
+            this.getBody().applyForce(new Vector2(-0.03f,-0.03f), this.getBody().getWorldCenter(), false);
         }
         setRegion(getFrame(dt));
         if(inContact){

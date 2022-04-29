@@ -39,15 +39,11 @@ public class SkillTree implements Screen {
     private Texture hp;
     private Texture boxBackground;
     private Texture coinPic;
-    private static Integer score;
     public static Integer health;
     private static Label scoreLabel;
     private static Label healthLabel;
     private static Label coinLabel;
     private static Label pointsText;
-    private static Label powerupLabel;
-    private static Integer coins;
-    private static Integer coinMulti;
     private Image hpImg;
     private com.badlogic.gdx.scenes.scene2d.ui.Image box;
     private Image coin;
@@ -195,7 +191,7 @@ public class SkillTree implements Screen {
         table3.setFillParent(true);
 
         scoreLabel = new Label(String.format("%03d", Hud.score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        if (GameScreen.difficulty == Difficulty.EASY){
+        if (GameScreen.getDifficulty() == Difficulty.EASY){
             healthLabel = new Label(String.format("%03d", Hud.health), new Label.LabelStyle(new BitmapFont(), Color.RED));
         }
         else{
@@ -236,7 +232,7 @@ public class SkillTree implements Screen {
             movement1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.IncreaseMaxSpeedPercent(5);
+                    GameScreen.getDifficulty().IncreaseMaxSpeedPercent(5);
                     states.set(0, 2);
                     movement1.setDisabled(true);
                     Hud.SubtractCoin(Speed1Cost);
@@ -254,7 +250,7 @@ public class SkillTree implements Screen {
             movement2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.IncreaseMaxSpeedPercent(10);
+                    GameScreen.getDifficulty().IncreaseMaxSpeedPercent(10);
                     states.set(1, 2);
                     Hud.SubtractCoin(Speed2Cost);
                     movement2.setDisabled(true);
@@ -272,7 +268,7 @@ public class SkillTree implements Screen {
             movement3.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.IncreaseMaxSpeedPercent(15);
+                    GameScreen.getDifficulty().IncreaseMaxSpeedPercent(15);
                     states.set(2, 2);
                     Hud.SubtractCoin(Speed3Cost);
                     movement3.setDisabled(true);
@@ -290,7 +286,7 @@ public class SkillTree implements Screen {
             traverse1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.IncreaseTraversePercent(10);
+                    GameScreen.getDifficulty().IncreaseTraversePercent(10);
                     states.set(3, 2);
                     Hud.SubtractCoin(Traverse1Cost);
                     traverse1.setDisabled(true);
@@ -306,7 +302,7 @@ public class SkillTree implements Screen {
             traverse2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.IncreaseTraversePercent(20);
+                    GameScreen.getDifficulty().IncreaseTraversePercent(20);
                     states.set(4, 2);
                     Hud.SubtractCoin(Traverse2Cost);
                     traverse2.setDisabled(true);
@@ -323,7 +319,7 @@ public class SkillTree implements Screen {
             damage1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.IncreaseDamageDealtPercent(5);
+                    GameScreen.getDifficulty().IncreaseDamageDealtPercent(5);
                     states.set(5, 2);
                     Hud.SubtractCoin(Damage1Cost);
                     damage1.setDisabled(true);
@@ -339,7 +335,7 @@ public class SkillTree implements Screen {
             damage2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.IncreaseDamageDealtPercent(10);
+                    GameScreen.getDifficulty().IncreaseDamageDealtPercent(10);
                     states.set(6, 2);
                     Hud.SubtractCoin(Damage2Cost);
                     damage2.setDisabled(true);
@@ -355,7 +351,7 @@ public class SkillTree implements Screen {
             damage3.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.IncreaseDamageDealtPercent(20);
+                    GameScreen.getDifficulty().IncreaseDamageDealtPercent(20);
                     states.set(7, 2);
                     Hud.SubtractCoin(Damage3Cost);
                     damage3.setDisabled(true);
@@ -372,7 +368,7 @@ public class SkillTree implements Screen {
             armour1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.DecreaseDamageRecievedPercent(14);
+                    GameScreen.getDifficulty().DecreaseDamageRecievedPercent(14);
                     states.set(8, 2);
                     Hud.SubtractCoin(Armour1Cost);
                     armour1.setDisabled(true);
@@ -388,7 +384,7 @@ public class SkillTree implements Screen {
             armour2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.DecreaseDamageRecievedPercent(12);
+                    GameScreen.getDifficulty().DecreaseDamageRecievedPercent(12);
                     states.set(9, 2);
                     Hud.SubtractCoin(Armour2Cost);
                     armour2.setDisabled(true);
@@ -404,7 +400,7 @@ public class SkillTree implements Screen {
             armour3.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.DecreaseDamageRecievedPercent(8);
+                    GameScreen.getDifficulty().DecreaseDamageRecievedPercent(8);
                     states.set(10, 2);
                     Hud.SubtractCoin(Armour3Cost);
                     armour3.setDisabled(true);
@@ -421,7 +417,7 @@ public class SkillTree implements Screen {
             GoldMulti1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.IncreaseCoinMulti(1);
+                    GameScreen.getDifficulty().IncreaseCoinMulti(1);
                     states.set(11, 2);
                     Hud.SubtractCoin(Gold1Cost);
                     GoldMulti1.setDisabled(true);
@@ -437,7 +433,7 @@ public class SkillTree implements Screen {
             GoldMulti2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.difficulty.IncreaseCoinMulti(1);
+                    GameScreen.getDifficulty().IncreaseCoinMulti(1);
                     states.set(12, 2);
                     Hud.SubtractCoin(Gold2Cost);
                     GoldMulti2.setDisabled(true);
@@ -455,7 +451,7 @@ public class SkillTree implements Screen {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     //TODO insert cone shoot function
-                    GameScreen.difficulty.SetConeMec(true);
+                    GameScreen.getDifficulty().SetConeMec(true);
                     states.set(13, 2);
                     Hud.SubtractCoin(Cone1Cost);
                     GoldMulti1.setDisabled(true);

@@ -17,10 +17,13 @@ import com.mygdx.pirategame.screens.GameScreen;
  *@version 1.0
  */
 public abstract class Entity extends Sprite implements Location<Vector2> {
+
+    protected boolean toDestroy;
+    protected boolean destroyed;
 	protected GameScreen screen;
 	protected Texture texture;
 	protected World world;
-    public Body body;
+    protected Body body;
     
     /**
      * Instantiates an entity
@@ -35,6 +38,8 @@ public abstract class Entity extends Sprite implements Location<Vector2> {
         this.screen = screen;
         super.setPosition(x, y);
         defineEntity(x, y);
+        destroyed = false;
+        toDestroy = false;
     }
 
     /**
@@ -48,7 +53,7 @@ public abstract class Entity extends Sprite implements Location<Vector2> {
     public abstract void onContact();
 
 	public Vector2 getPosition() {
-		return body.getPosition();
+		return getBody().getPosition();
 	}
 
 	public void setPosition(Vector2 position, float angle){
@@ -61,12 +66,12 @@ public abstract class Entity extends Sprite implements Location<Vector2> {
 	
 	@Override
 	public float getOrientation() {
-		return body.getAngle();
+		return getBody().getAngle();
 	}
 
 	@Override
 	public void setOrientation(float orientation) {
-		body.setTransform(getPosition(), orientation);
+		getBody().setTransform(getPosition(), orientation);
 	}
 
 	@Override
@@ -84,5 +89,33 @@ public abstract class Entity extends Sprite implements Location<Vector2> {
 	@Override
 	public Location<Vector2> newLocation() {
 		return null;
+	}
+
+	public Body getBody() {
+		return body;
+	}
+
+	public void setBody(Body body) {
+		this.body = body;
+	}
+	
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+	
+	public void setDestroyed(Boolean destroyed) {
+		this.destroyed = destroyed;
+	}
+
+	public boolean isSetToDestroy() {
+		return toDestroy;
+	}
+
+	public void setToDestroy(Boolean toDestroy) {
+		this.toDestroy = toDestroy;
+	}
+	
+	public void dispose() {
+		texture.dispose();
 	}
 }

@@ -28,11 +28,8 @@ import com.mygdx.pirategame.screens.Hud;
  *@version 1.0
  */
 public class Coin extends Entity {
-    private Texture coin;
-    public boolean setToDestroyed;
-    public boolean destroyed;
     private Sound coinPickup;
-    public Random rand = new Random();
+    private Random rand = new Random();
 
     /**
      * Instantiates a new Coin.
@@ -44,11 +41,11 @@ public class Coin extends Entity {
     public Coin(GameScreen screen, float x, float y) {
         super(screen, x, y);
         //Set coin image
-        coin = new Texture("coin.png");
+        texture = new Texture("coin.png");
         //Set the position and size of the coin
         setBounds(0,0,48 / PPM, 48 / PPM);
         //Set the texture
-        setRegion(coin);
+        setRegion(texture);
         //Sets origin of the coin
         setOrigin(24 / PPM,24 / PPM);
         coinPickup = Gdx.audio.newSound(Gdx.files.internal("coin-pickup.mp3"));
@@ -59,13 +56,13 @@ public class Coin extends Entity {
      */
     public void update() {
         //If coin is set to destroy and isnt, destroy it
-        if(setToDestroyed && !destroyed) {
-            world.destroyBody(body);
-            destroyed = true;
+        if(isSetToDestroy() && !isDestroyed()) {
+            world.destroyBody(getBody());
+            setDestroyed(true);
         }
         //Update position of coin
-        else if(!destroyed) {
-            setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight() / 2f);
+        else if(!isDestroyed()) {
+            setPosition(getBody().getPosition().x - getWidth() / 2f, getBody().getPosition().y - getHeight() / 2f);
         }
     }
 
@@ -78,7 +75,7 @@ public class Coin extends Entity {
         BodyDef bdef = new BodyDef();
         bdef.position.set(x, y);
         bdef.type = BodyDef.BodyType.DynamicBody;
-        body = world.createBody(bdef);
+        setBody(world.createBody(bdef));
 
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
@@ -90,7 +87,7 @@ public class Coin extends Entity {
         fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT | NOSPAWNAREA_BIT;
         fdef.shape = shape;
         fdef.isSensor = true;
-        body.createFixture(fdef).setUserData(this);
+        getBody().createFixture(fdef).setUserData(this);
     }
 
     /**
@@ -99,12 +96,12 @@ public class Coin extends Entity {
     @Override
     public void onContact() {
         //Add a coin
-        Hud.changeCoins((rand.nextInt(GameScreen.difficulty.getMaxGoldXCoin()) + 1) * GameScreen.difficulty.getGoldCoinMulti());
+        Hud.changeCoins((rand.nextInt(GameScreen.getDifficulty().getMaxGoldXCoin()) + 1) * GameScreen.getDifficulty().getGoldCoinMulti());
         //Set to destroy
-        setToDestroyed = true;
+        setToDestroy(true);
         //Play pickup sound
-        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
-            coinPickup.play(GameScreen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.getGame().getPreferences().isEffectsEnabled()) {
+            coinPickup.play(GameScreen.getGame().getPreferences().getEffectsVolume());
         }
 
     }
@@ -115,8 +112,14 @@ public class Coin extends Entity {
      * @param batch The batch of the program
      */
     public void draw(Batch batch) {
-        if(!destroyed) {
+        if(!isDestroyed()) {
             super.draw(batch);
         }
     }
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		coinPickup.dispose();
+	}
 }

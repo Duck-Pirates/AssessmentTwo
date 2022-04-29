@@ -26,7 +26,7 @@ public class MainMenu implements Screen {
 
     private final PirateGame parent;
     private final Stage stage;
-    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));;
+    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));
 
     /**
      * Instantiates a new Main menu.
