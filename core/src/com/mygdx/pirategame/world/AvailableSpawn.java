@@ -14,10 +14,6 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class AvailableSpawn {
     public static ArrayList<Rectangle> tileBlocked = new ArrayList<>();
-    public static final int xCap = 250;
-    public static final int yCap = 250;
-    public static final int xBase = 14;
-    public static final int yBase = 14;
 
     /**
      * Checks if given value pair is already contained in the map

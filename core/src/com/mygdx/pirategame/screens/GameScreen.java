@@ -158,8 +158,8 @@ public class GameScreen implements Screen {
             validLoc = false;
             while (!validLoc) {
                 //Get random x and y coords
-                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                a = rand.nextInt(xCap - xBase) + xBase;
+                b = rand.nextInt(yCap - yBase) + yBase;
                 //Check if valid
                 validLoc = AvailableSpawn.add(a, b);
             }
@@ -173,8 +173,8 @@ public class GameScreen implements Screen {
             validLoc = false;
             while (!validLoc) {
                 //Get random x and y coords
-                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                a = rand.nextInt(xCap - xBase) + xBase;
+                b = rand.nextInt(yCap - yBase) + yBase;
 
                 //Check if valid
                 validLoc = AvailableSpawn.add(a, b);
@@ -189,8 +189,8 @@ public class GameScreen implements Screen {
             validLoc = false;
             while (!validLoc) {
                 //Get random x and y coords
-                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                a = rand.nextInt(xCap - xBase) + xBase;
+                b = rand.nextInt(yCap - yBase) + yBase;
                 validLoc = AvailableSpawn.add(a, b);
             }
             powerups.add(new Powerup(this, a, b, i));
@@ -201,8 +201,8 @@ public class GameScreen implements Screen {
             validLoc = false;
             while (!validLoc) {
                 //Get random x and y coords
-                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                a = rand.nextInt(xCap - xBase) + xBase;
+                b = rand.nextInt(yCap - yBase) + yBase;
                 validLoc = checkGenPosClouds(a, b);
             }
             clouds.add(new Cloud(this, a, b));
@@ -212,8 +212,8 @@ public class GameScreen implements Screen {
             validLoc = false;
             while (!validLoc) {
                 //Get random x and y coords
-                a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                a = rand.nextInt(xCap - xBase) + xBase;
+                b = rand.nextInt(yCap - yBase) + yBase;
                 validLoc = AvailableSpawn.add(a, b);
             }
             //Add a coins at the random coords
@@ -454,8 +454,8 @@ public class GameScreen implements Screen {
                 validLoc = false;
                 while (!validLoc) {
                     //Get random x and y coords
-                    a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                    b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                    a = rand.nextInt(xCap - xBase) + xBase;
+                    b = rand.nextInt(yCap - yBase) + yBase;
                     validLoc = AvailableSpawn.add(a, b);
                 }
                 powerups.add(new Powerup(this, a, b, i));

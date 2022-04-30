@@ -27,4 +27,10 @@ public final class Constants {
 	public static final int HELP = 4;
 	public static final int VICTORY = 5;
 	public static final int LOADING = 6;
+
+	//Constant for spawning entities on the map
+	public static final int xCap = 250;
+	public static final int yCap = 250;
+	public static final int xBase = 14;
+	public static final int yBase = 14;
 }
