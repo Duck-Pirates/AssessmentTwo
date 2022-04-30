@@ -286,7 +286,7 @@ public class SkillTree implements Screen {
             traverse1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseTraversePercent(10);
+                    GameScreen.getDifficulty().IncreaseTraversePercent(2);
                     states.set(3, 2);
                     Hud.SubtractCoin(Traverse1Cost);
                     traverse1.setDisabled(true);
@@ -302,7 +302,7 @@ public class SkillTree implements Screen {
             traverse2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseTraversePercent(20);
+                    GameScreen.getDifficulty().IncreaseTraversePercent(2);
                     states.set(4, 2);
                     Hud.SubtractCoin(Traverse2Cost);
                     traverse2.setDisabled(true);
