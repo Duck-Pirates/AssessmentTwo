@@ -99,6 +99,9 @@ public class Player extends SteerableEntity {
         
     	float lf;
         float af;
+
+        setMaxLinearSpeed(GameScreen.getDifficulty().getMaxSpeed()/ PPM);
+        setMaxAngularSpeed((float) Math.PI /GameScreen.getDifficulty().getTraverseSpeed());
         
         if(linearDirection != 0) {
         	lf  = maxLinearAcceleration * linearDirection;
