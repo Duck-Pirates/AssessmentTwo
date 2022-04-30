@@ -65,7 +65,7 @@ public class Hud implements Disposable {
      */
     public Hud(SpriteBatch sb, GameScreen screen) {
         this.screen = screen;
-        health = GameScreen.difficulty.getHP();
+        health = GameScreen.getDifficulty().getHP();
         score = 0;
         coins = 0;
         coinMulti = 1;
@@ -104,7 +104,7 @@ public class Hud implements Disposable {
 
 
         scoreLabel = new Label(String.format("%03d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        if (GameScreen.difficulty == Difficulty.EASY){
+        if (GameScreen.getDifficulty() == Difficulty.EASY){
             healthLabel = new Label(String.format("%03d", health), new Label.LabelStyle(new BitmapFont(), Color.RED));
         }
         else{
@@ -156,7 +156,7 @@ public class Hud implements Disposable {
         if(timeCount >= 1) {
             //Regen health every second
             if(hpConstant_Time >= 3) {
-                if (health != GameScreen.difficulty.getHP()) {
+                if (health != GameScreen.getDifficulty().getHP()) {
                     health += 1;
                     healthLabel.setText(String.format("%02d", health));
                     hpConstant_Time = 0;
@@ -185,7 +185,7 @@ public class Hud implements Disposable {
             if (Constant_timeCount > PowerupTimer + PowerupTime){
                 // Remove powerup abilities
                 // Respawn that powerup
-                GameScreen.difficulty.PreviousPowerupStats();
+                GameScreen.getDifficulty().PreviousPowerupStats();
                 PowerupPic = new Texture("blank.png");
                 powerUp = new Image(PowerupPic);
                 powerUp.setFillParent(false);
@@ -205,8 +205,8 @@ public class Hud implements Disposable {
      */
     public static void changeHealth(int value) {
 
-        if (health + value > GameScreen.difficulty.getHP()){
-            health = GameScreen.difficulty.getHP();
+        if (health + value > GameScreen.getDifficulty().getHP()){
+            health = GameScreen.getDifficulty().getHP();
         }else{
             health += value;
         }
@@ -323,8 +323,6 @@ public class Hud implements Disposable {
      */
     @Override
     public void dispose() {
-        stage.dispose();
-
     }
 }
 

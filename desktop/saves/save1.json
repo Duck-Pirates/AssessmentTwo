@@ -1,0 +1,2019 @@
+[
+{
+	"class": "com.mygdx.pirategame.configs.Difficulty",
+	"value": "EASY"
+},
+{
+	"class": "com.mygdx.pirategame.world.AvailableSpawn"
+},
+{
+	"class": "com.mygdx.pirategame.configs.GameSave$PlayerSave",
+	"velocity": {}
+},
+[
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CollegeSave",
+		"collegeName": "alcuin",
+		"position": {
+			"x": 38.72,
+			"y": 42.3
+		},
+		"health": 100000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CollegeSave",
+		"collegeName": "anne_lister",
+		"fleet": [
+			{
+				"college": "anne_lister",
+				"position": {
+					"x": 125.97666,
+					"y": 57
+				},
+				"rotation": -90,
+				"health": 1000
+			},
+			{
+				"college": "anne_lister",
+				"position": {
+					"x": 50.04471,
+					"y": 68
+				},
+				"rotation": -90.083755,
+				"health": 1000
+			},
+			{
+				"college": "anne_lister",
+				"position": {
+					"x": 67.96493,
+					"y": 63.99973
+				},
+				"rotation": -88.94327,
+				"health": 1000
+			},
+			{
+				"college": "anne_lister",
+				"position": {
+					"x": 61.562557,
+					"y": 71.999626
+				},
+				"rotation": -90.704025,
+				"health": 1000
+			},
+			{
+				"college": "anne_lister",
+				"position": {
+					"x": 62.84011,
+					"y": 70.45057
+				},
+				"rotation": -89.689445,
+				"health": 1000
+			},
+			{
+				"college": "anne_lister",
+				"position": {
+					"x": 67.9601,
+					"y": 67.62506
+				},
+				"rotation": -89.999344,
+				"health": 1000
+			},
+			{
+				"college": "anne_lister",
+				"position": {
+					"x": 62.934937,
+					"y": 60.035294
+				},
+				"rotation": -180.08377,
+				"health": 1000
+			},
+			{
+				"college": "anne_lister",
+				"position": {
+					"x": 67.964714,
+					"y": 65
+				},
+				"rotation": -90.082115,
+				"health": 1000
+			}
+		],
+		"position": {
+			"x": 58.55,
+			"y": 64.7
+		},
+		"health": 100000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CollegeSave",
+		"collegeName": "constantine",
+		"fleet": [
+			{
+				"college": "constantine",
+				"position": {
+					"x": 158.84486,
+					"y": 96
+				},
+				"rotation": -90.10774,
+				"health": 1000
+			},
+			{
+				"college": "constantine",
+				"position": {
+					"x": 99.96449,
+					"y": 107
+				},
+				"rotation": -89.793915,
+				"health": 1000
+			},
+			{
+				"college": "constantine",
+				"position": {
+					"x": 157.97667,
+					"y": 88
+				},
+				"rotation": -90,
+				"health": 1000
+			},
+			{
+				"college": "constantine",
+				"position": {
+					"x": 93.562485,
+					"y": 92.89723
+				},
+				"rotation": -91.243935,
+				"health": 1000
+			},
+			{
+				"college": "constantine",
+				"position": {
+					"x": 114.6865,
+					"y": 105.001465
+				},
+				"rotation": -93.344894,
+				"health": 1000
+			},
+			{
+				"college": "constantine",
+				"position": {
+					"x": 84.92783,
+					"y": 95.06966
+				},
+				"rotation": -401.95956,
+				"health": 1000
+			},
+			{
+				"college": "constantine",
+				"position": {
+					"x": 87.16293,
+					"y": 98.558945
+				},
+				"rotation": -88.90167,
+				"health": 1000
+			},
+			{
+				"college": "constantine",
+				"position": {
+					"x": 97.4047,
+					"y": 101.97448
+				},
+				"rotation": -90.08428,
+				"health": 1000
+			}
+		],
+		"position": {
+			"x": 90.55,
+			"y": 98.6
+		},
+		"health": 100000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CollegeSave",
+		"collegeName": "goodricke",
+		"fleet": [
+			{
+				"college": "goodricke",
+				"position": {
+					"x": 54.523563,
+					"y": 113.03768
+				},
+				"rotation": -90.08589,
+				"health": 1000
+			},
+			{
+				"college": "goodricke",
+				"position": {
+					"x": 77.802536,
+					"y": 158.84221
+				},
+				"rotation": 0.3040619,
+				"health": 1000
+			},
+			{
+				"college": "goodricke",
+				"position": {
+					"x": 81.0125,
+					"y": 156.83194
+				},
+				"rotation": -333.05292,
+				"health": 1000
+			},
+			{
+				"college": "goodricke",
+				"position": {
+					"x": 67.12911,
+					"y": 106.11615
+				},
+				"rotation": -181.43634,
+				"health": 1000
+			},
+			{
+				"college": "goodricke",
+				"position": {
+					"x": 39.802673,
+					"y": 132.88748
+				},
+				"rotation": -90.67604,
+				"health": 1000
+			},
+			{
+				"college": "goodricke",
+				"position": {
+					"x": 77.5625,
+					"y": 135.99443
+				},
+				"rotation": -91.23919,
+				"health": 1000
+			},
+			{
+				"college": "goodricke",
+				"position": {
+					"x": 35.32282,
+					"y": 123.17365
+				},
+				"rotation": -88.86589,
+				"health": 1000
+			},
+			{
+				"college": "goodricke",
+				"position": {
+					"x": 45.741203,
+					"y": 125.957344
+				},
+				"rotation": -178.81161,
+				"health": 1000
+			}
+		],
+		"position": {
+			"x": 41.28,
+			"y": 129.36
+		},
+		"health": 100000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CollegeSave",
+		"collegeName": "halifax",
+		"fleet": [
+			{
+				"college": "halifax",
+				"position": {
+					"x": 122.36265,
+					"y": 147.0052
+				},
+				"rotation": -89.31561,
+				"health": 1000
+			},
+			{
+				"college": "halifax",
+				"position": {
+					"x": 134.52037,
+					"y": 140.58722
+				},
+				"rotation": -88.11531,
+				"health": 1000
+			},
+			{
+				"college": "halifax",
+				"position": {
+					"x": 128.1222,
+					"y": 139.93062
+				},
+				"rotation": -88.669334,
+				"health": 1000
+			},
+			{
+				"college": "halifax",
+				"position": {
+					"x": 142.05725,
+					"y": 158.84256
+				},
+				"rotation": -358.7803,
+				"health": 1000
+			},
+			{
+				"college": "halifax",
+				"position": {
+					"x": 134.52261,
+					"y": 140.15964
+				},
+				"rotation": -91.20475,
+				"health": 1000
+			},
+			{
+				"college": "halifax",
+				"position": {
+					"x": 131.32263,
+					"y": 138
+				},
+				"rotation": -89.314354,
+				"health": 1000
+			},
+			{
+				"college": "halifax",
+				"position": {
+					"x": 131.32233,
+					"y": 136.84842
+				},
+				"rotation": -88.71054,
+				"health": 1000
+			},
+			{
+				"college": "halifax",
+				"position": {
+					"x": 121.082634,
+					"y": 136.17322
+				},
+				"rotation": -88.8039,
+				"health": 1000
+			}
+		],
+		"position": {
+			"x": 127.68,
+			"y": 144.08
+		},
+		"health": 100000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CollegeSave",
+		"collegeName": "langwith",
+		"fleet": [
+			{
+				"college": "langwith",
+				"position": {
+					"x": 132.60272,
+					"y": 67.75017
+				},
+				"rotation": -90.65862,
+				"health": 1000
+			},
+			{
+				"college": "langwith",
+				"position": {
+					"x": 132.60158,
+					"y": 72.2467
+				},
+				"rotation": -89.00119,
+				"health": 1000
+			},
+			{
+				"college": "langwith",
+				"position": {
+					"x": 135.16472,
+					"y": 78
+				},
+				"rotation": -90.07663,
+				"health": 1000
+			},
+			{
+				"college": "langwith",
+				"position": {
+					"x": 121.72254,
+					"y": 71.99742
+				},
+				"rotation": -90.6471,
+				"health": 1000
+			},
+			{
+				"college": "langwith",
+				"position": {
+					"x": 158.84471,
+					"y": 63
+				},
+				"rotation": -90.07663,
+				"health": 1000
+			},
+			{
+				"college": "langwith",
+				"position": {
+					"x": 128.76257,
+					"y": 77.127396
+				},
+				"rotation": -89.296326,
+				"health": 1000
+			},
+			{
+				"college": "langwith",
+				"position": {
+					"x": 130.18466,
+					"y": 66.43644
+				},
+				"rotation": -179.06766,
+				"health": 1000
+			},
+			{
+				"college": "langwith",
+				"position": {
+					"x": 158.84474,
+					"y": 62.000004
+				},
+				"rotation": -90.067856,
+				"health": 1000
+			}
+		],
+		"position": {
+			"x": 125.76,
+			"y": 69.2
+		},
+		"health": 100000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CollegeSave",
+		"collegeName": "vanbrugh",
+		"fleet": [
+			{
+				"college": "vanbrugh",
+				"position": {
+					"x": 158.84264,
+					"y": 34.338074
+				},
+				"rotation": -90.14002,
+				"health": 1000
+			},
+			{
+				"college": "vanbrugh",
+				"position": {
+					"x": 141.01357,
+					"y": 47.826954
+				},
+				"rotation": 324.6585,
+				"health": 1000
+			},
+			{
+				"college": "vanbrugh",
+				"position": {
+					"x": 134.72623,
+					"y": 30.25925
+				},
+				"rotation": -55.415707,
+				"health": 1000
+			},
+			{
+				"college": "vanbrugh",
+				"position": {
+					"x": 158.84471,
+					"y": 29
+				},
+				"rotation": -90.07663,
+				"health": 1000
+			},
+			{
+				"college": "vanbrugh",
+				"position": {
+					"x": 122.36471,
+					"y": 42
+				},
+				"rotation": -90.082115,
+				"health": 1000
+			},
+			{
+				"college": "vanbrugh",
+				"position": {
+					"x": 132.76482,
+					"y": 38.917713
+				},
+				"rotation": -176.7567,
+				"health": 1000
+			},
+			{
+				"college": "vanbrugh",
+				"position": {
+					"x": 126.8426,
+					"y": 44.38355
+				},
+				"rotation": -91.16143,
+				"health": 1000
+			},
+			{
+				"college": "vanbrugh",
+				"position": {
+					"x": 121.08487,
+					"y": 39.000004
+				},
+				"rotation": -90.12219,
+				"health": 1000
+			}
+		],
+		"position": {
+			"x": 128.96,
+			"y": 37.83
+		},
+		"health": 100000
+	}
+],
+[
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "anne_lister",
+		"position": {
+			"x": 125.97666,
+			"y": 57
+		},
+		"rotation": -90,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "anne_lister",
+		"position": {
+			"x": 50.04471,
+			"y": 68
+		},
+		"rotation": -90.083755,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "anne_lister",
+		"position": {
+			"x": 67.96493,
+			"y": 63.99973
+		},
+		"rotation": -88.94327,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "anne_lister",
+		"position": {
+			"x": 61.562557,
+			"y": 71.999626
+		},
+		"rotation": -90.704025,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "anne_lister",
+		"position": {
+			"x": 62.84011,
+			"y": 70.45057
+		},
+		"rotation": -89.689445,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "anne_lister",
+		"position": {
+			"x": 67.9601,
+			"y": 67.62506
+		},
+		"rotation": -89.999344,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "anne_lister",
+		"position": {
+			"x": 62.934937,
+			"y": 60.035294
+		},
+		"rotation": -180.08377,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "anne_lister",
+		"position": {
+			"x": 67.964714,
+			"y": 65
+		},
+		"rotation": -90.082115,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "constantine",
+		"position": {
+			"x": 158.84486,
+			"y": 96
+		},
+		"rotation": -90.10774,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "constantine",
+		"position": {
+			"x": 99.96449,
+			"y": 107
+		},
+		"rotation": -89.793915,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "constantine",
+		"position": {
+			"x": 157.97667,
+			"y": 88
+		},
+		"rotation": -90,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "constantine",
+		"position": {
+			"x": 93.562485,
+			"y": 92.89723
+		},
+		"rotation": -91.243935,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "constantine",
+		"position": {
+			"x": 114.6865,
+			"y": 105.001465
+		},
+		"rotation": -93.344894,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "constantine",
+		"position": {
+			"x": 84.92783,
+			"y": 95.06966
+		},
+		"rotation": -401.95956,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "constantine",
+		"position": {
+			"x": 87.16293,
+			"y": 98.558945
+		},
+		"rotation": -88.90167,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "constantine",
+		"position": {
+			"x": 97.4047,
+			"y": 101.97448
+		},
+		"rotation": -90.08428,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "goodricke",
+		"position": {
+			"x": 54.523563,
+			"y": 113.03768
+		},
+		"rotation": -90.08589,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "goodricke",
+		"position": {
+			"x": 77.802536,
+			"y": 158.84221
+		},
+		"rotation": 0.3040619,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "goodricke",
+		"position": {
+			"x": 81.0125,
+			"y": 156.83194
+		},
+		"rotation": -333.05292,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "goodricke",
+		"position": {
+			"x": 67.12911,
+			"y": 106.11615
+		},
+		"rotation": -181.43634,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "goodricke",
+		"position": {
+			"x": 39.802673,
+			"y": 132.88748
+		},
+		"rotation": -90.67604,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "goodricke",
+		"position": {
+			"x": 77.5625,
+			"y": 135.99443
+		},
+		"rotation": -91.23919,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "goodricke",
+		"position": {
+			"x": 35.32282,
+			"y": 123.17365
+		},
+		"rotation": -88.86589,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "goodricke",
+		"position": {
+			"x": 45.741203,
+			"y": 125.957344
+		},
+		"rotation": -178.81161,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "halifax",
+		"position": {
+			"x": 122.36265,
+			"y": 147.0052
+		},
+		"rotation": -89.31561,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "halifax",
+		"position": {
+			"x": 134.52037,
+			"y": 140.58722
+		},
+		"rotation": -88.11531,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "halifax",
+		"position": {
+			"x": 128.1222,
+			"y": 139.93062
+		},
+		"rotation": -88.669334,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "halifax",
+		"position": {
+			"x": 142.05725,
+			"y": 158.84256
+		},
+		"rotation": -358.7803,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "halifax",
+		"position": {
+			"x": 134.52261,
+			"y": 140.15964
+		},
+		"rotation": -91.20475,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "halifax",
+		"position": {
+			"x": 131.32263,
+			"y": 138
+		},
+		"rotation": -89.314354,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "halifax",
+		"position": {
+			"x": 131.32233,
+			"y": 136.84842
+		},
+		"rotation": -88.71054,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "halifax",
+		"position": {
+			"x": 121.082634,
+			"y": 136.17322
+		},
+		"rotation": -88.8039,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "langwith",
+		"position": {
+			"x": 132.60272,
+			"y": 67.75017
+		},
+		"rotation": -90.65862,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "langwith",
+		"position": {
+			"x": 132.60158,
+			"y": 72.2467
+		},
+		"rotation": -89.00119,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "langwith",
+		"position": {
+			"x": 135.16472,
+			"y": 78
+		},
+		"rotation": -90.07663,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "langwith",
+		"position": {
+			"x": 121.72254,
+			"y": 71.99742
+		},
+		"rotation": -90.6471,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "langwith",
+		"position": {
+			"x": 158.84471,
+			"y": 63
+		},
+		"rotation": -90.07663,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "langwith",
+		"position": {
+			"x": 128.76257,
+			"y": 77.127396
+		},
+		"rotation": -89.296326,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "langwith",
+		"position": {
+			"x": 130.18466,
+			"y": 66.43644
+		},
+		"rotation": -179.06766,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "langwith",
+		"position": {
+			"x": 158.84474,
+			"y": 62.000004
+		},
+		"rotation": -90.067856,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "vanbrugh",
+		"position": {
+			"x": 158.84264,
+			"y": 34.338074
+		},
+		"rotation": -90.14002,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "vanbrugh",
+		"position": {
+			"x": 141.01357,
+			"y": 47.826954
+		},
+		"rotation": 324.6585,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "vanbrugh",
+		"position": {
+			"x": 134.72623,
+			"y": 30.25925
+		},
+		"rotation": -55.415707,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "vanbrugh",
+		"position": {
+			"x": 158.84471,
+			"y": 29
+		},
+		"rotation": -90.07663,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "vanbrugh",
+		"position": {
+			"x": 122.36471,
+			"y": 42
+		},
+		"rotation": -90.082115,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "vanbrugh",
+		"position": {
+			"x": 132.76482,
+			"y": 38.917713
+		},
+		"rotation": -176.7567,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "vanbrugh",
+		"position": {
+			"x": 126.8426,
+			"y": 44.38355
+		},
+		"rotation": -91.16143,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "vanbrugh",
+		"position": {
+			"x": 121.08487,
+			"y": 39.000004
+		},
+		"rotation": -90.12219,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 239.79358,
+			"y": 148.73596
+		},
+		"rotation": 11.698051,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 158.84471,
+			"y": 91
+		},
+		"rotation": -90.07854,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 265.7407,
+			"y": 140.11267
+		},
+		"rotation": -181.14665,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 184.97667,
+			"y": 193
+		},
+		"rotation": -90,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 158.84471,
+			"y": 26
+		},
+		"rotation": -90.07663,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 230.97665,
+			"y": 150
+		},
+		"rotation": -90,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 158.84471,
+			"y": 45
+		},
+		"rotation": -90.07663,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 126.844666,
+			"y": 76
+		},
+		"rotation": -90.106255,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 70.84485,
+			"y": 158.97758
+		},
+		"rotation": -103.875046,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 223.65129,
+			"y": 102.2397
+		},
+		"rotation": -48.54343,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 69.10039,
+			"y": 58.36323
+		},
+		"rotation": -360.51337,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 258.14685,
+			"y": 71.51287
+		},
+		"rotation": -153.64726,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 206.99808,
+			"y": 106.5091
+		},
+		"rotation": 24.660965,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 237.97665,
+			"y": 117
+		},
+		"rotation": -90,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 53.545082,
+			"y": 60.034992
+		},
+		"rotation": -180.00043,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 274.97665,
+			"y": 175
+		},
+		"rotation": -90,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 158.84503,
+			"y": 56
+		},
+		"rotation": -90.00053,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 33.402668,
+			"y": 31.608578
+		},
+		"rotation": -90.67832,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 245.1933,
+			"y": 208.80891
+		},
+		"rotation": 8.825523,
+		"health": 1000
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$ShipSave",
+		"college": "unaligned",
+		"position": {
+			"x": 180.97667,
+			"y": 172
+		},
+		"rotation": -90,
+		"health": 1000
+	}
+],
+[
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 157,
+			"y": 27
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 180,
+			"y": 32
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 113,
+			"y": 19
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 166,
+			"y": 107
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 209,
+			"y": 242
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 92,
+			"y": 126
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 131,
+			"y": 96
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 16,
+			"y": 194
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 200,
+			"y": 149
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 170,
+			"y": 139
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 16,
+			"y": 233
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 191,
+			"y": 20
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 98,
+			"y": 243
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 63,
+			"y": 214
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 183,
+			"y": 151
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 226,
+			"y": 150
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 91,
+			"y": 110
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 33,
+			"y": 204
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 100,
+			"y": 34
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 137,
+			"y": 206
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 43,
+			"y": 63
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 37,
+			"y": 190
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 87,
+			"y": 182
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 44,
+			"y": 88
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 161,
+			"y": 85
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 119,
+			"y": 196
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 70,
+			"y": 32
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 193,
+			"y": 45
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 95,
+			"y": 119
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 177,
+			"y": 19
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 146,
+			"y": 92
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 81,
+			"y": 162
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 147,
+			"y": 35
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 232,
+			"y": 200
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 114,
+			"y": 46
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 243,
+			"y": 56
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 53,
+			"y": 67
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 181,
+			"y": 145
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 191,
+			"y": 19
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 80,
+			"y": 47
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 163,
+			"y": 165
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 125,
+			"y": 192
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 86,
+			"y": 210
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 227,
+			"y": 48
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 75,
+			"y": 28
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 57,
+			"y": 59
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 68,
+			"y": 153
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 206,
+			"y": 17
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 179,
+			"y": 31
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 97,
+			"y": 184
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 89,
+			"y": 246
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 195,
+			"y": 105
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 36,
+			"y": 99
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 172,
+			"y": 153
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 31,
+			"y": 45
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 36,
+			"y": 154
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 174,
+			"y": 34
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 246,
+			"y": 87
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 119,
+			"y": 30
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 30,
+			"y": 16
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 140,
+			"y": 79
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 205,
+			"y": 124
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 85,
+			"y": 25
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 61,
+			"y": 225
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 34,
+			"y": 242
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 109,
+			"y": 98
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 98,
+			"y": 44
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 194,
+			"y": 85
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 38,
+			"y": 174
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 151,
+			"y": 82
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 37,
+			"y": 108
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 35,
+			"y": 145
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 105,
+			"y": 27
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 212,
+			"y": 184
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 182,
+			"y": 110
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 30,
+			"y": 201
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 68,
+			"y": 231
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 155,
+			"y": 87
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 136,
+			"y": 225
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 30,
+			"y": 180
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 164,
+			"y": 119
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 54,
+			"y": 60
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 244,
+			"y": 210
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 72,
+			"y": 168
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 96,
+			"y": 49
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 29,
+			"y": 186
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 190,
+			"y": 90
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 106,
+			"y": 164
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 162,
+			"y": 52
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 87,
+			"y": 204
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 107,
+			"y": 84
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 91,
+			"y": 40
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 106,
+			"y": 41
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 70,
+			"y": 67
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 201,
+			"y": 134
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 65,
+			"y": 88
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 173,
+			"y": 90
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 170,
+			"y": 22
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 96,
+			"y": 62
+		}
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$CoinSave",
+		"position": {
+			"x": 92,
+			"y": 182
+		}
+	}
+],
+{
+	"class": "com.mygdx.pirategame.configs.GameSave$HudSave",
+	"timeCount": 0.1559074,
+	"constantTimeCount": 14.908234,
+	"score": 55,
+	"health": 100,
+	"coins": 0
+},
+[
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$PowerUpSave",
+		"position": {
+			"x": 82,
+			"y": 47
+		},
+		"type": 0
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$PowerUpSave",
+		"position": {
+			"x": 182,
+			"y": 47
+		},
+		"type": 1
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$PowerUpSave",
+		"position": {
+			"x": 33,
+			"y": 226
+		},
+		"type": 2
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$PowerUpSave",
+		"position": {
+			"x": 29,
+			"y": 47
+		},
+		"type": 3
+	},
+	{
+		"class": "com.mygdx.pirategame.configs.GameSave$PowerUpSave",
+		"position": {
+			"x": 212,
+			"y": 194
+		},
+		"type": 4
+	}
+],
+[],
+{
+	"class": "java.lang.Float",
+	"value": 14.908234
+},
+[
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	},
+	{
+		"class": "java.lang.Integer",
+		"value": 1
+	}
+]
+]

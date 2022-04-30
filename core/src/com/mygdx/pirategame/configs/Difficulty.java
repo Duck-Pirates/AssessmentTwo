@@ -1,11 +1,12 @@
 package com.mygdx.pirategame.configs;
 
 import com.badlogic.gdx.Gdx;
+import com.mygdx.pirategame.entities.SteerableEntity;
 
 public enum Difficulty {
-    EASY(0.95f, 10, 15,100, 5, 8, 1, 14f, 40),
-    MEDIUM(0.93f, 10, 15,80, 3, 10, 1, 12f, 35),
-    HARD(0.91f, 15, 15,80, 2, 12, 1, 10f, 30);
+    EASY(0.95f, 10, 15,100, 5, 8, 1, 250.5f, 6),
+    MEDIUM(0.93f, 10, 15,80, 3, 10, 1, 225f, 6),
+    HARD(0.91f, 15, 15,80, 2, 12, 1, 200f, 6);
 
     private float speedReduction, maxSpeed, traverseSpeed;
     private int damageReceived, damageDealt, HP, maxGoldXCoin, maxCollegeShips, goldCoinMulti;
@@ -71,7 +72,9 @@ public enum Difficulty {
         Gdx.app.log("maxSpeed", Float.toString(maxSpeed));
     }
     public void IncreaseTraversePercent(int num){
-        this.traverseSpeed = prevTraverseSpeed * (1 + num/100);
+
+        this.traverseSpeed = prevTraverseSpeed - num;
+
     }
     public void IncreaseDamageDealtPercent(int num){
         //this.damageDealt = prevDamageDealt + num;

@@ -25,12 +25,11 @@ import com.mygdx.pirategame.screens.Hud;
  * @version 2.0
  */
 
-public class Powerup extends Entity{
-    public Texture powerup;
-    public boolean setToDestroyed;
-    public boolean destroyed;
-    public Sound powerupPickup;
-    public Integer powerupType;
+public class Powerup extends Entity {
+    private boolean setToDestroyed;
+    private boolean destroyed;
+    private Sound powerupPickup;
+    private Integer powerupType;
 
 
     /**
@@ -48,17 +47,17 @@ public class Powerup extends Entity{
 
         //Set powerup image
 
-        powerupType = type;
-        if (powerupType == 0) {
-            powerup = new Texture("Ammo.png");
-        } else if (powerupType == 1){
-            powerup = new Texture("Lightning.png");
-        } else if (powerupType == 2){
-            powerup = new Texture("Money.png");
-        } else if (powerupType == 3){
-            powerup = new Texture("Repair.png");
-        } else if (powerupType == 4){
-            powerup = new Texture("Star.png");
+        setPowerupType(type);
+        if (getPowerupType() == 0) {
+            texture = new Texture("Ammo.png");
+        } else if (getPowerupType() == 1){
+        	texture = new Texture("Lightning.png");
+        } else if (getPowerupType() == 2){
+        	texture = new Texture("Money.png");
+        } else if (getPowerupType() == 3){
+        	texture = new Texture("Repair.png");
+        } else if (getPowerupType() == 4){
+        	texture = new Texture("Star.png");
         }
 
 
@@ -67,7 +66,7 @@ public class Powerup extends Entity{
         //Set the position and size of the powerup
         setBounds(0,0,100 / PPM, 100 / PPM);
         //Set the texture
-        setRegion(powerup);
+        setRegion(texture);
         //Sets origin of the powerup
         setOrigin(24 / PPM,24 / PPM);
         powerupPickup = Gdx.audio.newSound(Gdx.files.internal("powerup-pickup.mp3"));
@@ -78,13 +77,13 @@ public class Powerup extends Entity{
      */
     public void update() {
         //If powerup is set to destroy and isnt, destroy it
-        if(setToDestroyed && !destroyed) {
-            world.destroyBody(body);
-            destroyed = true;
+        if(isSetToDestroyed() && !isDestroyed()) {
+            world.destroyBody(getBody());
+            setDestroyed(true);
         }
         //Update position of powerup
-        else if(!destroyed) {
-            setPosition(body.getPosition().x - getWidth() / 2f, body.getPosition().y - getHeight() / 2f);
+        else if(!isDestroyed()) {
+            setPosition(getBody().getPosition().x - getWidth() / 2f, getBody().getPosition().y - getHeight() / 2f);
         }
     }
 
@@ -97,7 +96,7 @@ public class Powerup extends Entity{
         BodyDef bdef = new BodyDef();
         bdef.position.set(x, y);
         bdef.type = BodyDef.BodyType.DynamicBody;
-        body = world.createBody(bdef);
+        setBody(world.createBody(bdef));
 
         //Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
@@ -109,15 +108,15 @@ public class Powerup extends Entity{
         fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT;
         fdef.shape = shape;
         fdef.isSensor = true;
-        body.createFixture(fdef).setUserData(this);
+        getBody().createFixture(fdef).setUserData(this);
     }
     @Override
     public void onContact() {
 
-        setToDestroyed = true;
+        setSetToDestroyed(true);
 
-        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
-            powerupPickup.play(GameScreen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.getGame().getPreferences().isEffectsEnabled()) {
+            powerupPickup.play(GameScreen.getGame().getPreferences().getEffectsVolume());
         }
 
 
@@ -135,21 +134,21 @@ public class Powerup extends Entity{
 
             // Remove previous powerup
             // Reset previous powerup
-            GameScreen.difficulty.PreviousPowerupStats();
+            GameScreen.getDifficulty().PreviousPowerupStats();
 
-            if (powerupType == 0) {
+            if (getPowerupType() == 0) {
                 Hud.ChangePowerUpImage(0);
                 Ammo();
-            } else if (powerupType == 1) {
+            } else if (getPowerupType() == 1) {
                 Hud.ChangePowerUpImage(1);
                 Lightning();
-            } else if (powerupType == 2) {
+            } else if (getPowerupType() == 2) {
                 Hud.ChangePowerUpImage(2);
                 Money();
-            } else if (powerupType == 3) {
+            } else if (getPowerupType() == 3) {
                 Hud.ChangePowerUpImage(3);
                 Repair();
-            } else if (powerupType == 4) {
+            } else if (getPowerupType() == 4) {
                 Hud.ChangePowerUpImage(4);
                 Star();
             }
@@ -167,22 +166,22 @@ public class Powerup extends Entity{
 
     public void Ammo(){
         // Increase damage or shots per second
-        GameScreen.difficulty.SavePowerupStats();
-        GameScreen.difficulty.SetDamageDealt(5); // increases damage dealt by 5... could be doubled??
+        GameScreen.getDifficulty().SavePowerupStats();
+        GameScreen.getDifficulty().SetDamageDealt(5); // increases damage dealt by 5... could be doubled??
     }
     public void Lightning(){
         // Increase Speed
-        GameScreen.difficulty.SavePowerupStats();
-        GameScreen.difficulty.SetMaxSpeed(1.5f);// doubles mad speed + imcreases speed reduction by 1%
+        GameScreen.getDifficulty().SavePowerupStats();
+        GameScreen.getDifficulty().SetMaxSpeed(1.5f);// doubles mad speed + imcreases speed reduction by 1%
     }
     public void Money(){
         // Increase money earnt
-        GameScreen.difficulty.SavePowerupStats();
-        GameScreen.difficulty.SetGoldCoinMulti(1); // +1 to current multi (from *1 to *2)
+        GameScreen.getDifficulty().SavePowerupStats();
+        GameScreen.getDifficulty().SetGoldCoinMulti(1); // +1 to current multi (from *1 to *2)
     }
     public void Repair(){
         // Recovers ship
-        GameScreen.difficulty.SavePowerupStats();
+        GameScreen.getDifficulty().SavePowerupStats();
         //screen.difficulty.IncreaseHP();
         Hud.changeHealth(50); // increases HP by 50 aslong as its less than max,
         // TODO getting health back even if ur not getting damaged
@@ -190,8 +189,8 @@ public class Powerup extends Entity{
     }
     public void Star(){
         // TODO Imunity?? could change for cone
-        GameScreen.difficulty.SavePowerupStats();
-        GameScreen.difficulty.SetDamageReceived(0);
+        GameScreen.getDifficulty().SavePowerupStats();
+        GameScreen.getDifficulty().SetDamageReceived(0);
     }
 
     /**
@@ -200,8 +199,38 @@ public class Powerup extends Entity{
      * @param batch The batch of the program
      */
     public void draw(Batch batch) {
-        if(!destroyed) {
+        if(!isDestroyed()) {
             super.draw(batch);
         }
     }
+
+	public Integer getPowerupType() {
+		return powerupType;
+	}
+
+	public void setPowerupType(Integer powerupType) {
+		this.powerupType = powerupType;
+	}
+
+	public boolean isSetToDestroyed() {
+		return setToDestroyed;
+	}
+
+	public void setSetToDestroyed(boolean setToDestroyed) {
+		this.setToDestroyed = setToDestroyed;
+	}
+
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+
+	public void setDestroyed(boolean destroyed) {
+		this.destroyed = destroyed;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		powerupPickup.dispose();
+	}
 }

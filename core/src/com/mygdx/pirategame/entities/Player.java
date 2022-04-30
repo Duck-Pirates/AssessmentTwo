@@ -1,16 +1,15 @@
 package com.mygdx.pirategame.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.mygdx.pirategame.screens.GameScreen;
 
 import static com.mygdx.pirategame.configs.Constants.*;
@@ -22,10 +21,6 @@ import static com.mygdx.pirategame.configs.Constants.*;
  */
 public class Player extends SteerableEntity {
     private Sound breakSound;
-    private Array<CannonFire> cannonBalls;
-    public float velocity = 0;
-    public float maxVelocity = 50;
-    public float maxAngularVelocity = 2;
     
     /**
      * Instantiates a new Player. Constructor only called once per game
@@ -34,8 +29,10 @@ public class Player extends SteerableEntity {
      */
     public Player(GameScreen screen) {
     	super(screen, 1200  / PPM, 2500 / PPM);
-        // Creates ship texture
-        texture = new Texture("player_ship.png");
+        
+    	college = "alcuin";
+    	// Creates ship texture
+        texture = new Texture(college + "_ship.png");
         
         setBounds(0,0,64 / PPM, 110 / PPM);
         setRegion(texture);
@@ -43,10 +40,6 @@ public class Player extends SteerableEntity {
 	    
         // Sound effect for damage
         breakSound = Gdx.audio.newSound(Gdx.files.internal("wood-bump.mp3"));
-
-        // Sets cannonball array
-        cannonBalls = new Array<CannonFire>();
-        college = "Alcuin";
     }
 
     /**
@@ -55,15 +48,89 @@ public class Player extends SteerableEntity {
      * @param delta Delta Time
      */
     public void update(float delta) {
+    	updateMovement();
+    	
+        setRotation((float) Math.toDegrees(getOrientation()) - 90);
         setPosition(getPosition().x - getWidth() / 2f, getPosition().y - getHeight()/2f);
-        setRotation((float) (getOrientation() * 180 / Math.PI));
-
+        
+        // Cannon fire on 'Space'
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && GdxAI.getTimepiece().getTime() - getTimeFired() > 1f) {
+            fire();
+            setTimeFired(GdxAI.getTimepiece().getTime());
+        }
+        
         // Updates cannonball data
         for(CannonFire ball : cannonBalls) {
             ball.update(delta);
-            if(ball.isDestroyed())
+            if(ball.isDestroyed()) {
                 cannonBalls.removeValue(ball, true);
+            	ball.dispose();
+            }
         }
+    }
+    
+    /**
+     * updates the force applied to the player using the equation f = (a - cu)
+     * f - Force
+     * a - Maximum acceleration
+     * c - Constant
+     * u - Current velocity of the player
+     * 
+     * NOTE: this equation is using f = ma as its base assuming m = 1
+     * 
+     * @param delta
+     */
+    public void updateMovement(){
+
+    	int linearDirection = 0;
+    	int angularDirection = 0;
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        	linearDirection++;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        	linearDirection--;
+        }
+    	if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+    		angularDirection++;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        	angularDirection--;
+        }
+        
+    	float lf;
+        float af;
+
+        setMaxLinearSpeed(GameScreen.getDifficulty().getMaxSpeed()/ PPM);
+        setMaxAngularSpeed((float) Math.PI /GameScreen.getDifficulty().getTraverseSpeed());
+        
+        if(linearDirection != 0) {
+        	lf  = maxLinearAcceleration * linearDirection;
+        } else {
+        	lf = -1f * maxLinearAcceleration * getBody().getLinearVelocity().len() / maxLinearSpeed;
+        }
+        
+        if(angularDirection != 0) {
+        	af = maxAngularAcceleration * angularDirection;
+        } else {
+        	af = -1f * maxAngularAcceleration * getBody().getAngularVelocity() / maxAngularSpeed;
+        }
+
+        getBody().applyTorque(af, true);
+        getBody().applyForceToCenter(lf * (float) Math.cos(getBody().getAngle()), lf * (float) Math.sin(getBody().getAngle()), true);
+        
+    	if(getBody().getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
+    		getBody().setLinearVelocity(maxLinearSpeed * (float) Math.cos(getBody().getAngle()), 
+    							   		maxLinearSpeed * (float) Math.sin(getBody().getAngle()));
+    	} else {
+        	getBody().setLinearVelocity(getBody().getLinearVelocity().len() * (float) Math.cos(getBody().getAngle()),
+    									getBody().getLinearVelocity().len() * (float) Math.sin(getBody().getAngle()));
+    	}
+    	
+        if(getBody().getAngularVelocity() > maxAngularSpeed) {
+    		getBody().setAngularVelocity(maxAngularSpeed);
+    	} else if (getBody().getAngularVelocity() < -maxAngularSpeed) {
+    		getBody().setAngularVelocity(-maxAngularSpeed);
+    	}
     }
 
     /**
@@ -71,8 +138,8 @@ public class Player extends SteerableEntity {
      */
     public void playBreakSound() {
         // Plays damage sound effect
-        if (GameScreen.game.getPreferences().isEffectsEnabled()) {
-            breakSound.play(GameScreen.game.getPreferences().getEffectsVolume());
+        if (GameScreen.getGame().getPreferences().isEffectsEnabled()) {
+            breakSound.play(GameScreen.getGame().getPreferences().getEffectsVolume());
         }
     }
 
@@ -83,17 +150,20 @@ public class Player extends SteerableEntity {
     protected void defineEntity(float x, float y) {
         // Defines a players position
         BodyDef bdef = new BodyDef();
-        bdef.position.set(new Vector2(x, y)); // Default Pos: 1800,2500
+        bdef.position.set(x, y); // Default Pos: 1800,2500
         bdef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bdef);
 
         // Defines a player's shape and contact borders
         FixtureDef fdef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(50 / PPM);
+        fdef.density = 1;
+        
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(50 / PPM, 20 / PPM);
         fdef.shape = shape;
         fdef.restitution = 0f;
-
+        shape.dispose();
+        
         // setting BIT identifier
         fdef.filter.categoryBits = PLAYER_BIT;
         // determining what this BIT can collide with
@@ -104,111 +174,36 @@ public class Player extends SteerableEntity {
         body.createFixture(fdef).setUserData(this);
     }
 
-
-
-    public void updateVelocity(int linearAcceleration, float delta){
-
-        setVelocity((getVelocity() +  (linearAcceleration * delta) * (1 - getVelocity() / maxVelocity)) * GameScreen.difficulty.getSpeedReduction());
-        //Gdx.app.log("powerup1", Float.toString(velocity));
-        //Gdx.app.log("powerup2", Float.toString(screen.difficulty.getMaxSpeed()));
-        if (getVelocity() < -1.5f) {
-            setVelocity(-1.5f);
-        }
-        else if (getVelocity() > GameScreen.difficulty.getMaxSpeed()){
-            setVelocity(GameScreen.difficulty.getMaxSpeed());
-        }
-        setLinearVelocity(getVelocity());
-    }
-
-    public void slowDown(float delta){
-        setVelocity((float) (getVelocity() * Math.pow(0.95f, delta * 20.0f)));
-        //Gdx.app.log("Slowing down velocity:", String.valueOf(velocity));
-        setLinearVelocity(getVelocity());
-        //TODO slow down reverse
-    }
-
-
-    public void updateRotation(float angularAcceleration, float delta) {
-
-        float angularVelocity = getAngularVelocity() + (angularAcceleration * delta) * (getVelocity() / maxAngularVelocity);
-        if (angularVelocity < -5f) {
-            angularVelocity = -5f;
-        }
-        // Increase rotation
-        if (angularVelocity > 5f) {
-            angularVelocity = 5;
-        }
-
-        if (angularVelocity > 0) {
-            angularVelocity -= (angularVelocity / GameScreen.difficulty.getTraverseSpeed()); // change to update rotation
-        } else if (angularVelocity < 0) {
-            angularVelocity -= (angularVelocity / GameScreen.difficulty.getTraverseSpeed()); // change to update rotation
-        }
-
-
-        body.setAngularVelocity(angularVelocity);
-    }
-
-    public void updateRotation(int angularAcceleration, float delta) {
-        updateRotation((float) angularAcceleration, delta);
-    }
-
-    public void setLinearVelocity(float newVelocity){
-        float horizontalVelocity = -newVelocity * MathUtils.sin(getOrientation());
-        float verticalVelocity = newVelocity * MathUtils.cos(getOrientation());
-        body.setLinearVelocity(horizontalVelocity, verticalVelocity);
-        velocity = newVelocity;
-    }
-
     /**
      * Called when E is pushed. Causes 1 cannon ball to spawn on both sides of the ships with their relative velocity
      */
     public void fire() {
+    	cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI / 2, 5));
+        cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI / 2, 5));
+        
+        if (GameScreen.getDifficulty().GetConeMec() == true){
+            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI / 4, 5));
+            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI / 4, 5));
 
-        cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, 5F, body.getAngle() - (float)Math.toRadians(180)));
-        cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, -5, body.getAngle() - (float)Math.toRadians(-180)));
-        if (GameScreen.difficulty.GetConeMec() == true){
-            cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, 5F, body.getAngle() - (float)Math.toRadians(45)));
-            cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, -5, body.getAngle() - (float)Math.toRadians(-45)));
-
-            cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, 5F,  body.getAngle() -(float)Math.toRadians(225)));
-            cannonBalls.add(new CannonFire(screen, getPosition().x, getPosition().y, body, -5, body.getAngle() - (float)Math.toRadians(-225)));
+            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI * 3 / 4, 5));
+            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI * 3 / 4, 5));
         }
-
-        // Fires cannons
-
-
-
-
-        // Cone fire below
-
     }
     
     @Override
     public void onContact() {}
-
-    /**
-     * Draws the player using batch
-     * Draws cannonballs using batch
-     *
-     * @param batch The batch of the program
-     */
-    public void draw(Batch batch){
-        // Draws player and cannonballs
-        super.draw(batch);
-        for(CannonFire ball : cannonBalls)
-            ball.draw(batch);
-    }
     
 	public Body getBody() {
 		return body;
 	}
 
 	public float getVelocity() {
-		return velocity;
+		return this.getLinearVelocity().len();
 	}
-
-	public void setVelocity(float velocity) {
-        setLinearVelocity(velocity);
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		breakSound.dispose();
 	}
 }
