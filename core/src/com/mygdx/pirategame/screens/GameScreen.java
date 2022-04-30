@@ -266,8 +266,8 @@ public class GameScreen implements Screen {
                 validLoc = false;
                 while (!validLoc) {
                     //Get random x and y coords
-                    a = rand.nextInt(AvailableSpawn.xCap - AvailableSpawn.xBase) + AvailableSpawn.xBase;
-                    b = rand.nextInt(AvailableSpawn.yCap - AvailableSpawn.yBase) + AvailableSpawn.yBase;
+                    a = rand.nextInt(xCap - xBase) + xBase;
+                    b = rand.nextInt(yCap - yBase) + yBase;
                     validLoc = AvailableSpawn.add(a, b);
                 }
                 getPowerups().add(new Powerup(this, a, b, i));
@@ -316,7 +316,6 @@ public class GameScreen implements Screen {
      *
      * Caps player velocity
      *
-     * @param delta Delta time (elapsed time since last game tick)
      */
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
