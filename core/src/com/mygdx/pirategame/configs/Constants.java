@@ -16,7 +16,6 @@ public final class Constants {
 	public static final short COLLEGE_BIT = 128;
 	public static final short COLLEGESENSOR_BIT = 256;
 	public static final short TORNADO_BIT = 512;
-	public static final short NOSPAWNAREA_BIT = 1024;
 
 	//Constant for swapping between screens
 	public static final int MENU = 0;

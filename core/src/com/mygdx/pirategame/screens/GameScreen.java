@@ -312,9 +312,6 @@ public class GameScreen implements Screen {
      * Checks for input and performs an action
      * Applies to keys "W" "A" "S" "D" "E" "Esc"
      *
-     * Caps player velocity
-     *
-     * @param delta Delta time (elapsed time since last game tick)
      */
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
