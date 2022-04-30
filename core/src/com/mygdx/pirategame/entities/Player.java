@@ -108,6 +108,7 @@ public class Player extends SteerableEntity {
         } else {
         	lf = -1f * maxLinearAcceleration * getBody().getLinearVelocity().len() / maxLinearSpeed;
         }
+
         
         if(angularDirection != 0) {
         	af = maxAngularAcceleration * angularDirection;
