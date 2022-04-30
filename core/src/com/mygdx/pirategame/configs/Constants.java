@@ -3,7 +3,7 @@ package com.mygdx.pirategame.configs;
 public final class Constants {
 
 	// Pixels per meter
-	public static final float PPM = 100;
+	public static final float PPM = 64;
 
 	//Bits used in collisions
 	public static final short DEFAULT_BIT = 1;

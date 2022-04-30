@@ -1,7 +1,10 @@
 package com.mygdx.pirategame.world;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
@@ -13,29 +16,23 @@ import com.badlogic.gdx.math.Rectangle;
  *@version 1.0
  */
 public class AvailableSpawn {
-    public static ArrayList<Rectangle> tileBlocked = new ArrayList<>();
+    public static ArrayList<Polygon> bounds = WorldCreator.getBounds();
+    public static HashMap<Integer, ArrayList<Integer>> blockedTiles = new HashMap(){{put(12, new ArrayList<Integer>(Arrays.asList(25)));}};
 
-    /**
-     * Checks if given value pair is already contained in the map
-     * If not contained in the map, adds the data pair to the map
-     *
-     * @param x the x coord value
-     * @param y the y coord value
-     */
-    public static boolean add(int x, int y){
-        boolean check = check(x, y);
-        if (check){
-            Rectangle rect = new Rectangle(x, y, 1, 1);
-            tileBlocked.add(rect);
-        }
-        return check;
-    }
-
-    protected static boolean check(int x, int y) {
-        for (Rectangle rect : tileBlocked) {
-            if (rect.contains(x, y)) {
+    public static boolean add(int x, final int y){
+        for(Polygon polygon: bounds){
+            if(polygon.contains(x, y)){
                 return false;
             }
+        }
+        if(blockedTiles.containsKey(x) && blockedTiles.get(x).contains(y)){
+            return false;
+        }
+        if(blockedTiles.containsKey(x)){
+            blockedTiles.get(x).add(y);
+        }
+        else{
+            blockedTiles.put(x, new ArrayList<Integer>(){{add(y);}});
         }
         return true;
     }

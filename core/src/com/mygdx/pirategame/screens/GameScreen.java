@@ -104,7 +104,7 @@ public class GameScreen implements Screen {
         GameScreen.difficulty = difficulty;
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
-        camera.zoom = 0.0155f;
+        camera.zoom = 0.03f;
         viewport = new ScreenViewport(camera);
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
