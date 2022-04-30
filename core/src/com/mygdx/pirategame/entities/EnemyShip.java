@@ -137,7 +137,7 @@ public class EnemyShip extends SteerableEntity {
         // setting BIT identifier
         fdef.filter.categoryBits = ENEMY_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT | CANNON_BIT | NOSPAWNAREA_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT | CANNON_BIT;
         
         body.createFixture(fdef).setUserData(this);
     }
