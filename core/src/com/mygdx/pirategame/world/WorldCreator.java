@@ -37,8 +37,8 @@ public class WorldCreator {
         // Object class is islands, stuff for boat to collide with
         for(MapObject object : map.getLayers().get(4).getObjects().getByType(PolygonMapObject.class)) {
             Polygon polygon = ((PolygonMapObject) object).getPolygon();
-            polygon.setPosition(polygon.getX()/64, polygon.getY()/64);
-            polygon.scale(-0.984375f);
+            polygon.setPosition(polygon.getX()/PPM, polygon.getY()/PPM);
+            polygon.scale(-(1-1/PPM));
             bounds.add(polygon);
         }
         for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
