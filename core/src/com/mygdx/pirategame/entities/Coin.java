@@ -3,7 +3,6 @@ package com.mygdx.pirategame.entities;
 import static com.mygdx.pirategame.configs.Constants.COIN_BIT;
 import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
 import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
-import static com.mygdx.pirategame.configs.Constants.NOSPAWNAREA_BIT;
 import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
 import static com.mygdx.pirategame.configs.Constants.PPM;
 
@@ -84,7 +83,7 @@ public class Coin extends Entity {
         // setting BIT identifier
         fdef.filter.categoryBits = COIN_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT | NOSPAWNAREA_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT | PLAYER_BIT | ENEMY_BIT;
         fdef.shape = shape;
         fdef.isSensor = true;
         getBody().createFixture(fdef).setUserData(this);

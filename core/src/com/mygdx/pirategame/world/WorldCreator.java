@@ -17,7 +17,6 @@ import com.mygdx.pirategame.college.*;
 import com.mygdx.pirategame.screens.GameScreen;
 
 import static com.mygdx.pirategame.configs.Constants.*;
-import static com.mygdx.pirategame.configs.Constants.NOSPAWNAREA_BIT;
 
 /**
  * This is the class where all boundaries and collisions are created for the map.
@@ -38,13 +37,13 @@ public class WorldCreator {
         // Object class is islands, stuff for boat to collide with
         for(MapObject object : map.getLayers().get(4).getObjects().getByType(PolygonMapObject.class)) {
             Polygon polygon = ((PolygonMapObject) object).getPolygon();
-            polygon.setPosition(polygon.getX()/64, polygon.getY()/64);
-            polygon.scale(-0.984375f);
+            polygon.setPosition(polygon.getX()/PPM, polygon.getY()/PPM);
+            polygon.scale(-(1-1/PPM));
             bounds.add(polygon);
         }
         for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Islands(screen, rect, false);
+            new Islands(screen, rect);
         }
         for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
