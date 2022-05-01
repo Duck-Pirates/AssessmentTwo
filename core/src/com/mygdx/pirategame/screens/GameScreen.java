@@ -25,6 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.pirategame.PirateGame;
@@ -772,6 +774,8 @@ public class GameScreen implements Screen {
 	public static void setPowerups(ArrayList<Powerup> powerups) {
 		GameScreen.powerups = powerups;
 	}
+
+    public static void setTornadoes(ArrayList<Tornado> tornadoes){ GameScreen.Tornadoes = tornadoes;}
 
 	public void setTempTime(Float tempTime) {
 		TempTime = tempTime;

@@ -77,8 +77,6 @@ public class Player extends SteerableEntity {
      * u - Current velocity of the player
      * 
      * NOTE: this equation is using f = ma as its base assuming m = 1
-     * 
-     * @param delta
      */
     public void updateMovement(){
 
@@ -162,7 +160,7 @@ public class Player extends SteerableEntity {
         shape.setAsBox(50 / PPM, 20 / PPM);
         fdef.shape = shape;
         fdef.restitution = 0f;
-        shape.dispose();
+        // shape.dispose();
         
         // setting BIT identifier
         fdef.filter.categoryBits = PLAYER_BIT;

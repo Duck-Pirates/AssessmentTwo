@@ -38,7 +38,6 @@ public class EnemyShip extends SteerableEntity {
      * @param screen Visual data
      * @param x x coordinates of entity
      * @param y y coordinates of entity
-     * @param path path of texture file
      * @param assignment College ship is assigned to
      */
     public EnemyShip(GameScreen screen, float x, float y, String assignment) {
@@ -150,7 +149,7 @@ public class EnemyShip extends SteerableEntity {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(50 / PPM, 20 / PPM);
         fdef.shape = shape;
-        shape.dispose();
+        // shape.dispose();
         
         // setting BIT identifier
         fdef.filter.categoryBits = ENEMY_BIT;

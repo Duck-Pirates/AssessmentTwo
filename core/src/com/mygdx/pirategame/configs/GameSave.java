@@ -2,6 +2,7 @@ package com.mygdx.pirategame.configs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.StateMachine;
@@ -33,7 +34,7 @@ public class GameSave {
     private Json json = new Json();
 
     private static Difficulty difficultySave;
-    private static AvailableSpawn invalidSpawnSave;
+    private static ObjectMap<Integer, Array<Integer>> invalidSpawnSaveHashMap;
 
     private PlayerSave playerSave;
     private ArrayList<CollegeSave> collegesSaves = new ArrayList<>();
@@ -56,7 +57,11 @@ public class GameSave {
 
     public void save(GameScreen game, SkillTree shop) {
         difficultySave = GameScreen.getDifficulty();
-        invalidSpawnSave = game.getInvalidSpawn();
+        invalidSpawnSaveHashMap = AvailableSpawn.getBlockedTiles();
+        Array<Integer> keys = new Array<>();
+        Array<Array<Integer>> values = new Array<>();
+        keys = invalidSpawnSaveHashMap.keys().toArray();
+        values = invalidSpawnSaveHashMap.values().toArray();
 
         playerSave = new PlayerSave(GameScreen.getPlayer());
         for (College college: GameScreen.getColleges()) {
@@ -80,7 +85,7 @@ public class GameSave {
         statesSave = shop.states;
 
         json.setOutputType(JsonWriter.OutputType.json);
-        ArrayList<Object> parameters2Save = new ArrayList<>(Arrays.asList(difficultySave, invalidSpawnSave, playerSave, collegesSaves, shipsSaves, coinSaves, hudSave, powerUpSaves, tornadoesSaves, tempTimeSave, statesSave));
+        ArrayList<Object> parameters2Save = new ArrayList<>(Arrays.asList(difficultySave, keys, values, playerSave, collegesSaves, shipsSaves, coinSaves, hudSave, powerUpSaves, tornadoesSaves, tempTimeSave, statesSave));
         file.writeString(json.prettyPrint(parameters2Save), false);
     }
 
@@ -92,11 +97,12 @@ public class GameSave {
      * Auxiliary class to save data about the player
      */
     public static class PlayerSave{
-    	private Vector2 velocity;
+    	private Vector2 velocity, position;
+        private float angle;
         public PlayerSave(Player player) {
             velocity = player.getBody().getLinearVelocity();
-            player.getRotation();
-            player.getBody().getPosition();
+            angle = player.getRotation();
+            position = player.getBody().getPosition();
         }
 
         /**
@@ -110,10 +116,12 @@ public class GameSave {
          * Modifies the game's Player instance while loading the game
          * @param game
          */
-        public void createPlayer(GameScreen game){
+        public Player createPlayer(GameScreen game){
             Player result = new Player(game);
             result.getBody().setLinearVelocity(this.velocity);
+            result.setPosition(this.position, this.angle);
             GameScreen.setPlayer(result);
+            return result;
         }
     }
 
@@ -367,20 +375,27 @@ public class GameSave {
         gameScreen.destroyBodies();
         SkillTree shop = new SkillTree(game);
 
-        gameScreen.setInvalidSpawn((AvailableSpawn) loaded_data.get(1));
-        ((PlayerSave) loaded_data.get(2)).createPlayer(gameScreen);
+        ObjectMap<Integer, Array<Integer>> newBlockedTiles = new ObjectMap<>();
+        Array<Integer> oldKeys = (Array<Integer>)loaded_data.get(1);
+        Array<Array<Integer>> oldValues = (Array<Array<Integer>>) loaded_data.get(2);
+        for(int i = 0; i < oldKeys.size; i ++){
+            newBlockedTiles.put(oldKeys.get(i), oldValues.get(i));
+        }
+        gameScreen.getInvalidSpawn().setBlockedTiles(newBlockedTiles);
+
+        ArrayList<SteerableEntity> ships = new ArrayList<>();
+        ships.add(((PlayerSave) loaded_data.get(3)).createPlayer(gameScreen));
 
         ArrayList<College> colleges = new ArrayList<>();
-        ArrayList<SteerableEntity> ships = new ArrayList<>();
         ArrayList<Coin> coins = new ArrayList<>();
         ArrayList<Powerup> powerups = new ArrayList<>();
         ArrayList<Tornado> tornadoes = new ArrayList<>();
 
-        for (CollegeSave college: (Array<CollegeSave>) loaded_data.get(3)) {
+        for (CollegeSave college: (Array<CollegeSave>) loaded_data.get(4)) {
             colleges.add(college.createCollege(gameScreen));
             ships.addAll(colleges.get(colleges.size()-1).getFleet());
         }
-        for(ShipSave ship: (Array<ShipSave>) loaded_data.get(4)){
+        for(ShipSave ship: (Array<ShipSave>) loaded_data.get(5)){
             if(!ship.college.equals("Unaligned")){
                 continue;
             }
@@ -388,7 +403,7 @@ public class GameSave {
         }
         GameScreen.setColleges(colleges);
         GameScreen.setShips(ships);
-        for (CoinSave coin: (Array<CoinSave>) loaded_data.get(5)){
+        for (CoinSave coin: (Array<CoinSave>) loaded_data.get(6)){
             Coin newcoin = new Coin(gameScreen, coin.position.x, coin.position.y);
             newcoin.setDestroyed(coin.destroyed);
             newcoin.setToDestroy(coin.setToDestroyed);
@@ -396,13 +411,17 @@ public class GameSave {
             coins.add(newcoin);
         }
         GameScreen.setCoins(coins);
-        ((HudSave) loaded_data.get(6)).createHud(gameScreen);
-        for(PowerUpSave powerUp: (Array<PowerUpSave>) loaded_data.get(7)){
+        ((HudSave) loaded_data.get(7)).createHud(gameScreen);
+        for(PowerUpSave powerUp: (Array<PowerUpSave>) loaded_data.get(8)){
             powerups.add(powerUp.createPowerUp(gameScreen));
         }
         GameScreen.setPowerups(powerups);
-        gameScreen.setTempTime((Float) loaded_data.get(8));
-        SkillTree.states = new ArrayList<Integer>(Arrays.asList(((Array<Integer>) loaded_data.get(9)).toArray()));
+        for (TornadoSave tornado: (Array<TornadoSave>) loaded_data.get(9)) {
+            tornadoes.add(tornado.createTornado(gameScreen));
+        }
+        GameScreen.setTornadoes(tornadoes);
+        gameScreen.setTempTime((Float) loaded_data.get(10));
+        SkillTree.states = new ArrayList<>(Arrays.asList(((Array<Integer>) loaded_data.get(11)).toArray()));
         
         game.setGameScreen(gameScreen);
         game.setSkillTreeScreen(shop);
