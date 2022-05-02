@@ -1,11 +1,21 @@
 package com.mygdx.pirategame.entities;
 
-import com.badlogic.gdx.Gdx;
+import static com.mygdx.pirategame.configs.Constants.CANNON_BIT;
+import static com.mygdx.pirategame.configs.Constants.CLOUDS_BIT;
+import static com.mygdx.pirategame.configs.Constants.COIN_BIT;
+import static com.mygdx.pirategame.configs.Constants.COLLEGEFIRE_BIT;
+import static com.mygdx.pirategame.configs.Constants.COLLEGESENSOR_BIT;
+import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
+import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
+import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
+import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
+import static com.mygdx.pirategame.configs.Constants.POWERUP_BIT;
+import static com.mygdx.pirategame.configs.Constants.PPM;
+
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -16,8 +26,6 @@ import com.mygdx.pirategame.fsm.EnemyStateMachine;
 import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
 
-import static com.mygdx.pirategame.configs.Constants.*;
-
 /**
  * Enemy Ship
  * Generates enemy ship data
@@ -27,8 +35,6 @@ import static com.mygdx.pirategame.configs.Constants.*;
  *@version 3.1
  */
 public class EnemyShip extends SteerableEntity {
-    private Sound destroy;
-    private Sound hit;
     
     private StateMachine<EnemyShip, EnemyStateMachine> stateMachine;
     
@@ -47,9 +53,6 @@ public class EnemyShip extends SteerableEntity {
         setTimeFired(GdxAI.getTimepiece().getTime());
         setStateMachine(new DefaultStateMachine<EnemyShip, EnemyStateMachine>(this, EnemyStateMachine.SLEEP));
         
-        //Set audio
-        destroy = Gdx.audio.newSound(Gdx.files.internal("ship-explosion-2.wav"));
-        hit = Gdx.audio.newSound(Gdx.files.internal("ship-hit.wav"));
         //Set the position and size of the college
         setBounds(0, 0, 64 / PPM, 110 / PPM);
         setRegion(texture);
@@ -79,7 +82,6 @@ public class EnemyShip extends SteerableEntity {
             Hud.changeCoins(10);
         } else {
         	getStateMachine().update();
-        	setHealth(1000);
         	if (behavior != null) {
     			behavior.calculateSteering(steerOutput);
     			applySteering(steerOutput, delta);
@@ -110,8 +112,9 @@ public class EnemyShip extends SteerableEntity {
         float aa = steering.angular;
         
         getBody().setTransform(getPosition(), getOrientation() + aa * delta);
-        getBody().setLinearVelocity((getBody().getLinearVelocity().len() + la.len() * delta) * (float) Math.cos(getOrientation()),
-        					   		(getBody().getLinearVelocity().len() + la.len() * delta) * (float) Math.sin(getOrientation()));
+        getBody().applyForceToCenter(la, true);
+        getBody().setLinearVelocity((getBody().getLinearVelocity().len()) * (float) Math.cos(getOrientation()),
+        					   		(getBody().getLinearVelocity().len()) * (float) Math.sin(getOrientation()));
         
         if(getBody().getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
     		getBody().setLinearVelocity(maxLinearSpeed * (float) Math.cos(getBody().getAngle()), 
@@ -124,12 +127,6 @@ public class EnemyShip extends SteerableEntity {
     		getBody().setAngularVelocity(-maxAngularSpeed);
     	}
 	}
-    
-    public void fire() {
-        cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI / 2, 5));
-        cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI / 2, 5));
-   	
-    }
 
     /**
      * Defines the ship as an enemy
@@ -149,13 +146,13 @@ public class EnemyShip extends SteerableEntity {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(50 / PPM, 20 / PPM);
         fdef.shape = shape;
-        // shape.dispose();
+        shape.dispose();
         
         // setting BIT identifier
         fdef.filter.categoryBits = ENEMY_BIT;
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PLAYER_BIT | DEFAULT_BIT | COIN_BIT | COLLEGE_BIT | POWERUP_BIT
-        					 | COLLEGESENSOR_BIT | COLLEGEFIRE_BIT | CLOUDS_BIT;
+        fdef.filter.maskBits = PLAYER_BIT | DEFAULT_BIT | COIN_BIT | COLLEGE_BIT | POWERUP_BIT | ENEMY_BIT
+        					 | COLLEGESENSOR_BIT | COLLEGEFIRE_BIT | CLOUDS_BIT | CANNON_BIT;
         					 
         
         setBody(world.createBody(bdef));
@@ -197,12 +194,5 @@ public class EnemyShip extends SteerableEntity {
 
 	public void setStateMachine(StateMachine<EnemyShip, EnemyStateMachine> stateMachine) {
 		this.stateMachine = stateMachine;
-	}
-	
-	@Override
-	public void dispose() {
-		super.dispose();
-		destroy.dispose();
-		hit.dispose();
 	}
 }

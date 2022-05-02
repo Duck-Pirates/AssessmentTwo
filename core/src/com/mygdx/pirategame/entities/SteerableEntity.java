@@ -2,9 +2,11 @@ package com.mygdx.pirategame.entities;
 
 import static com.mygdx.pirategame.configs.Constants.PPM;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -21,6 +23,9 @@ import com.mygdx.pirategame.screens.GameScreen;
  */
 public abstract class SteerableEntity extends Entity implements Steerable<Vector2> {
     protected String college;
+    
+    protected Sound destroy;
+    protected Sound hit;
     
     protected boolean setToDestroy;
     protected boolean destroyed;
@@ -55,6 +60,10 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
         this.setHealth(100);
         bar = new HealthBar(this);
         
+        //Set audio
+        destroy = Gdx.audio.newSound(Gdx.files.internal("ship-explosion-2.wav"));
+        hit = Gdx.audio.newSound(Gdx.files.internal("ship-hit.wav"));
+        
 	    steerOutput = new SteeringAcceleration<Vector2>(new Vector2());
 	    
         cannonBalls = new Array<CannonFire>();
@@ -62,7 +71,12 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
     
     public abstract void update(float delta);
     
-    public abstract void fire();
+    public void fire() {
+        cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x + (30 / PPM) * (float) Math.sin(getOrientation()), 
+        							   getPosition().y - (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() - (float) Math.PI / 2, 5));
+        cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x - (30 / PPM) * (float) Math.sin(getOrientation()), 
+        							   getPosition().y + (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() + (float) Math.PI / 2, 5));
+    }
 
     /**
      * Checks recieved damage
@@ -217,6 +231,8 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 	public void dispose() {
 		super.dispose();
 		bar.dispose();
+		destroy.dispose();
+		hit.dispose();
 	}
 
 	public float getTimeFired() {

@@ -108,7 +108,7 @@ public class CannonFire extends Entity {
         setPosition(getBody().getPosition().x - getWidth() / 2, getBody().getPosition().y - getHeight() / 2);
 
         //If ball is set to destroy and isnt, destroy it
-        if(stateTime > 0.98f || isSetToDestroy()) {
+        if(stateTime > 1.4f || isSetToDestroy()) {
             world.destroyBody(getBody());
             destroyed = true;
         }

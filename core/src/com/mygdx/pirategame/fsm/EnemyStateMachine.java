@@ -33,7 +33,7 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 					.setFaceEnabled(true)
 					.setWanderOffset(100f / PPM)
 					.setWanderRadius(50f / PPM)
-					.setWanderRate((float) Math.PI);
+					.setWanderRate((float) Math.PI / 2);
 			entity.setBehavior(wander);
 		}
 		

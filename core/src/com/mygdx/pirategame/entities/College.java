@@ -1,6 +1,7 @@
 package com.mygdx.pirategame.entities;
 
 import static com.mygdx.pirategame.configs.Constants.COLLEGESENSOR_BIT;
+import static com.mygdx.pirategame.configs.Constants.CANNON_BIT;
 import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
 import static com.mygdx.pirategame.configs.Constants.PPM;
 
@@ -150,7 +151,7 @@ public class College extends SteerableEntity {
         fdef.filter.categoryBits = COLLEGESENSOR_BIT;
         
         // determining what this BIT can collide with
-        fdef.filter.maskBits = PLAYER_BIT;
+        fdef.filter.maskBits = PLAYER_BIT | CANNON_BIT;
         fdef.isSensor = true;
         getBody().createFixture(fdef).setUserData(this);
     }
@@ -169,14 +170,15 @@ public class College extends SteerableEntity {
     /**
      * Fires cannonballs
      */
+    @Override
     public void fire() {
-    	ArrayList<Entity> ships = EntityProximity.findAgents(this, GameScreen.getShips(), 600000 / PPM);
-    	if(ships != null && GdxAI.getTimepiece().getTime() - getTimeFired() > 1f) {
+    	ArrayList<Entity> ships = EntityProximity.findAgents(this, GameScreen.getShips(), 6000 / PPM);
+    	if(ships != null && GdxAI.getTimepiece().getTime() - getTimeFired() > 0.5f) {
     		Vector2 A = getBody().getPosition();
     		Vector2 B = ships.get(0).getPosition();
     		float angle = B.sub(A).angleRad();
-    		cannonBalls.add(new CannonFire(screen, getBody(), getBody().getPosition().x, getBody().getPosition().y,
-    									   angle, 5));
+    		cannonBalls.add(new CannonFire(screen, getBody(), getBody().getPosition().x + (70 / PPM) * (float) Math.sin(angle),
+    									   getBody().getPosition().y + (70 / PPM) * (float) Math.sin(angle), angle, 5));
     		setTimeFired(GdxAI.getTimepiece().getTime());
     	}
     }

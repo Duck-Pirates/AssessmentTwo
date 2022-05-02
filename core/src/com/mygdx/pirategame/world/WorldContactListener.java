@@ -99,6 +99,16 @@ public class WorldContactListener implements ContactListener {
                     }
                 }
                 break;
+            case PLAYER_BIT | CANNON_BIT:
+                if(fixA.getFilterData().categoryBits == PLAYER_BIT) {
+                    ((SteerableEntity) fixA.getUserData()).onContact();
+                    ((CannonFire) fixB.getUserData()).setToDestroy(true);
+                }
+                else {
+                    ((SteerableEntity) fixB.getUserData()).onContact();
+                    ((CannonFire) fixA.getUserData()).setToDestroy(true);
+                }
+                break;
             case ENEMY_BIT | CANNON_BIT:
                 if(fixA.getFilterData().categoryBits == ENEMY_BIT) {
                     ((SteerableEntity) fixA.getUserData()).onContact();

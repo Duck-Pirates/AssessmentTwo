@@ -276,9 +276,6 @@ public class Hud implements Disposable {
         coins -= value;
     }
 
-
-
-
     /**
      * Changes health by value factor
      *

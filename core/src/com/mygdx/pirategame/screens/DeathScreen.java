@@ -76,7 +76,6 @@ public class DeathScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 parent.changeScreen(MENU, false);
-                parent.killEndScreen();
             }
         });
 

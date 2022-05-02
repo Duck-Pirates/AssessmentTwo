@@ -1,5 +1,14 @@
 package com.mygdx.pirategame.screens;
 
+import static com.mygdx.pirategame.configs.Constants.DEATH;
+import static com.mygdx.pirategame.configs.Constants.PPM;
+import static com.mygdx.pirategame.configs.Constants.SKILL;
+import static com.mygdx.pirategame.configs.Constants.VICTORY;
+import static com.mygdx.pirategame.configs.Constants.xBase;
+import static com.mygdx.pirategame.configs.Constants.xCap;
+import static com.mygdx.pirategame.configs.Constants.yBase;
+import static com.mygdx.pirategame.configs.Constants.yCap;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,8 +34,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntMap;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.pirategame.PirateGame;
@@ -42,8 +49,6 @@ import com.mygdx.pirategame.entities.Tornado;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
-
-import static com.mygdx.pirategame.configs.Constants.*;
 
 
 /**
