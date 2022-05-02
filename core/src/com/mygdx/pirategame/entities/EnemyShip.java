@@ -107,7 +107,7 @@ public class EnemyShip extends SteerableEntity {
     }
     
     private void applySteering(SteeringAcceleration<Vector2> steering, float delta) {
-		
+
     	Vector2 la = steering.linear;
         float aa = steering.angular;
         
@@ -121,9 +121,9 @@ public class EnemyShip extends SteerableEntity {
     									maxLinearSpeed * (float) Math.sin(getBody().getAngle()));
     	}
         
-        if(getBody().getAngularVelocity() > maxAngularSpeed) {
+        if(getBody().getAngularVelocity() > maxAngularSpeed + 10) {
     		getBody().setAngularVelocity(maxAngularSpeed);
-    	} else if (getBody().getAngularVelocity() < -maxAngularSpeed) {
+    	} else if (getBody().getAngularVelocity() < -maxAngularSpeed - 10) {
     		getBody().setAngularVelocity(-maxAngularSpeed);
     	}
 	}
@@ -146,7 +146,7 @@ public class EnemyShip extends SteerableEntity {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(50 / PPM, 20 / PPM);
         fdef.shape = shape;
-        shape.dispose();
+        // shape.dispose();
         
         // setting BIT identifier
         fdef.filter.categoryBits = ENEMY_BIT;

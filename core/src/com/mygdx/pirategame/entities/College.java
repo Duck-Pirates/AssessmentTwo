@@ -41,8 +41,6 @@ public class College extends SteerableEntity {
      * @param college College name i.e. "Alcuin" used for fleet assignment
      * @param x College position on x-axis
      * @param y College position on y-axis
-     * @param flag College flag sprite (image name)
-     * @param ship College ship sprite (image name)
      * @param ship_no Number of college ships to produce
      * @param invalidSpawn Spawn data to check spawn validity when generating ships
      */
@@ -83,8 +81,7 @@ public class College extends SteerableEntity {
      * @param dt Delta time (elapsed time since last game tick)
      */
     public void update(float dt) {
-    	
-    	setHealth(100000);
+
     	
         //If college is set to destroy and isnt, destroy it
         if(isSetToDestroy()) {
@@ -163,8 +160,10 @@ public class College extends SteerableEntity {
     @Override
     public void onContact() {
         // Damage to college by cannon ball
-        setHealth(getHealth() - GameScreen.getDifficulty().getDamageDealt());
-        bar.changeHealth(GameScreen.getDifficulty().getDamageDealt());
+        if(!getCollege().equals("alcuin")){
+            setHealth(getHealth() - GameScreen.getDifficulty().getDamageDealt());
+            bar.changeHealth(GameScreen.getDifficulty().getDamageDealt());
+        }
     }
     
     /**
@@ -172,13 +171,13 @@ public class College extends SteerableEntity {
      */
     @Override
     public void fire() {
-    	ArrayList<Entity> ships = EntityProximity.findAgents(this, GameScreen.getShips(), 6000 / PPM);
+    	ArrayList<Entity> ships = EntityProximity.findAgents(this, GameScreen.getShips().subList(0, 1), 6000 / PPM);
     	if(ships != null && GdxAI.getTimepiece().getTime() - getTimeFired() > 0.5f) {
     		Vector2 A = getBody().getPosition();
     		Vector2 B = ships.get(0).getPosition();
     		float angle = B.sub(A).angleRad();
     		cannonBalls.add(new CannonFire(screen, getBody(), getBody().getPosition().x + (70 / PPM) * (float) Math.sin(angle),
-    									   getBody().getPosition().y + (70 / PPM) * (float) Math.sin(angle), angle, 5));
+    									   getBody().getPosition().y + (70 / PPM) * (float) Math.sin(angle), angle, 5, false));
     		setTimeFired(GdxAI.getTimepiece().getTime());
     	}
     }

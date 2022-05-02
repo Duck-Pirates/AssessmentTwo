@@ -1,11 +1,5 @@
 package com.mygdx.pirategame.entities;
 
-import static com.mygdx.pirategame.configs.Constants.CANNON_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
-import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
-import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
-import static com.mygdx.pirategame.configs.Constants.PPM;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,6 +10,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.mygdx.pirategame.screens.GameScreen;
+
+import static com.mygdx.pirategame.configs.Constants.*;
 
 /**
  * Cannon Fire
@@ -33,6 +29,7 @@ public class CannonFire extends Entity {
     private Sound fireNoise;
     private Vector2 bodyVel;
     private boolean fired = false;
+    private boolean player;
 
     /**
      * Instantiates cannon fire
@@ -45,8 +42,9 @@ public class CannonFire extends Entity {
      * @param body body of origin
      * @param velocity velocity of the cannon ball
      */
-    public CannonFire(GameScreen screen, Body body, float x, float y, float angle, float velocity) {
+    public CannonFire(GameScreen screen, Body body, float x, float y, float angle, float velocity, boolean player) {
     	super(screen, x, y);
+        this.player = player;
         this.velocity = velocity;
         this.world = screen.getWorld();
         //sets the angle and velocity
@@ -91,7 +89,7 @@ public class CannonFire extends Entity {
      * Updates state with delta time
      * Defines range of cannon fire
      *
-     * @param dt Delta time (elapsed time since last game tick)
+     * @param delta Delta time (elapsed time since last game tick)
      */
     public void update(float delta){
     	
@@ -122,4 +120,8 @@ public class CannonFire extends Entity {
 		super.dispose();
 		fireNoise.dispose();
 	}
+
+    public boolean getIsPlayer(){
+        return player;
+    }
 }

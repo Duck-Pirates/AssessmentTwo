@@ -97,7 +97,7 @@ public class PirateGame extends Game {
 				break;
 
 			case DEATH:
-				if (deathScreen == null) deathScreen = new DeathScreen(this);
+				if (deathScreen == null || newScreen) deathScreen = new DeathScreen(this);
 				this.setScreen(deathScreen);
 				break;
 

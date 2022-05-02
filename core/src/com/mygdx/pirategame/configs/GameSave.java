@@ -69,7 +69,7 @@ public class GameSave {
             collegesSaves.add(collegeSave);
             shipsSaves.addAll(collegeSave.fleet);
         }
-        for (int i = 20; i > 0; i--){ // Saves the unaligned ships
+        for (int i = 10; i > 0; i--){ // Saves the unaligned ships
             shipsSaves.add(new ShipSave(GameScreen.getShips().get(GameScreen.getShips().size() - i)));
         }
         for (Coin coin: GameScreen.getCoins()) {

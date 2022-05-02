@@ -1,14 +1,5 @@
 package com.mygdx.pirategame.screens;
 
-import static com.mygdx.pirategame.configs.Constants.DEATH;
-import static com.mygdx.pirategame.configs.Constants.PPM;
-import static com.mygdx.pirategame.configs.Constants.SKILL;
-import static com.mygdx.pirategame.configs.Constants.VICTORY;
-import static com.mygdx.pirategame.configs.Constants.xBase;
-import static com.mygdx.pirategame.configs.Constants.xCap;
-import static com.mygdx.pirategame.configs.Constants.yBase;
-import static com.mygdx.pirategame.configs.Constants.yCap;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,6 +40,8 @@ import com.mygdx.pirategame.entities.Tornado;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
+
+import static com.mygdx.pirategame.configs.Constants.*;
 
 
 /**
@@ -153,7 +146,7 @@ public class GameScreen implements Screen {
         Boolean validLoc;
         int a = 0;
         int b = 0;
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             validLoc = false;
             while (!validLoc) {
                 //Get random x and y coords
@@ -519,7 +512,7 @@ public class GameScreen implements Screen {
         exit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
+                game.changeScreen(MENU, true);
             }
         });
     }
@@ -593,12 +586,12 @@ public class GameScreen implements Screen {
         //Lose game if ship on 0 health or Alcuin is destroyed
         if (Hud.getHealth() <= 0 || getColleges().get(0).getHealth() <= 0) {
             getGame().changeScreen(DEATH, true);
-            getGame().killGame();
+            destroyBodies();
         }
         //Win game if all colleges destroyed
         else if (getColleges().size() == 1 && getColleges().get(0).getCollege() == "alcuin"){
             getGame().changeScreen(VICTORY, true);
-            getGame().killGame();
+            destroyBodies();
         }
     }
 

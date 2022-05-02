@@ -12,6 +12,7 @@ import com.badlogic.gdx.ai.steer.behaviors.Pursue;
 import com.badlogic.gdx.ai.steer.behaviors.Seek;
 import com.badlogic.gdx.ai.steer.behaviors.Wander;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.pirategame.configs.Difficulty;
 import com.mygdx.pirategame.entities.EnemyShip;
 import com.mygdx.pirategame.entities.Entity;
 import com.mygdx.pirategame.entities.SteerableEntity;
@@ -38,7 +39,7 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		}
 		
 		public void update(EnemyShip entity) {
-			if (EntityProximity.findAgents(entity, GameScreen.getShips(), 1000 / PPM) != null) { 
+			if (EntityProximity.findAgents(entity, GameScreen.getShips().subList(0, 1), 1000 / PPM) != null) {
 				entity.getStateMachine().changeState(PERSUE); 
 			} else if (EntityProximity.findAgents(entity, GameScreen.getCoins(), 1000 / PPM) != null) {
 				entity.getStateMachine().changeState(SEEK);
@@ -56,7 +57,7 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		}
 		
 		public void update(EnemyShip entity) {
-			if (EntityProximity.findAgents(entity, GameScreen.getShips(), 1000 / PPM) != null) { 
+			if (EntityProximity.findAgents(entity, GameScreen.getShips().subList(0, 1), 1000 / PPM) != null) {
 				entity.getStateMachine().changeState(PERSUE); 
 			} else if (entity.getPosition() == ((Seek<Vector2>) entity.getBehavior()).getTarget()) {
 				entity.getStateMachine().changeState(WANDER);
@@ -64,9 +65,9 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		}
 	},
 	
-	PERSUE() {
+	PERSUE() { //TODO Add comment
 		public void enter(EnemyShip entity) {
-			ArrayList<Entity> ships = EntityProximity.findAgents(entity, GameScreen.getShips(), 1000 / PPM);
+			ArrayList<Entity> ships = EntityProximity.findAgents(entity, GameScreen.getShips().subList(0, 1), 1000 / PPM);
 			Pursue<Vector2> persue = new Pursue<Vector2>(entity, (SteerableEntity) ships.get(0))
 					.setEnabled(true)
 					.setMaxPredictionTime(0.01f);
