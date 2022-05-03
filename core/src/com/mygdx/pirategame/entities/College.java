@@ -41,9 +41,8 @@ public class College extends SteerableEntity {
      * @param x College position on x-axis
      * @param y College position on y-axis
      * @param ship_no Number of college ships to produce
-     * @param invalidSpawn Spawn data to check spawn validity when generating ships
      */
-    public College(GameScreen screen, String college, float x, float y, int ship_no, AvailableSpawn invalidSpawn) {
+    public College(GameScreen screen, String college, float x, float y, int ship_no) {
         super(screen, x, y);
         this.college = college;
         flag = college + "_flag.png";

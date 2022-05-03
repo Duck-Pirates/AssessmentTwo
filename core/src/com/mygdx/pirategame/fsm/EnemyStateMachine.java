@@ -12,7 +12,6 @@ import com.badlogic.gdx.ai.steer.behaviors.Pursue;
 import com.badlogic.gdx.ai.steer.behaviors.Seek;
 import com.badlogic.gdx.ai.steer.behaviors.Wander;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.pirategame.configs.Difficulty;
 import com.mygdx.pirategame.entities.EnemyShip;
 import com.mygdx.pirategame.entities.Entity;
 import com.mygdx.pirategame.entities.SteerableEntity;

@@ -111,7 +111,11 @@ public class EnemyShip extends SteerableEntity {
     	Vector2 la = steering.linear;
         float aa = steering.angular;
         
-        getBody().setTransform(getPosition(), getOrientation() + aa * delta);
+        if(stateMachine.isInState(EnemyStateMachine.WANDER))
+        	getBody().setTransform(getPosition(), getOrientation() + aa * delta);
+        else
+        	getBody().setTransform(getPosition(), la.angleRad());
+        	
         getBody().applyForceToCenter(la, true);
         getBody().setLinearVelocity((getBody().getLinearVelocity().len()) * (float) Math.cos(getOrientation()),
         					   		(getBody().getLinearVelocity().len()) * (float) Math.sin(getOrientation()));

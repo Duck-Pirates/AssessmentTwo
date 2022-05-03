@@ -170,7 +170,7 @@ public class GameSave {
          * @return College Object
          */
         public College createCollege(GameScreen game){
-            College result = new College(game, collegeName, this.position.x, this.position.y, collegeName.equals("alcuin") ? 0 : GameScreen.getDifficulty().getMaxCollegeShips(), game.getInvalidSpawn());
+            College result = new College(game, collegeName, this.position.x, this.position.y, collegeName.equals("alcuin") ? 0 : GameScreen.getDifficulty().getMaxCollegeShips());
             ArrayList<EnemyShip> newfleet = new ArrayList<>();
             for(int i = 0; i < this.fleet.size(); i++){
                 newfleet.add(this.fleet.get(i).createEnemyShip(game));

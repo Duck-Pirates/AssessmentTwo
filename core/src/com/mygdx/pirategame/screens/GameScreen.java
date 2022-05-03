@@ -129,13 +129,13 @@ public class GameScreen implements Screen {
         world.setContactListener(new WorldContactListener(this));
 
         // Spawning enemy ship and coin. x and y is spawn location
-        colleges.add(new College(this, "alcuin", 3872 / PPM, 4230 / PPM, 0, getInvalidSpawn()));
-        colleges.add(new College(this, "anne_lister", 5855 / PPM, 6470 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
-        colleges.add(new College(this, "constantine", 9055 / PPM, 9860 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
-        colleges.add(new College(this, "goodricke", 4128 / PPM, 12936 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
-        colleges.add(new College(this, "halifax", 12768 / PPM, 14408 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
-        colleges.add(new College(this, "langwith", 12576 / PPM, 6920 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
-        colleges.add(new College(this, "vanbrugh", 12896 / PPM, 3783 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
+        colleges.add(new College(this, "alcuin", 3872 / PPM, 4230 / PPM, 0));
+        colleges.add(new College(this, "anne_lister", 5855 / PPM, 6470 / PPM, difficulty.getMaxCollegeShips()));
+        colleges.add(new College(this, "constantine", 9055 / PPM, 9860 / PPM, difficulty.getMaxCollegeShips()));
+        colleges.add(new College(this, "goodricke", 4128 / PPM, 12936 / PPM, difficulty.getMaxCollegeShips()));
+        colleges.add(new College(this, "halifax", 12768 / PPM, 14408 / PPM, difficulty.getMaxCollegeShips()));
+        colleges.add(new College(this, "langwith", 12576 / PPM, 6920 / PPM, difficulty.getMaxCollegeShips()));
+        colleges.add(new College(this, "vanbrugh", 12896 / PPM, 3783 / PPM, difficulty.getMaxCollegeShips()));
 
         ships = new ArrayList<>();
         ships.add(new Player(this));
