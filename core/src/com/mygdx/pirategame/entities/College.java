@@ -10,6 +10,7 @@ import java.util.Random;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -62,8 +63,8 @@ public class College extends SteerableEntity {
             while (!spawnIsValid){
                 ranX = rand.nextInt(2000) - 1000;
                 ranY = rand.nextInt(2000) - 1000;
-                ranX = (int)Math.floor(x + (ranX / PPM));
-                ranY = (int)Math.floor(y + (ranY / PPM));
+                ranX = (int) MathUtils.floor(x + (ranX / PPM));
+                ranY = (int) MathUtils.floor(y + (ranY / PPM));
                 spawnIsValid = AvailableSpawn.add(ranX, ranY);
             }
             getFleet().add(new EnemyShip(screen, ranX, ranY, college));
@@ -170,8 +171,7 @@ public class College extends SteerableEntity {
     		Vector2 A = getBody().getPosition();
     		Vector2 B = ships.get(0).getPosition();
     		float angle = B.sub(A).angleRad();
-    		cannonBalls.add(new CannonFire(this, screen, getBody(), getBody().getPosition().x,
-    									   getBody().getPosition().y, angle));
+    		cannonBalls.add(new CannonFire(this, screen, getBody(), getBody().getPosition().x, getBody().getPosition().y, angle));
     		setTimeFired(GdxAI.getTimepiece().getTime());
     	}
     }

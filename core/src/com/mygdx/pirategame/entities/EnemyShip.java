@@ -18,6 +18,7 @@ import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -116,13 +117,11 @@ public class EnemyShip extends SteerableEntity {
         	getBody().setTransform(getPosition(), la.angleRad());
         	
         getBody().applyForceToCenter(la, true);
-        getBody().setLinearVelocity((getBody().getLinearVelocity().len()) * (float) Math.cos(getOrientation()),
-        					   		(getBody().getLinearVelocity().len()) * (float) Math.sin(getOrientation()));
-        
-        if(getBody().getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
-    		getBody().setLinearVelocity(maxLinearSpeed * (float) Math.cos(getBody().getAngle()), 
-    									maxLinearSpeed * (float) Math.sin(getBody().getAngle()));
-    	}
+        velocity = velocity + (la.len() * delta) * (1 - velocity / (maxLinearSpeed * 0.85f));
+    	if (velocity < -0.5f)
+    		velocity = -0.5f;
+    	
+    	body.setLinearVelocity(velocity * MathUtils.cos(getOrientation()), velocity * MathUtils.sin(getOrientation()));
         
         if(getBody().getAngularVelocity() > maxAngularSpeed + 10) {
     		getBody().setAngularVelocity(maxAngularSpeed);

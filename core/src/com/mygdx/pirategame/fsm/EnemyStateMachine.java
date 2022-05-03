@@ -9,7 +9,6 @@ import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.steer.behaviors.Flee;
 import com.badlogic.gdx.ai.steer.behaviors.Pursue;
-import com.badlogic.gdx.ai.steer.behaviors.Seek;
 import com.badlogic.gdx.ai.steer.behaviors.Wander;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.pirategame.entities.EnemyShip;
@@ -40,31 +39,12 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		public void update(EnemyShip entity) {
 			if (EntityProximity.findAgents(entity, GameScreen.getShips().subList(0, 1), 1000 / PPM) != null) {
 				entity.getStateMachine().changeState(PERSUE); 
-			} else if (EntityProximity.findAgents(entity, GameScreen.getCoins(), 1000 / PPM) != null) {
-				entity.getStateMachine().changeState(SEEK);
-			}
+			} 
 		}
 	},
 	
-	SEEK() {
-		public void enter(EnemyShip entity) {
-			ArrayList<Entity> coins = EntityProximity.findAgents(entity, GameScreen.getCoins(), 1000 / PPM);
-			Seek<Vector2> seek = new Seek<Vector2>(entity)
-					.setEnabled(true)
-					.setTarget(coins.get(0));
-			entity.setBehavior(seek);
-		}
-		
-		public void update(EnemyShip entity) {
-			if (EntityProximity.findAgents(entity, GameScreen.getShips().subList(0, 1), 1000 / PPM) != null) {
-				entity.getStateMachine().changeState(PERSUE); 
-			} else if (entity.getPosition() == ((Seek<Vector2>) entity.getBehavior()).getTarget()) {
-				entity.getStateMachine().changeState(WANDER);
-			}
-		}
-	},
-	
-	PERSUE() { //TODO Add comment
+	PERSUE() { 
+		// Finds the nearest ship to the entity and persues it (note the player is the 0th item in the array so will always be prioritized) 
 		public void enter(EnemyShip entity) {
 			ArrayList<Entity> ships = EntityProximity.findAgents(entity, GameScreen.getShips().subList(0, 1), 1000 / PPM);
 			Pursue<Vector2> persue = new Pursue<Vector2>(entity, (SteerableEntity) ships.get(0))
@@ -74,13 +54,12 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		}
 		
 		public void update(EnemyShip entity) {
-			// attack enemy
 			if(entity.getHealth() <= 15) {
 				entity.getStateMachine().changeState(FLEE);
 			} else if(entity.getPosition().dst(((Pursue<Vector2>) entity.getBehavior()).getTarget().getPosition()) >= 1000 / PPM) {
 				entity.getStateMachine().changeState(WANDER);
 			}
-			
+			// attack enemy
 			if(GdxAI.getTimepiece().getTime() - entity.getTimeFired() > 1f) {
 				entity.fire();
 				entity.setTimeFired(GdxAI.getTimepiece().getTime());
@@ -91,7 +70,6 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 	FLEE() {
 		public void enter(EnemyShip entity) {
 			Flee<Vector2> flee = new Flee<Vector2>(entity)
-					// temp fix
 					.setTarget(GameScreen.getCoins().get(0));
 			entity.setBehavior(flee);
 		}

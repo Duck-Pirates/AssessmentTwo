@@ -9,6 +9,7 @@ import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.pirategame.screens.GameScreen;
@@ -36,12 +37,14 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
     protected static float zeroLinearSpeedThreshold = 0.01f;
     protected static float maxLinearSpeed = GameScreen.getDifficulty().getMaxSpeed() / PPM;
     protected static float maxLinearAcceleration = 55f / PPM;
-    protected static float maxAngularSpeed = (float) Math.PI / GameScreen.getDifficulty().getTraverseSpeed();
-    protected static float maxAngularAcceleration = (float) Math.PI / 16;
+    protected static float maxAngularSpeed = MathUtils.PI / GameScreen.getDifficulty().getTraverseSpeed();
+    protected static float maxAngularAcceleration = MathUtils.PI / 16;
     protected static float boundingRadius = 55f / PPM;
     protected static boolean tagged = false;
     protected SteeringBehavior<Vector2> behavior;
     protected SteeringAcceleration<Vector2> steerOutput;
+    
+    protected float velocity = 0;
     
     protected Array<CannonFire> cannonBalls;
     protected float timeFired;
@@ -74,10 +77,10 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
     public abstract void update(float delta);
     
     public void fire() {
-		cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x + (30 / PPM) * (float) Math.sin(getOrientation()),
-					getPosition().y - (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() - (float) Math.PI / 2));
-		cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x - (30 / PPM) * (float) Math.sin(getOrientation()),
-					getPosition().y + (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() + (float) Math.PI / 2));
+		cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x + (30 / PPM) * MathUtils.sin(getOrientation()),
+					getPosition().y - (30 / PPM) * MathUtils.cos(getOrientation()), getOrientation() - MathUtils.PI / 2));
+		cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x - (30 / PPM) * MathUtils.sin(getOrientation()),
+					getPosition().y + (30 / PPM) * MathUtils.cos(getOrientation()), getOrientation() + MathUtils.PI / 2));
 		
 	}
 
