@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
-import com.badlogic.gdx.ai.steer.behaviors.Flee;
 import com.badlogic.gdx.ai.steer.behaviors.Pursue;
 import com.badlogic.gdx.ai.steer.behaviors.Wander;
 import com.badlogic.gdx.math.Vector2;
@@ -54,29 +53,15 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		}
 		
 		public void update(EnemyShip entity) {
-			if(entity.getHealth() <= 15) {
-				entity.getStateMachine().changeState(FLEE);
-			} else if(entity.getPosition().dst(((Pursue<Vector2>) entity.getBehavior()).getTarget().getPosition()) >= 1000 / PPM) {
+			if(entity.getPosition().dst(((Pursue<Vector2>) entity.getBehavior()).getTarget().getPosition()) >= 1000 / PPM) {
 				entity.getStateMachine().changeState(WANDER);
-			}
-			// attack enemy
-			if(GdxAI.getTimepiece().getTime() - entity.getTimeFired() > 1f) {
-				entity.fire();
-				entity.setTimeFired(GdxAI.getTimepiece().getTime());
-			}
-		}
-	},
-	
-	FLEE() {
-		public void enter(EnemyShip entity) {
-			Flee<Vector2> flee = new Flee<Vector2>(entity)
-					.setTarget(GameScreen.getCoins().get(0));
-			entity.setBehavior(flee);
-		}
-		
-		public void update(EnemyShip entity) {
-			if(entity.getHealth() >= 70) {
-				entity.getStateMachine().changeState(WANDER);
+			} else {
+				// attack enemy
+				float distanceToTargetSquare = ((Pursue<Vector2>) entity.getBehavior()).getTarget().getPosition().dst2(entity.getPosition());
+				if(GdxAI.getTimepiece().getTime() - entity.getTimeFired() > 1f && distanceToTargetSquare <= (400 / PPM) * (400 / PPM)) {
+					entity.fire();
+					entity.setTimeFired(GdxAI.getTimepiece().getTime());
+				}
 			}
 		}
 	};

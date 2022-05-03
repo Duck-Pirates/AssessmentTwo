@@ -54,6 +54,8 @@ public class Player extends SteerableEntity {
      * @param delta Delta Time
      */
     public void update(float delta) {
+    	SteerableEntity.maxLinearSpeed = GameScreen.getDifficulty().getMaxSpeed() / PPM;
+    	
     	updateMovement(delta);
     	
         setRotation((float) Math.toDegrees(getOrientation()) - 90);

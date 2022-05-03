@@ -36,10 +36,10 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
     protected static float zeroLinearSpeedThreshold = 0.01f;
     protected static float maxLinearSpeed = GameScreen.getDifficulty().getMaxSpeed() / PPM;
-    protected static float maxLinearAcceleration = 55f / PPM;
+    protected static float maxLinearAcceleration = 30f / PPM;
     protected static float maxAngularSpeed = MathUtils.PI / GameScreen.getDifficulty().getTraverseSpeed();
     protected static float maxAngularAcceleration = MathUtils.PI / 16;
-    protected static float boundingRadius = 55f / PPM;
+    protected static float boundingRadius = 90f / PPM;
     protected static boolean tagged = false;
     protected SteeringBehavior<Vector2> behavior;
     protected SteeringAcceleration<Vector2> steerOutput;
