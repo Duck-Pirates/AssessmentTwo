@@ -19,7 +19,7 @@ public class GameScreenTest {
 
         // Create a new college
         College testCollege = new College(this, "Test College", 100 / PPM, 200 / PPM,
-                "alcuin_flag.png", "alcuin_ship.png", 30);
+                 30);
 
         // Assert that it is correctly created with all the correct attributes generated
         assertEquals((100 / PPM), testCollege.getX());
