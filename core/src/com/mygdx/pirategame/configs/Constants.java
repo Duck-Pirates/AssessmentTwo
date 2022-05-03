@@ -1,5 +1,12 @@
 package com.mygdx.pirategame.configs;
 
+/**
+ * Constants Class
+ * This is used to store all the Constants that are used throughout the game
+ *
+ * @author Team 22
+ * @author Davide Bressani, Harry Swift
+ */
 public final class Constants {
 
 	// Pixels per meter
@@ -18,7 +25,7 @@ public final class Constants {
 	public static final short TORNADO_BIT = 512;
 	public static final short CLOUDS_BIT = 1024;
 
-	//Constant for swapping between screens
+	// Constants for swapping between screens
 	public static final int MENU = 0;
 	public static final int GAME = 1;
 	public static final int SKILL = 2;
@@ -27,9 +34,10 @@ public final class Constants {
 	public static final int VICTORY = 5;
 	public static final int LOADING = 6;
 
-	//Constant for spawning entities on the map
+	// Constants for spawning entities on the map
 	public static final int xCap = 250;
 	public static final int yCap = 250;
 	public static final int xBase = 14;
 	public static final int yBase = 14;
+
 }

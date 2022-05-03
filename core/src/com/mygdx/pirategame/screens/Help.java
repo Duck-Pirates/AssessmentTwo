@@ -1,6 +1,7 @@
 package com.mygdx.pirategame.screens;
 
 import static com.mygdx.pirategame.configs.Constants.MENU;
+import com.mygdx.pirategame.PirateGame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -17,25 +18,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.pirategame.PirateGame;
+
+
 /**
  * Screen with instructions for the user
+ *
  * @author Sam Pearson
  * @version 1.0
  */
 public class Help implements Screen {
+
     private final PirateGame parent;
     private final Stage stage;
-    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));;
+    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));
 
     /**
-     * In the constructor, the parent and stage are set. Also the states list is set
+     * In the constructor, the parent and stage are set. Also, the states list is set
      *
      * @param pirateGame Game data
      */
     public Help(PirateGame pirateGame){
+
         parent = pirateGame;
         stage = new Stage(new ScreenViewport());
+
     }
 
     /**
@@ -43,8 +49,10 @@ public class Help implements Screen {
      */
     @Override
     public void show() {
+
         //Set the input processor
         Gdx.input.setInputProcessor(stage);
+
         // Create a table that fills the screen
         Table table = new Table();
         table.setFillParent(true);
@@ -107,17 +115,19 @@ public class Help implements Screen {
         Other.row();
         Other.add(powerupInfo2);
         Other.row();
-        Other.add(powerupInfo3);//.padBottom((40));
+        Other.add(powerupInfo3);
         Other.center();
+
     }
 
     /**
      * Renders visual data with delta time
      *
-     * @param dt Delta time (elapsed time since last game tick)
+     * @param delta Delta time (elapsed time since last game tick)
      */
     @Override
-    public void render(float dt) {
+    public void render(float delta) {
+
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -127,7 +137,7 @@ public class Help implements Screen {
         stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
         stage.draw();
-        // TODO Auto-generated method stub
+
     }
 
     /**
@@ -143,30 +153,27 @@ public class Help implements Screen {
 
     /**
      * (Not Used)
-     * Pauses game
+     * Pauses the screen
      */
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     /**
      * (Not Used)
-     * Resumes game
+     * Resumes the screen
      */
     @Override
-    public void resume() {
-    }
+    public void resume() {}
 
     /**
      * (Not Used)
-     * Hides game
+     * Hides the screen
      */
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     /**
-     * Disposes game data
+     * Disposes screen data
      */
     @Override
     public void dispose() {

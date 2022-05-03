@@ -1,43 +1,31 @@
 package com.mygdx.pirategame;
 
-import static com.mygdx.pirategame.configs.Constants.DEATH;
-import static com.mygdx.pirategame.configs.Constants.GAME;
-import static com.mygdx.pirategame.configs.Constants.HELP;
-import static com.mygdx.pirategame.configs.Constants.LOADING;
-import static com.mygdx.pirategame.configs.Constants.MENU;
-import static com.mygdx.pirategame.configs.Constants.SKILL;
-import static com.mygdx.pirategame.configs.Constants.VICTORY;
+import static com.mygdx.pirategame.configs.Constants.*;
+import com.mygdx.pirategame.configs.*;
+import com.mygdx.pirategame.screens.*;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.pirategame.configs.Difficulty;
-import com.mygdx.pirategame.configs.GameSave;
-import com.mygdx.pirategame.configs.audioControls;
-import com.mygdx.pirategame.screens.DeathScreen;
-import com.mygdx.pirategame.screens.GameScreen;
-import com.mygdx.pirategame.screens.Help;
-import com.mygdx.pirategame.screens.LoadingMenu;
-import com.mygdx.pirategame.screens.MainMenu;
-import com.mygdx.pirategame.screens.SkillTree;
-import com.mygdx.pirategame.screens.VictoryScreen;
 
 
 /**
- * The start of the program. Sets up the main back bone of the game.
- * This includes most constants used through out for collision and changing screens
+ * The start of the program. Sets up the main backbone of the game.
+ * This includes most constants used throughout for collision and changing screens
  * Provides access for screens to interact with each other and the options interface
+ *
  * @author Sam Pearson
  * @version 1.0
  */
 public class PirateGame extends Game {
-	private SpriteBatch batch;
 
-	//Variable for each screen
-	private MainMenu menuScreen;
+	private final SpriteBatch batch = new SpriteBatch();
+
+	// Variables for each screen
+	private MainMenu menuScreen = new MainMenu(this);
 	private GameScreen gameScreen;
-	private SkillTree skillTreeScreen;
+	private Shop shopScreen;
 	private DeathScreen deathScreen;
 	private Help helpScreen;
 	private VictoryScreen victoryScreen;
@@ -54,20 +42,21 @@ public class PirateGame extends Game {
 	 */
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		//Set starting screen
-		MainMenu mainMenu = new MainMenu(this);
-		setScreen(mainMenu);
-		//Create options
+
+		// Set starting screen
+		setScreen(menuScreen);
+
+		// Create options
 		options = new audioControls();
 
-		//Set background music and play if valid
+		// Set background music and play if valid
 		setSong(Gdx.audio.newMusic(Gdx.files.internal("pirate-music.mp3")));
 		getSong().setLooping(true);
 		if(getPreferences().isMusicEnabled()){
 			getSong().play();
 		}
 		getSong().setVolume(getPreferences().getMusicVolume());
+
 	}
 
 	/**
@@ -77,23 +66,23 @@ public class PirateGame extends Game {
 	 * @param newScreen This boolean is passed to make creating a new game after loading one possible
 	 */
 	public void changeScreen(int screen, boolean newScreen) {
-		//Depending on which value given, change the screen
+
 		switch (screen) {
+
 			case MENU:
 				if (menuScreen == null) menuScreen = new MainMenu(this);
 				this.setScreen(menuScreen);
-				//todo EXIT TO MENU
 				break;
 
 			case GAME:
 				if (getGameScreen() == null || newScreen) gameScreen = new GameScreen(this, difficulty);
-				if (getSkillTreeScreen() == null ||  newScreen) skillTreeScreen = new SkillTree(this);
+				if (getShopScreen() == null ||  newScreen) shopScreen = new Shop(this);
 				this.setScreen(getGameScreen());
 				break;
 
 			case SKILL:
-				if (getSkillTreeScreen() == null) skillTreeScreen = new SkillTree(this);
-				this.setScreen(getSkillTreeScreen());
+				if (getShopScreen() == null) shopScreen = new Shop(this);
+				this.setScreen(getShopScreen());
 				break;
 
 			case DEATH:
@@ -117,25 +106,19 @@ public class PirateGame extends Game {
 				break;
 				
 		}
+
 	}
 
 	/**
-	 * Allows the user to interact with the audio options
-	 *
-	 * @return the options object
-	 */
-	public audioControls getPreferences() {
-		return this.options;
-	}
-
-	/**
-	 * Kills the game screen and skill tree so they can be refreshed on next game start
+	 * Kills the game screen and skill tree, so they can be refreshed on next game start
 	 */
 	public void killGame(){
+
 		gameScreen.dispose();
-		skillTreeScreen.dispose();
+		shopScreen.dispose();
 		gameScreen = null;
-		skillTreeScreen = null;
+		shopScreen = null;
+
 	}
 
 	/**
@@ -147,8 +130,10 @@ public class PirateGame extends Game {
 		deathScreen = null;
 		victoryScreen = null;
 	}
+
 	/**
 	 * (Not Used)
+	 *
 	 * Renders the visual data for all objects
 	 */
 	@Override
@@ -157,61 +142,59 @@ public class PirateGame extends Game {
 	}
 
 	/**
-	 * Disposes game data
+	 * Disposes the Pirate Game data
 	 */
 	@Override
 	public void dispose () {
+
 		song.dispose();
 		batch.dispose();
 		super.dispose();
-	}
 
-	public void save() {
-		GameSave gameInstance = new GameSave();
-		gameInstance.save(gameScreen, skillTreeScreen);
-	}
-
-	public void load(){
-		GameSave gameInstance = new GameSave();
-		gameInstance.load(this);
-		this.changeScreen(GAME, false);
-	}
-	
-	public static void setDifficulty(Difficulty difficulty) {
-		PirateGame.difficulty = difficulty;
-	}
-
-	public GameScreen getGameScreen() {
-		return gameScreen;
-	}
-
-	public void setGameScreen(GameScreen gameScreen) {
-		this.gameScreen = gameScreen;
-	}
-
-	public SkillTree getSkillTreeScreen() {
-		return skillTreeScreen;
-	}
-
-	public void setSkillTreeScreen(SkillTree skillTreeScreen) {
-		this.skillTreeScreen = skillTreeScreen;
-	}
-
-	public SpriteBatch getBatch() {
-		return batch;
 	}
 
 	/**
-	 * @return the song
+	 * Start the saving process whenever the player clicks on the save button
 	 */
+	public void save() {
+
+		GameSave gameInstance = new GameSave();
+		gameInstance.save(gameScreen);
+
+	}
+
+	/**
+	 * Start the loading process whenever the player clicks on the load button
+	 */
+	public void load(){
+
+		GameSave gameInstance = new GameSave();
+		killGame();
+		gameInstance.load(this);
+		this.changeScreen(GAME, false);
+
+	}
+
+	public SpriteBatch getBatch() { return batch; }
+
 	public Music getSong() {
 		return song;
 	}
 
-	/**
-	 * @param song the song to set
-	 */
+	public audioControls getPreferences() { return this.options; }
+
+	public GameScreen getGameScreen() { return gameScreen; }
+	
+	public static void setDifficulty(Difficulty difficulty) { PirateGame.difficulty = difficulty; }
+
+	public void setGameScreen(GameScreen gameScreen) { this.gameScreen = gameScreen; }
+
+	public Shop getShopScreen() { return shopScreen; }
+
+	public void setShopScreen(Shop shopScreen) { this.shopScreen = shopScreen; }
+
 	public void setSong(Music song) {
 		this.song = song;
 	}
+
 }

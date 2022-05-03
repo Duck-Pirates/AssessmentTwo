@@ -1,6 +1,7 @@
 package com.mygdx.pirategame.screens;
 
 import static com.mygdx.pirategame.configs.Constants.MENU;
+import com.mygdx.pirategame.PirateGame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -15,14 +16,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.pirategame.PirateGame;
 
 /**
  * Death Screen
  * Produces a death screen on player death
  *
- *@author Sam Pearson
- *@version 1.0
+ * @author Sam Pearson
+ * @version 1.0
  */
 public class DeathScreen implements Screen {
 
@@ -35,8 +35,10 @@ public class DeathScreen implements Screen {
      * @param pirateGame Game data
      */
     public DeathScreen(PirateGame pirateGame){
+
         parent = pirateGame;
         stage = new Stage(new ScreenViewport());
+
     }
 
     /**
@@ -44,6 +46,7 @@ public class DeathScreen implements Screen {
      */
     @Override
     public void show() {
+
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         Gdx.input.setInputProcessor(stage);
 
@@ -61,16 +64,16 @@ public class DeathScreen implements Screen {
         table.add(deathMsg).center();
         stage.addActor(table);
 
-        //Creat button
+        // Create button
         TextButton backButton = new TextButton("Return To Menu", skin);
 
-        //Return to main menu and kill screen
+        // Return to main menu and kill screen
         backButton.addListener(new ChangeListener() {
             /**
              * Switches screen
              * Returns to menu
              *
-             * @param event Updates system event state to meny
+             * @param event Updates system event state to many
              * @param actor updates scene
              */
             @Override
@@ -90,8 +93,7 @@ public class DeathScreen implements Screen {
      * (Not Used)
      * Updates the state of each object
      */
-    public void update(){
-    }
+    public void update(){}
 
     /**
      * Renders visual data with delta time
@@ -100,9 +102,11 @@ public class DeathScreen implements Screen {
      */
     @Override
     public void render(float dt) {
+
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();
+
     }
 
     /**
@@ -121,30 +125,27 @@ public class DeathScreen implements Screen {
      * Pauses game
      */
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     /**
      * (Not Used)
      * Resumes game
      */
     @Override
-    public void resume() {
-    }
+    public void resume() {}
 
     /**
      * (Not Used)
      * Hides game
      */
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     /**
      * (Not Used)
      * Disposes game data
      */
     @Override
-    public void dispose() {
-    }
+    public void dispose() {}
+
 }

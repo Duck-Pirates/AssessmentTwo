@@ -1,5 +1,7 @@
 package com.mygdx.pirategame.screens;
 
+import com.mygdx.pirategame.PirateGame;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,10 +19,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.pirategame.PirateGame;
 
 /**
  * Provides a UI for the user to interact with the audioControls interface
+ *
  * @author Sam Pearson
  * @version 1.0
  */
@@ -29,7 +31,7 @@ public class Options implements Screen {
     private final PirateGame PirateGame;
     private final Screen parent;
     private final Stage stage;
-    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));;
+    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));
 
 
     /**
@@ -39,39 +41,44 @@ public class Options implements Screen {
      * @param parent     the screen that called the options screen. Allows for easy return
      */
     public Options(PirateGame pirateGame, Screen parent){
+
         this.PirateGame = pirateGame;
         this.parent = parent;
         stage = new Stage(new ScreenViewport());
+
     }
 
     /**
-     * What should be displayed on the options screen
-     *
+     * Displays the Options Menu
      */
     @Override
     public void show() {
-        //Set the input processor
+
+        // Set the input processor
+
         Gdx.input.setInputProcessor(stage);
+
         stage.clear();
+
         // Create the main table
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
 
-        //The skin for the actors
+        // The skin for the actors
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-        //Music Sliders and Check boxes
+        // Music Sliders and Check boxes
         final Slider volumeMusicSlider = new Slider( 0f, 1f, 0.1f,false, skin );
 
-        //Set value to current option
+        // Set value to current option
         volumeMusicSlider.setValue( PirateGame.getPreferences().getMusicVolume() );
 
         volumeMusicSlider.addListener( new EventListener() {
             @Override
             public boolean handle(Event event) {
-                PirateGame.getPreferences().setMusicVolume(volumeMusicSlider.getValue());  //Change music value in options to slider
-                PirateGame.getSong().setVolume(PirateGame.getPreferences().getMusicVolume()); //Change the volume
+                PirateGame.getPreferences().setMusicVolume(volumeMusicSlider.getValue());  // Change music value in options to slider
+                PirateGame.getSong().setVolume(PirateGame.getPreferences().getMusicVolume()); // Change the volume
 
                 return false;
             }
@@ -79,15 +86,15 @@ public class Options implements Screen {
 
         final CheckBox musicCheckbox = new CheckBox(null, skin);
 
-        //Check if it should be checked or unchecked by default
+        // Check if it should be checked or unchecked by default
         musicCheckbox.setChecked( PirateGame.getPreferences().isMusicEnabled() );
         musicCheckbox.addListener( new EventListener() {
             @Override
             public boolean handle(Event event) {
-                boolean enabled = musicCheckbox.isChecked(); //Get checked value
-                PirateGame.getPreferences().setMusicEnabled( enabled ); //Set
+                boolean enabled = musicCheckbox.isChecked(); // Get checked value
+                PirateGame.getPreferences().setMusicEnabled( enabled ); // Set
 
-                if(PirateGame.getPreferences().isMusicEnabled()){ //Play or don't
+                if(PirateGame.getPreferences().isMusicEnabled()){ // Play or don't
                     PirateGame.getSong().play();
                 }
                 else {
@@ -98,12 +105,13 @@ public class Options implements Screen {
         });
 
         //EFFECTS
+
         final Slider volumeEffectSlider = new Slider( 0f, 1f, 0.1f,false, skin );
-        volumeEffectSlider.setValue( PirateGame.getPreferences().getEffectsVolume() ); //Set value to current option
+        volumeEffectSlider.setValue( PirateGame.getPreferences().getEffectsVolume() ); // Set value to current option
         volumeEffectSlider.addListener( new EventListener() {
             @Override
             public boolean handle(Event event) {
-                PirateGame.getPreferences().setEffectsVolume(volumeEffectSlider.getValue()); //Change effect value in options to slider
+                PirateGame.getPreferences().setEffectsVolume(volumeEffectSlider.getValue()); // Change effect value in options to slider
                 return false;
             }
         });
@@ -113,13 +121,13 @@ public class Options implements Screen {
         effectCheckbox.addListener( new EventListener() {
             @Override
             public boolean handle(Event event) {
-                boolean enabled = effectCheckbox.isChecked(); //Get checked value
-                PirateGame.getPreferences().setEffectsEnabled( enabled ); //Set
+                boolean enabled = effectCheckbox.isChecked(); // Get checked value
+                PirateGame.getPreferences().setEffectsEnabled( enabled ); // Set
                 return false;
             }
         });
 
-        // return to main screen button
+        // Return to main screen button
         TextButton backButton = new TextButton("Back", skin);
         backButton.addListener(new ChangeListener() {
             @Override
@@ -134,7 +142,7 @@ public class Options implements Screen {
         Label musicOnLabel = new Label("Music On/Off", skin);
         Label effectOnLabel = new Label("Effect On/Off", skin);
 
-        //add buttons,sliders and labels to table
+        // Add buttons,sliders and labels to table
         table.add(titleLabel).colspan(2);
         table.row().pad(10,0,0,0);
         table.add(musicLabel).left();
@@ -159,6 +167,7 @@ public class Options implements Screen {
      */
     @Override
     public void render(float delta) {
+
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
@@ -166,8 +175,6 @@ public class Options implements Screen {
         stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
         stage.draw();
-
-
 
     }
     
@@ -184,38 +191,36 @@ public class Options implements Screen {
 
     /**
      * (Not Used)
-     * Pauses game
+     *
+     * Pauses the Options Menu
      */
     @Override
-    public void pause() {
-        // TODO Auto-generated method stub
-    }
+    public void pause() {}
 
     /**
      * (Not Used)
-     * Resumes game
+     *
+     * Resumes the Options Menu
      */
     @Override
-    public void resume() {
-        // TODO Auto-generated method stub
-    }
+    public void resume() {}
     
     /**
      * (Not Used)
-     * Hides game
+     *
+     * Hides the Options Menu
      */
     @Override
-    public void hide() {
-        // TODO Auto-generated method stub
-    }
+    public void hide() {}
 
     /**
-     * Disposes game data
+     * (Not Used)
+     *
+     * Disposes the Options Menu data
      */
     @Override
-    public void dispose() {
-        // TODO Auto-generated method stub
-    }
+    public void dispose() {}
+
 }
 
 

@@ -17,10 +17,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
  *@version 1.0
  */
 public class HealthBar {
-    private Sprite healthBar;
-    private Texture image;
 
-    private SteerableEntity owner;
+    private final Sprite healthBar;
+    private final Texture image;
+
+    private final SteerableEntity owner;
 
     /**
      * Instantiates health bar
@@ -29,9 +30,11 @@ public class HealthBar {
      * @param owner Parent entity of health bar
      */
     public HealthBar(SteerableEntity owner){
+
         this.owner = owner;
         image = new Texture("HealthBar.png");
         healthBar = new Sprite(image);
+
         //Sets size of the health bar
         healthBar.setScale(0.0155f);
         healthBar.setSize(healthBar.getWidth(), healthBar.getHeight() - 2f);
@@ -40,17 +43,20 @@ public class HealthBar {
         healthBar.setX (this.owner.getPosition().x - 0.68f);
         healthBar.setY(this.owner.getPosition().y + this.owner.getHeight() / 2);
         healthBar.setOrigin(0,0);
+
     }
 
     /**
      * Updates health bar
      */
     public void update(){
+
         if (owner != null) {
             //Update location
             healthBar.setX(owner.getBody().getPosition().x - 0.68f);
             healthBar.setY(owner.getBody().getPosition().y + 60 / PPM);
         }
+
     }
 
     /**
@@ -61,16 +67,19 @@ public class HealthBar {
     }
 
     /**
-     * Updates healthbar with regards to damage
+     * Updates healthbar size with regard to damage
      *
-     * @param value Damage recieved
+     * @param damage Damage received
      */
-    public void changeHealth(float value){
+    public void changeHealth(float damage){
+
         //Changes bar size when damaged
-        healthBar.setSize(healthBar.getWidth() - value, healthBar.getHeight());
+        healthBar.setSize(healthBar.getWidth() - damage, healthBar.getHeight());
+
     }
-    
-    public void dispose() {
-    	image.dispose();
-    }
+
+    /**
+     * Disposes the healthbar's texture
+     */
+    public void dispose() { image.dispose(); }
 }

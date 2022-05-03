@@ -1,7 +1,7 @@
 package com.mygdx.pirategame.screens;
 
-import static com.mygdx.pirategame.configs.Constants.HELP;
-import static com.mygdx.pirategame.configs.Constants.LOADING;
+import static com.mygdx.pirategame.configs.Constants.*;
+import com.mygdx.pirategame.PirateGame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -15,10 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.pirategame.PirateGame;
 
 /**
  * Main menu is the first screen the player sees. Allows them to navigate where they want to go to
+ *
  * @author Sam Pearson
  * @version 1.1
  */
@@ -34,17 +34,19 @@ public class MainMenu implements Screen {
      * @param PirateGame the main starting body of the game. Where screen swapping is carried out.
      */
     public MainMenu(PirateGame PirateGame){
+
         parent = PirateGame;
         stage = new Stage(new ScreenViewport());
+
     }
 
     /**
-     * What should be displayed on the options screen
-     *
+     * Displays the Main Menu
      */
     @Override
     public void show() {
-        //Set the input processor
+
+        // Set the input processor
         Gdx.input.setInputProcessor(stage);
         // Create a table for the buttons
 
@@ -52,17 +54,17 @@ public class MainMenu implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
 
-        //The skin for the actors
+        // The skin for the actors
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-        //create buttons
+        // Create buttons
         TextButton newGame = new TextButton("New Game", skin);
         TextButton LoadSaved = new TextButton("Load Saved Game", skin);
         TextButton help = new TextButton("Help", skin);
         TextButton options = new TextButton("Options", skin);
         TextButton exit = new TextButton("Exit", skin);
 
-        //add buttons to table
+        // Add buttons to table
         table.add(newGame).fillX().uniformX();
         table.row();
         table.add(LoadSaved).fillX().uniformX();
@@ -73,9 +75,9 @@ public class MainMenu implements Screen {
         table.row();
         table.add(exit).fillX().uniformX();
 
-        //add listeners to the buttons
+        // Add listeners to the buttons
 
-        //Start a game
+        // Start a game
         newGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
@@ -83,7 +85,8 @@ public class MainMenu implements Screen {
                 parent.changeScreen(LOADING, false);
             }
         });
-        //Help Screen
+
+        // Help Screen
         help.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
@@ -91,7 +94,7 @@ public class MainMenu implements Screen {
             }
         });
 
-        //Go to edit options
+        // Go to edit options
         options.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
@@ -99,6 +102,7 @@ public class MainMenu implements Screen {
             }
         });
 
+        // Load a Saved game
         LoadSaved.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
@@ -106,13 +110,14 @@ public class MainMenu implements Screen {
             }
         });
 
-        //Quit game
+        // Quit game
         exit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.app.exit();
             }
         });
+
     }
 
     /**
@@ -121,6 +126,7 @@ public class MainMenu implements Screen {
      */
     @Override
     public void render(float delta) {
+
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
@@ -128,6 +134,7 @@ public class MainMenu implements Screen {
         stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
         stage.draw();
+
     }
 
     /**
@@ -143,35 +150,36 @@ public class MainMenu implements Screen {
 
     /**
      * (Not Used)
-     * Pauses game
+     *
+     * Pauses the Main Menu
      */
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     /**
      * (Not Used)
-     * Resumes game
+     *
+     * Resumes the Main Menu
      */
     @Override
-    public void resume() {
-    }
+    public void resume() {}
 
     /**
      * (Not Used)
-     * Hides game
+     *
+     * Hides the Main Menu
      */
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     /**
-     * Disposes game data
+     * Disposes the Main Menu data
      */
     @Override
     public void dispose() {
         stage.dispose();
     }
+
 }
 
 

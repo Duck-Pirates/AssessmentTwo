@@ -1,16 +1,9 @@
 package com.mygdx.pirategame.entities;
 
-import static com.mygdx.pirategame.configs.Constants.CANNON_BIT;
-import static com.mygdx.pirategame.configs.Constants.CLOUDS_BIT;
-import static com.mygdx.pirategame.configs.Constants.COIN_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGEFIRE_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGESENSOR_BIT;
-import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
-import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
-import static com.mygdx.pirategame.configs.Constants.ENEMY_BIT;
-import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
-import static com.mygdx.pirategame.configs.Constants.POWERUP_BIT;
-import static com.mygdx.pirategame.configs.Constants.PPM;
+import static com.mygdx.pirategame.configs.Constants.*;
+import com.mygdx.pirategame.fsm.EnemyStateMachine;
+import com.mygdx.pirategame.screens.GameScreen;
+import com.mygdx.pirategame.screens.Hud;
 
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
@@ -22,17 +15,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.mygdx.pirategame.fsm.EnemyStateMachine;
-import com.mygdx.pirategame.screens.GameScreen;
-import com.mygdx.pirategame.screens.Hud;
 
 /**
  * Enemy Ship
  * Generates enemy ship data
  * Instantiates an enemy ship
  *
- *@author Ethan Alabaster, Sam Pearson, Edward Poulter, Alexander Davis
- *@version 3.1
+ * @author Ethan Alabaster, Sam Pearson, Edward Poulter, Alexander Davis
+ * @version 3.1
  */
 public class EnemyShip extends SteerableEntity {
     
@@ -47,11 +37,14 @@ public class EnemyShip extends SteerableEntity {
      * @param assignment College ship is assigned to
      */
     public EnemyShip(GameScreen screen, float x, float y, String assignment) {
+
         super(screen, x, y);
+
         texture = new Texture(assignment + "_ship.png");
         college = assignment;
+
         setTimeFired(GdxAI.getTimepiece().getTime());
-        setStateMachine(new DefaultStateMachine<EnemyShip, EnemyStateMachine>(this, EnemyStateMachine.SLEEP));
+        setStateMachine(new DefaultStateMachine<>(this, EnemyStateMachine.SLEEP));
         
         //Set the position and size of the college
         setBounds(0, 0, 64 / PPM, 110 / PPM);
@@ -59,6 +52,7 @@ public class EnemyShip extends SteerableEntity {
         setOrigin(32 /PPM, 55 / PPM);
 
         damage = GameScreen.getDifficulty().getDamageDealt();
+
     }
 
     /**
@@ -68,6 +62,7 @@ public class EnemyShip extends SteerableEntity {
      * @param delta Delta time (elapsed time since last game tick)
      */
     public void update(float delta) {
+
         //If ship is set to destroy and isn't, destroy it
         if(isSetToDestroy()) {
             //Play death noise
@@ -80,7 +75,8 @@ public class EnemyShip extends SteerableEntity {
             //Change player coins and points
             Hud.changePoints(30);
             Hud.changeCoins(10);
-        } else {
+        }
+        else {
         	getStateMachine().update();
         	if (behavior != null) {
     			behavior.calculateSteering(steerOutput);
@@ -101,11 +97,19 @@ public class EnemyShip extends SteerableEntity {
             
             bar.update();
         }
+
         if(getHealth() <= 0) {
             setSetToDestroy(true);
         }
+
     }
-    
+
+    /**
+     * Applies the steering to the ships, based on their targets
+     *
+     * @param steering The new steering that needs to be applied
+     * @param delta Time elapsed
+     */
     private void applySteering(SteeringAcceleration<Vector2> steering, float delta) {
 
     	Vector2 la = steering.linear;
@@ -129,34 +133,38 @@ public class EnemyShip extends SteerableEntity {
 	}
 
     /**
-     * Defines the ship as an enemy
-     * Sets data to act as an enemy
+     * Defines the entity
+     *
+     * @param x value of origin
+     * @param y value of origin
      */
     @Override
     protected void defineEntity(float x, float y) {
-        //sets the body definitions
+
+        // Sets the body definitions
         BodyDef bdef = new BodyDef();
         bdef.position.set(x, y);
         bdef.type = BodyDef.BodyType.DynamicBody;
 
-        //Sets collision boundaries
+        // Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
         fdef.density = 1;
         
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(50 / PPM, 20 / PPM);
         fdef.shape = shape;
-        // shape.dispose();
         
-        // setting BIT identifier
+        // Setting BIT identifier
         fdef.filter.categoryBits = ENEMY_BIT;
-        // determining what this BIT can collide with
+        // Determining what this BIT can collide with
         fdef.filter.maskBits = PLAYER_BIT | DEFAULT_BIT | COIN_BIT | COLLEGE_BIT | POWERUP_BIT | ENEMY_BIT
         					 | COLLEGESENSOR_BIT | COLLEGEFIRE_BIT | CLOUDS_BIT | CANNON_BIT;
         					 
         
         setBody(world.createBody(bdef));
+
         getBody().createFixture(fdef).setUserData(this);
+
     }
 
     /**
@@ -166,10 +174,12 @@ public class EnemyShip extends SteerableEntity {
      */
     @Override
     public void draw(Batch batch) {
+
         if(!isDestroyed()) {
             super.draw(batch);
             bar.render(batch);
         }
+
     }
 
     /**
@@ -178,21 +188,22 @@ public class EnemyShip extends SteerableEntity {
      */
     @Override
     public void onContact() {
+
         //Play collision sound
         if (GameScreen.getGame().getPreferences().isEffectsEnabled()) {
             hit.play(GameScreen.getGame().getPreferences().getEffectsVolume());
         }
+
         //Deal with the damage
         setHealth(getHealth() - GameScreen.getDifficulty().getDamageDealt());
         bar.changeHealth(GameScreen.getDifficulty().getDamageDealt());
         Hud.changePoints(5);
+
     }
 
 	public StateMachine<EnemyShip, EnemyStateMachine> getStateMachine() {
 		return stateMachine;
 	}
 
-	public void setStateMachine(StateMachine<EnemyShip, EnemyStateMachine> stateMachine) {
-		this.stateMachine = stateMachine;
-	}
+	public void setStateMachine(StateMachine<EnemyShip, EnemyStateMachine> stateMachine) { this.stateMachine = stateMachine; }
 }

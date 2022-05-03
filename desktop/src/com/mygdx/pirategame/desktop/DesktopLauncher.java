@@ -1,14 +1,14 @@
 package com.mygdx.pirategame.desktop;
 
+import com.mygdx.pirategame.PirateGame;
+
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.mygdx.pirategame.PirateGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		//TODO Change this, but keep for now
 		config.setWindowedMode(1000, 700);
 		config.setTitle("Duck Pirates");
 		config.setWindowIcon("DuckPiratesLogo.jpg");

@@ -1,9 +1,12 @@
 package com.mygdx.pirategame.configs;
 
-import com.badlogic.gdx.Gdx;
-import com.mygdx.pirategame.entities.SteerableEntity;
-
+/**
+ * The difficulty stores values that change the game based on which difficulty the player chooses
+ *
+ * @author Davide Bressani, Benjamin Whitnell
+ */
 public enum Difficulty {
+
     EASY(0.95f, 10, 15,100, 5, 8, 1, 250.5f, 6),
     MEDIUM(0.93f, 10, 15,80, 3, 10, 1, 225f, 6),
     HARD(0.91f, 15, 15,80, 2, 12, 1, 200f, 6);
@@ -16,11 +19,21 @@ public enum Difficulty {
 
     private boolean ConeMec = false;
 
-    //TODO Add skill cost variable
-    //TODO Add AI accuracy
-    //TODO Add base radius for colleges
-
+    /**
+     * Difficulty enum constructor, used to set and store variables
+     *
+     * @param speedReduction
+     * @param damageReceived
+     * @param damageDealt
+     * @param HP
+     * @param maxGoldXCoin
+     * @param maxCollegeShips
+     * @param goldCoinMulti
+     * @param maxSpeed
+     * @param traverseSpeed
+     */
     Difficulty(float speedReduction, int damageReceived, int damageDealt, int HP, int maxGoldXCoin, int maxCollegeShips, int goldCoinMulti, float maxSpeed, int traverseSpeed){
+
         this.speedReduction = speedReduction;
         this.damageReceived = damageReceived;
         this.damageDealt = damageDealt;
@@ -30,119 +43,91 @@ public enum Difficulty {
         this.goldCoinMulti = goldCoinMulti;
         this.maxSpeed = maxSpeed;
         this.traverseSpeed = traverseSpeed;
-        SavePowerupStats();
-        PreviousPowerupStats();
+
+        savePowerupStats();
+        previousPowerupStats();
+
     }
 
-    public void SetGoldCoinMulti(int num) {
-        this.goldCoinMulti += num;
-    }
+    /**
+     * Increases the maxSpeed variable
+     *
+     * @param percentage The change percentage
+     */
+    public void increaseMaxSpeedByPercent(int percentage){
 
-    //public void SetSpeedReduction(float num) { this.speedReduction = num; }
-
-    public void SetDamageReceived(int num) { this.damageReceived = num; }  // DAMAGE RECEIVED
-
-    public void SetDamageDealt(int num) { this.damageDealt += num; }  // DAMAGE Dealt
-
-    //public void IncreaseHP() {this.HP += 50; }
-
-    public void SetMaxSpeed(float num) {
-        this.maxSpeed = this.maxSpeed * num;
-
-        if (this.speedReduction < 0.94f){
-            this.speedReduction = this.speedReduction + 0.03f;
+        if (maxSpeed == prevMaxSpeed){ // If this is true, no Speed Powerup has been activated previously
+            maxSpeed = maxSpeed * (1+ percentage/100);
         }
-        else{
-            this.speedReduction = this.speedReduction + 0.01f;
-        }
-    }
-
-
-
-    // Save to previous if powerup is in effect
-    public void IncreaseMaxSpeedPercent(int num){
-        Gdx.app.log("max Speed", Float.toString(maxSpeed));
-        if (maxSpeed == prevMaxSpeed){ // No powerup
-            maxSpeed = maxSpeed * (1+ num/100);
-        } else if (maxSpeed != prevMaxSpeed) { // Powerup
-            prevMaxSpeed = prevMaxSpeed * (1+ num/100); // Set prev max speed
-            maxSpeed = maxSpeed + (prevMaxSpeed - maxSpeed); // Add prev max difference to the powerup max speed
+        else if (maxSpeed != prevMaxSpeed) { // If this is true, a Speed Powerup has been activated previously
+            prevMaxSpeed = prevMaxSpeed * (1+ percentage/100);
+            maxSpeed = maxSpeed + (prevMaxSpeed - maxSpeed);
         }
         this.speedReduction = this.speedReduction + 0.01f;
-        Gdx.app.log("maxSpeed", Float.toString(maxSpeed));
-    }
-    public void IncreaseTraversePercent(int num){
-
-        this.traverseSpeed = prevTraverseSpeed - num;
 
     }
-    public void IncreaseDamageDealtPercent(int num){
-        //this.damageDealt = prevDamageDealt + num;
-        Gdx.app.log("damage dealt", Float.toString(damageDealt));
-        if (damageDealt == prevDamageDealt){ // No powerup
-            damageDealt = damageDealt + num;
-        } else if (damageDealt != prevDamageDealt) { // Powerup
-            prevDamageDealt = prevDamageDealt + num; // Set prev damage dealt
-            damageDealt = damageDealt + (prevDamageDealt - damageDealt); // Add prev max difference to the powerup max speed
+
+    /**
+     * Increases the traverseSpeed variable
+     *
+     * @param percentage The change percentage
+     */
+    public void increaseTraverseByPercent(int percentage){this.traverseSpeed = prevTraverseSpeed - percentage;}
+
+    /**
+     * Increases the damageDealt variable
+     *
+     * @param percentage The change percentage
+     */
+    public void increaseDamageDealtByPercent(int percentage){
+
+        if (damageDealt == prevDamageDealt){ // If this is true, no Damage Powerup has been activated previously
+            damageDealt = damageDealt + percentage;
         }
-        Gdx.app.log("damage dealt", Float.toString(damageDealt));
-    }
-    public void IncreaseCoinMulti(int num){
-        //this.goldCoinMulti = num;
-
-        Gdx.app.log("gold coin multi", Float.toString(goldCoinMulti));
-        if (goldCoinMulti == prevGoldCoinMulti){
-            goldCoinMulti += num;
-        } else if (goldCoinMulti != prevGoldCoinMulti){
-            prevGoldCoinMulti += num;
-            goldCoinMulti += num;
+        else if (damageDealt != prevDamageDealt) { // If this is true, a Damage Powerup has been activated previously
+            prevDamageDealt = prevDamageDealt + percentage;
+            damageDealt = damageDealt + (prevDamageDealt - damageDealt);
         }
-        Gdx.app.log("gold coin multi", Float.toString(goldCoinMulti));
 
     }
-    // SetGoldCoinMulti
-    public void DecreaseDamageRecievedPercent(int num){
-        //this.damageReceived = num;
-        Gdx.app.log("damage received", Float.toString(damageReceived));
-        if (damageReceived == prevDamageReceived){
-            damageReceived = num;
-        } else if (damageReceived != prevDamageReceived){
-            prevDamageReceived = num;
-            damageReceived = num;
+
+    /**
+     * Increases the goldCoinMulti variable
+     *
+     * @param amount The change amount
+     */
+    public void increaseCoinMulti(int amount){
+
+        if (goldCoinMulti == prevGoldCoinMulti){ // If this is true, no Coin Powerup has been activated previously
+            goldCoinMulti += amount;
+        } else if (goldCoinMulti != prevGoldCoinMulti){ // If this is true, a Coin Powerup has been activated previously
+            prevGoldCoinMulti += amount;
+            goldCoinMulti += amount;
         }
-        Gdx.app.log("damage received", Float.toString(damageReceived));
+
     }
 
-    public float getSpeedReduction() { return speedReduction; }
+    /**
+     * Decreases the damageReceived
+     *
+     * @param amount
+     */
+    public void decreaseDamageRecieved(int amount){
 
-    public int getDamageReceived() {
-        return damageReceived;
+        if (damageReceived == prevDamageReceived){ // If this is true, no Damage Powerup has been activated previously
+            damageReceived = amount;
+        } else if (damageReceived != prevDamageReceived){ // If this is true, a Coin Powerup has been activated previously
+            prevDamageReceived = amount;
+            damageReceived = amount;
+        }
+
     }
 
-    public int getDamageDealt() { return damageDealt; }
+    /**
+     * Saves the previous variable associated with the Powerups whenever one of them has been picked up
+     */
+    public void savePowerupStats() {
 
-    public int getHP() {
-        return HP;
-    }
-
-    public int getMaxGoldXCoin() {
-        return maxGoldXCoin;
-    }
-
-    public int getMaxCollegeShips() {
-        return maxCollegeShips;
-    }
-
-    public int getGoldCoinMulti() {
-        return goldCoinMulti;
-    }
-
-    public float getMaxSpeed() { return  maxSpeed; }
-
-    public float getTraverseSpeed() {return traverseSpeed; }
-
-    // When powerup is activated, save the previous variables
-    public void SavePowerupStats () {
         prevDamageDealt = damageDealt;
         prevMaxSpeed = maxSpeed;
         prevGoldCoinMulti = goldCoinMulti;
@@ -152,22 +137,58 @@ public enum Difficulty {
 
     }
 
-    // After powerup is deactivated, revert to previous variables...
-    public void PreviousPowerupStats () {
+    /**
+     * Resets all the variables to their previous values whenever a Powerup has been deactivated
+     */
+    public void previousPowerupStats() {
+
         damageDealt = prevDamageDealt;
         maxSpeed = prevMaxSpeed;
         goldCoinMulti = prevGoldCoinMulti ;
         damageReceived = prevDamageReceived;
         traverseSpeed = prevTraverseSpeed;
         speedReduction = prevspeedReduction;
+
     }
 
-    public void SetConeMec (boolean val){
-        ConeMec = val;
-    }
-    public boolean GetConeMec (){
-        return ConeMec;
-    }
 
+    public int getDamageReceived() { return damageReceived; }
+
+    public int getDamageDealt() { return damageDealt; }
+
+    public int getHP() { return HP; }
+
+    public int getMaxGoldXCoin() { return maxGoldXCoin; }
+
+    public int getMaxCollegeShips() { return maxCollegeShips; }
+
+    public int getGoldCoinMulti() { return goldCoinMulti; }
+
+    public float getMaxSpeed() { return  maxSpeed; }
+
+    public float getTraverseSpeed() { return traverseSpeed; }
+
+    public boolean getConeMec(){ return ConeMec; }
+
+    public void setGoldCoinMulti(int amount) { this.goldCoinMulti += amount; }
+
+    public void setDamageReceived(int amount) { this.damageReceived = amount; }
+
+    public void setDamageDealt(int amount) { this.damageDealt += amount; }
+
+    public void setConeMec(boolean bool){ ConeMec = bool; }
+
+    public void setMaxSpeed(float percentage) {
+
+        this.maxSpeed = this.maxSpeed * percentage;
+
+        if (this.speedReduction < 0.94f){
+            this.speedReduction = this.speedReduction + 0.03f;
+        }
+        else{
+            this.speedReduction = this.speedReduction + 0.01f;
+        }
+
+    }
 
 }

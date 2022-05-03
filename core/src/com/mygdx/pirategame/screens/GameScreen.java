@@ -1,5 +1,11 @@
 package com.mygdx.pirategame.screens;
 
+import static com.mygdx.pirategame.configs.Constants.*;
+import com.mygdx.pirategame.world.*;
+import com.mygdx.pirategame.entities.*;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.configs.Difficulty;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,21 +33,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.pirategame.PirateGame;
-import com.mygdx.pirategame.configs.Difficulty;
-import com.mygdx.pirategame.entities.Cloud;
-import com.mygdx.pirategame.entities.Coin;
-import com.mygdx.pirategame.entities.College;
-import com.mygdx.pirategame.entities.EnemyShip;
-import com.mygdx.pirategame.entities.Player;
-import com.mygdx.pirategame.entities.Powerup;
-import com.mygdx.pirategame.entities.SteerableEntity;
-import com.mygdx.pirategame.entities.Tornado;
-import com.mygdx.pirategame.world.AvailableSpawn;
-import com.mygdx.pirategame.world.WorldContactListener;
-import com.mygdx.pirategame.world.WorldCreator;
-
-import static com.mygdx.pirategame.configs.Constants.*;
 
 
 /**
@@ -49,35 +40,33 @@ import static com.mygdx.pirategame.configs.Constants.*;
  * Class to generate the various screens used to play the game.
  * Instantiates all screen types and displays current screen.
  *
- *@author Ethan Alabaster, Adam Crook, Joe Dickinson, Sam Pearson, Tom Perry, Edward Poulter
- *@version 1.0
+ * @author Ethan Alabaster, Adam Crook, Joe Dickinson, Sam Pearson, Tom Perry, Edward Poulter
+ * @version 1.0
  */
 public class GameScreen implements Screen {
-    private static float maxSpeed = 2.5f;
-    private static float accel = 0.05f;
+
     private float stateTime;
 
     private static PirateGame game;
-    private OrthographicCamera camera;
-    private Viewport viewport;
+    private final OrthographicCamera camera;
+    private final Viewport viewport;
     private final Stage stage;
 
-    private TmxMapLoader maploader;
-    private TiledMap map;
-    private OrthogonalTiledMapRenderer renderer;
+    private final TiledMap map;
+    private final OrthogonalTiledMapRenderer renderer;
 
-    private World world;
+    private final World world;
     private static Difficulty difficulty;
-    private Box2DDebugRenderer b2dr;
+    private final Box2DDebugRenderer b2dr;
 
     private static ArrayList<College> colleges = new ArrayList<>();
     private static ArrayList<SteerableEntity> ships = new ArrayList<>();
     private static ArrayList<Coin> coins = new ArrayList<>();
-    private AvailableSpawn invalidSpawn = new AvailableSpawn();
-    private HashMap<Integer, ArrayList<Integer>> invalidSpawnClouds = new HashMap<>();
-    private Hud hud;
+    private final AvailableSpawn invalidSpawn = new AvailableSpawn();
+    private final HashMap<Integer, ArrayList<Integer>> invalidSpawnClouds = new HashMap<>();
+    private final Hud hud;
     private static ArrayList<Powerup> powerups = new ArrayList<>();
-    private static ArrayList<Cloud> clouds = new ArrayList<>();
+    private static final ArrayList<Cloud> clouds = new ArrayList<>();
     private static ArrayList<Tornado> Tornadoes = new ArrayList<>();
 
     private static final int GAME_RUNNING = 0;
@@ -87,7 +76,7 @@ public class GameScreen implements Screen {
     private Table pauseTable;
     private Table table;
 
-    private Random rand = new Random();
+    private final Random rand = new Random();
     private Float TempTime;
 
 
@@ -97,10 +86,13 @@ public class GameScreen implements Screen {
      * @param game passes game data to current class,
      */
     public GameScreen(PirateGame game, Difficulty difficulty){
+
         gameStatus = GAME_RUNNING;
         GameScreen.setGame(game);
+
         // Setting the difficulty, that will be changed based on the getPlayer()'s choice at the start of the game
         GameScreen.difficulty = difficulty;
+
         // Initialising camera and extendable viewport for viewing game
         camera = new OrthographicCamera();
         camera.zoom = 0.03f;
@@ -114,8 +106,8 @@ public class GameScreen implements Screen {
         world = new World(new Vector2(0,0), true);
         b2dr = new Box2DDebugRenderer();
 
-        // making the Tiled tmx file render as a map
-        maploader = new TmxMapLoader();
+        // Making the Tiled tmx file render as a map
+        TmxMapLoader maploader = new TmxMapLoader();
         map = maploader.load("map.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / PPM);
         new WorldCreator(this);
@@ -123,16 +115,15 @@ public class GameScreen implements Screen {
         // Setting up contact listener for collisions
         world.setContactListener(new WorldContactListener(this));
 
-        // Spawning enemy ship and coin. x and y is spawn location
-        colleges.add(new College(this, "alcuin", 3872 / PPM, 4230 / PPM, 0, getInvalidSpawn()));
-        colleges.add(new College(this, "anne_lister", 5855 / PPM, 6470 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
-        colleges.add(new College(this, "constantine", 9055 / PPM, 9860 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
-        colleges.add(new College(this, "goodricke", 4128 / PPM, 12936 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
-        colleges.add(new College(this, "halifax", 12768 / PPM, 14408 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
-        colleges.add(new College(this, "langwith", 12576 / PPM, 6920 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
-        colleges.add(new College(this, "vanbrugh", 12896 / PPM, 3783 / PPM, difficulty.getMaxCollegeShips(), getInvalidSpawn()));
+        // Spawning enemy ship and coin. x and y are the spawn locations
+        colleges.add(new College(this, "alcuin", 3872 / PPM, 4230 / PPM, 0));
+        colleges.add(new College(this, "anne_lister", 5855 / PPM, 6470 / PPM, difficulty.getMaxCollegeShips()));
+        colleges.add(new College(this, "constantine", 9055 / PPM, 9860 / PPM, difficulty.getMaxCollegeShips()));
+        colleges.add(new College(this, "goodricke", 4128 / PPM, 12936 / PPM, difficulty.getMaxCollegeShips()));
+        colleges.add(new College(this, "halifax", 12768 / PPM, 14408 / PPM, difficulty.getMaxCollegeShips()));
+        colleges.add(new College(this, "langwith", 12576 / PPM, 6920 / PPM, difficulty.getMaxCollegeShips()));
+        colleges.add(new College(this, "vanbrugh", 12896 / PPM, 3783 / PPM, difficulty.getMaxCollegeShips()));
 
-        ships = new ArrayList<>();
         ships.add(new Player(this));
         ships.addAll(colleges.get(0).getFleet());
         ships.addAll(colleges.get(1).getFleet());
@@ -142,45 +133,42 @@ public class GameScreen implements Screen {
         ships.addAll(colleges.get(5).getFleet());
         ships.addAll(colleges.get(6).getFleet());
 
-        //Random ships
-        Boolean validLoc;
+        // Random Ships
+        boolean validLoc;
         int a = 0;
         int b = 0;
         for (int i = 0; i < 10; i++) {
             validLoc = false;
             while (!validLoc) {
-                //Get random x and y coords
+                // Get random x and y coordinates
                 a = rand.nextInt(xCap - xBase) + xBase;
                 b = rand.nextInt(yCap - yBase) + yBase;
-                //Check if valid
+                // Check if the random coordinates are valid
                 validLoc = AvailableSpawn.add(a, b);
             }
-            //Add a ship at the random coords
+            //Add a ship at the random coordinates
             getShips().add(new EnemyShip(this, a, b, "unaligned"));
         }
-        setTempTime(0f);
-        //Random coins
-        coins = new ArrayList<>();
+
+        //Random Coins
         for (int i = 0; i < 100; i++) {
             validLoc = false;
             while (!validLoc) {
-                //Get random x and y coords
+                //Get random x and y coordinates
                 a = rand.nextInt(xCap - xBase) + xBase;
                 b = rand.nextInt(yCap - yBase) + yBase;
 
                 //Check if valid
                 validLoc = AvailableSpawn.add(a, b);
             }
-            //Add a coins at the random coords
             coins.add(new Coin(this, a, b));
         }
 
-        //Spawn powerups
-        powerups = new ArrayList<>();
+        // Random Powerups
         for (int i = 0; i < 5; i++) {
             validLoc = false;
             while (!validLoc) {
-                //Get random x and y coords
+                //Get random x and y coordinates
                 a = rand.nextInt(xCap - xBase) + xBase;
                 b = rand.nextInt(yCap - yBase) + yBase;
                 validLoc = AvailableSpawn.add(a, b);
@@ -188,33 +176,37 @@ public class GameScreen implements Screen {
             powerups.add(new Powerup(this, a, b, i));
         }
 
-        clouds = new ArrayList<>();
+        // Random Coins
         for (int i = 0; i < rand.nextInt(51-30)+30; i++) {
             validLoc = false;
             while (!validLoc) {
-                //Get random x and y coords
+                //Get random x and y coordinates
                 a = rand.nextInt(xCap - xBase) + xBase;
                 b = rand.nextInt(yCap - yBase) + yBase;
                 validLoc = checkGenPosClouds(a, b);
             }
             clouds.add(new Cloud(this, a, b));
         }
+
+        // Random Tornadoes
         Tornadoes = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             validLoc = false;
             while (!validLoc) {
-                //Get random x and y coords
+                //Get random x and y coordinates
                 a = rand.nextInt(xCap - xBase) + xBase;
                 b = rand.nextInt(yCap - yBase) + yBase;
                 validLoc = AvailableSpawn.add(a, b);
             }
-            //Add a coins at the random coords
+            //Add a coins at the random coordinates
             Tornadoes.add(new Tornado(this, a, b, rand.nextInt(257-128)+128));
         }
 
+        setTempTime(0f);
 
-        //Setting stage
+        // Setting stage
         stage = new Stage(new ScreenViewport());
+
     }
 
     /**
@@ -223,6 +215,7 @@ public class GameScreen implements Screen {
      * @param delta Delta time (elapsed time since last game tick)
      */
     public void update(float delta) {
+
     	// Stepping the physics engine by time of 1 frame
         world.step(1 / 60f, 6, 2);
         GdxAI.getTimepiece().update(delta);
@@ -230,42 +223,57 @@ public class GameScreen implements Screen {
     	stateTime += delta;
         setTempTime(getTempTime() + delta);
 
-        handleInput();
+        handleInput(); // Handles Keyboard input
+
+        // Update Colleges
         for(College college: getColleges()){
         	if(!college.isDestroyed())
         		college.update(delta);
         }
 
-        //Update ships
+        // Update Ships
         for (SteerableEntity ship : getShips()) {
         	if(!ship.isDestroyed())
         		ship.update(delta);
         }
 
-        //Updates coin
+        // Update Coins
         for (Coin coin: getCoins()) {
         	if(!coin.isDestroyed())
         		coin.update();
         }
 
-        //Updates powerups
+        // Update Powerups
         for (Powerup powerup: getPowerups()) {
         	if(!powerup.isDestroyed())
         		powerup.update();
         }
 
-        //Gdx.app.log("powerup", String.valueOf(ConstantTime));
-        //Add new powerup
-        //Gdx.app.log("x", String.valueOf(TempTime));
+        // Update Clouds
+        for (Cloud cloud : clouds) {
+            cloud.update(delta);
+            if ((getPlayer().getX() >= cloud.getX() - 2 && getPlayer().getX() <= cloud.getX() + 2) && (getPlayer().getY() >= cloud.getY() - 2 && getPlayer().getY() <= cloud.getY() + 2)) {
+                cloud.changeAlpha();
+            } else {
+                cloud.resetAlpha();
+            }
+        }
 
+        // Update Tornadoes
+        for (Tornado tornado : Tornadoes) {
+            tornado.update(delta);
+            tornado.tornadoImpulse(getPlayer());
+        }
+
+        //Add a new Powerup if the elapsed time is more than 30 seconds from the last Powerup spawn
         if (getTempTime() >= 29f){
-            Boolean validLoc;
+            boolean validLoc;
             int a = 0;
             int b = 0;
             for (int i = 0; i < 5; i++) {
                 validLoc = false;
                 while (!validLoc) {
-                    //Get random x and y coords
+                    //Get random x and y coordinates
                     a = rand.nextInt(xCap - xBase) + xBase;
                     b = rand.nextInt(yCap - yBase) + yBase;
                     validLoc = AvailableSpawn.add(a, b);
@@ -275,23 +283,7 @@ public class GameScreen implements Screen {
             setTempTime(0f);
         }
 
-        //Updates clouds
-        for (int i = 0; i < clouds.size(); i++) {
-            clouds.get(i).update(delta);
-            if ((getPlayer().getX() >= clouds.get(i).getX() - 2 && getPlayer().getX() <= clouds.get(i).getX() + 2) && (getPlayer().getY() >= clouds.get(i).getY() - 2 && getPlayer().getY() <= clouds.get(i).getY() + 2)){
-                clouds.get(i).changeAlpha();
-            }
-            else{
-                clouds.get(i).resetAlpha();
-            }
-        }
-
-        for (int i = 0; i < Tornadoes.size(); i++) {
-            Tornado tornado = Tornadoes.get(i);
-            tornado.update(delta);
-            tornado.tornadoImpulse(getPlayer(), delta);
-        }
-        //After a delay check if a college is destroyed. If not, it can fire
+        //After a delay, check if a college is destroyed. If not, it can fire
         if (stateTime > 1) {
             for(College college: getColleges()){
                 if(!college.isDestroyed() && !(college.getCollege().equals("alcuin"))){
@@ -301,24 +293,28 @@ public class GameScreen implements Screen {
         stateTime = 0;
         }
 
+        // Update the HUD
         getHud().update(delta);
 
-        // Centre camera on player boat
+        // Centre camera on player's boat
         camera.position.x = getPlayer().getPosition().x;
         camera.position.y = getPlayer().getPosition().y;
         camera.update();
         renderer.setView(camera);
+
     }
 
     /**
-     * Checks for input and performs an action
-     * Applies to keys "W" "A" "S" "D" "E" "Esc"
+     * Checks for input and performs an action on the pause and menu tables
+     * Applies to key "Esc"
      *
      * Caps player velocity
      *
      */
     public void handleInput() {
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+
             if(gameStatus == GAME_PAUSED) {
                 resume();
                 table.setVisible(true);
@@ -329,7 +325,9 @@ public class GameScreen implements Screen {
                 pauseTable.setVisible(true);
                 pause();
             }
+
         }
+
     }
 
     /**
@@ -340,6 +338,7 @@ public class GameScreen implements Screen {
      */
     @Override
     public void render(float delta) {
+
         if (gameStatus == GAME_RUNNING) {
             update(delta);
         }
@@ -348,39 +347,41 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(46/255f, 204/255f, 113/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.render();
-        // b2dr is the hitbox shapes, can be commented out to hide
-        b2dr.render(world, camera.combined);
+
+        // b2dr is the hit-box shapes, can be commented out to hide
+        // b2dr.render(world, camera.combined);
 
         getGame().getBatch().setProjectionMatrix(camera.combined);
         getGame().getBatch().begin();
         // Order determines layering
 
-        //Renders coins
+        // Renders Coins
         for(Coin coin: getCoins()) {
             coin.draw(getGame().getBatch());
         }
 
-        //Renders powerups
+        // Renders Powerups
         for(Powerup powerup: getPowerups()) {
             powerup.draw(getGame().getBatch());
         }
 
-
-        //Renders colleges
+        // Renders Player
         getPlayer().draw(getGame().getBatch());
 
+        // Renders Colleges
         for (College college: getColleges()) {
             college.draw(getGame().getBatch());
         }
 
-        for(int i = 0; i< Tornadoes.size(); i++) {
-            Tornadoes.get(i).draw(getGame().getBatch());
+        // Renders Tornadoes
+        for (Tornado tornado : Tornadoes) {
+            tornado.draw(getGame().getBatch());
         }
 
-        //Updates all ships
+        // Updates all ships if the college has been destroyed
+        // It also renders them all
         for (SteerableEntity ship: getShips()){
             if (!ship.getCollege().equals("unaligned")) {
-                //Flips a colleges allegence if their college is destroyed
                 if (getCollege(ship.getCollege()).isDestroyed()) {
                     ship.updateTexture("alcuin", "alcuin_ship.png");
                 }
@@ -388,17 +389,19 @@ public class GameScreen implements Screen {
             ship.draw(getGame().getBatch());
         }
 
-        // Renders all the clouds on top of eerything else
-        for(int i = 0; i <clouds.size(); i++){
-            clouds.get(i).draw(getGame().getBatch());
+        // Renders all the clouds on top of everything else
+        for (Cloud cloud : clouds) {
+            cloud.draw(getGame().getBatch());
         }
 
         getGame().getBatch().end();
         Hud.stage.draw();
         stage.act();
         stage.draw();
+
         //Checks game over conditions
         gameOverCheck();
+
     }
 
     /**
@@ -408,6 +411,7 @@ public class GameScreen implements Screen {
      */
     @Override
     public void show() {
+
         Gdx.input.setInputProcessor(stage);
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
@@ -434,7 +438,7 @@ public class GameScreen implements Screen {
         stage.addActor(pauseTable);
 
 
-        //Set the visability of the tables. Particuarly used when coming back from options or skillTree
+        //Set the visibility of the tables. Particularly used when coming back from options or skillTree
         if (gameStatus == GAME_PAUSED){
             table.setVisible(false);
             pauseTable.setVisible(true);
@@ -463,6 +467,8 @@ public class GameScreen implements Screen {
         pauseTable.center();
 
 
+        // BUTTONS: pause, shop, start (for a new game), save, options and exit
+
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
@@ -473,13 +479,6 @@ public class GameScreen implements Screen {
             }
         });
         shopButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor){
-                pauseTable.setVisible(false);
-                getGame().changeScreen(SKILL, true);
-            }
-        });
-        skill.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor){
                 pauseTable.setVisible(false);
@@ -515,6 +514,7 @@ public class GameScreen implements Screen {
                 game.changeScreen(MENU, true);
             }
         });
+
     }
 
     /**
@@ -530,138 +530,6 @@ public class GameScreen implements Screen {
         Hud.resize(width, height);
         camera.update();
         renderer.setView(camera);
-    }
-
-    /**
-     * Returns the map
-     *
-     * @return map : returns the world map
-     */
-    public TiledMap getMap() {
-        return map;
-    }
-
-    /**
-     * Returns the world (map and objects)
-     *
-     * @return world : returns the world
-     */
-    public World getWorld() {
-        return world;
-    }
-
-    /**
-     * Destroys all the bodies in world
-     */
-    public void destroyBodies(){
-        Array<Body> bodies = new Array<>();
-        world.getBodies(bodies);
-        for (Body body:
-                bodies) {
-            if(!world.isLocked())
-                world.destroyBody(body);
-        }
-    }
-
-    /**
-     * Returns the college from the colleges hashmap
-     *
-     * @param collegeName uses a college name as an index
-     * @return college : returns the college fetched from colleges
-     */
-    public static College getCollege(String collegeName) {
-    	for (College college : getColleges()) {
-    		if (college.getCollege() == collegeName) {
-    			return college;
-    		}
-    	}
-        return getColleges().get(0);
-    }
-
-    /**
-     * Checks if the game is over
-     * i.e. goal reached (all colleges bar "Alcuin" are destroyed)
-     */
-    public void gameOverCheck(){
-        //Lose game if ship on 0 health or Alcuin is destroyed
-        if (Hud.getHealth() <= 0 || getColleges().get(0).getHealth() <= 0) {
-            getGame().changeScreen(DEATH, true);
-            destroyBodies();
-        }
-        //Win game if all colleges destroyed
-        else if (getColleges().size() == 1 && getColleges().get(0).getCollege() == "alcuin"){
-            getGame().changeScreen(VICTORY, true);
-            destroyBodies();
-        }
-    }
-
-
-    //public void IncreaseMaxSpeedPercent(int num){difficulty.IncreaseMaxSpeedPercent(num); } // num increase
-    //public void IncreaseTraversePercent(int num){difficulty.IncreaseTraversePercent(num); }
-    //public void IncreaseDamageDealtPercent(int num){difficulty.IncreaseDamageDealtPercent(num);}
-    // SetGoldCoinMulti
-    //public void DecreaseDamageRecievedPercent(int num){difficulty.DecreaseDamageRecievedPercent(num);}
-
-
-
-
-    // TODO delete
-    
-    public static Player getPlayer() {
-    	return (Player) getShips().get(0);
-    }
-
-    public static void setPlayer(Player player) {
-    	getShips().set(0, player);
-    }
-    
-    /**
-     * Fetches the player's current position
-     *
-     * @return position vector : returns the position of the player
-     */
-    public Vector2 getPlayerPos(){
-        return new Vector2(getPlayer().getPosition().x, getPlayer().getPosition().y);
-    }
-
-    /**
-     * Updates acceleration by a given percentage. Accessed by skill tree
-     *
-     * @param percentage percentage increase
-     */
-    public static void changeAcceleration(Float percentage){
-        accel = accel * (1 + (percentage / 100));
-    }
-
-    /**
-     * Updates max speed by a given percentage. Accessed by skill tree
-     *
-     * @param percentage percentage increase
-     */
-    public static void changeMaxSpeed(Float percentage){
-        maxSpeed = maxSpeed * (1 +(percentage/100));
-    }
-
-    /**
-     * Changes the amount of damage done by each hit. Accessed by skill tree
-     *
-     * @param value damage dealt
-     */
-    public static void changeDamage(int value){
-
-        for (int i = 0; i < getShips().size(); i++){
-            getShips().get(i).changeDamageReceived(value);
-        }
-        getCollege("anne_lister").changeDamageReceived(value);
-        getCollege("constantine").changeDamageReceived(value);
-        getCollege("goodricke").changeDamageReceived(value);
-        getCollege("halifax").changeDamageReceived(value);
-        getCollege("langwith").changeDamageReceived(value);
-        getCollege("vanbrugh").changeDamageReceived(value);
-    }
-
-    public void SetGoldCoinMulti(int num){
-        GameScreen.getDifficulty().SetGoldCoinMulti(num);
     }
 
     /**
@@ -685,6 +553,36 @@ public class GameScreen implements Screen {
             }
         }
         return true;
+    }
+
+    /**
+     * Destroys all the bodies in world
+     */
+    public void destroyBodies(){
+        Array<Body> bodies = new Array<>();
+        world.getBodies(bodies);
+        for (Body body:
+                bodies) {
+            if(!world.isLocked())
+                world.destroyBody(body);
+        }
+    }
+
+    /**
+     * Checks if the game is over
+     * i.e. goal reached (all colleges bar "Alcuin" are destroyed)
+     */
+    public void gameOverCheck(){
+        //Lose game if ship on 0 health or Alcuin is destroyed
+        if (Hud.getHealth() <= 0 || getColleges().get(0).getHealth() <= 0) {
+            getGame().changeScreen(DEATH, true);
+            destroyBodies();
+        }
+        //Win game if all colleges destroyed
+        else if (getColleges().size() == 1 && getColleges().get(0).getCollege().equals("alcuin")){
+            getGame().changeScreen(VICTORY, true);
+            destroyBodies();
+        }
     }
 
     /**
@@ -724,6 +622,37 @@ public class GameScreen implements Screen {
         getHud().dispose();
         stage.dispose();
     }
+
+    public TiledMap getMap() {
+        return map;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    /**
+     * Returns the college from the colleges hashmap
+     *
+     * @param collegeName uses a college name as an index
+     * @return college : returns the college fetched from colleges
+     */
+    public static College getCollege(String collegeName) {
+    	for (College college : getColleges()) {
+    		if (college.getCollege().equals(collegeName)) {
+    			return college;
+    		}
+    	}
+        return getColleges().get(0);
+    }
+    
+    public static Player getPlayer() {
+    	return (Player) getShips().get(0);
+    }
+
+    public Vector2 getPlayerPosition(){
+        return new Vector2(getPlayer().getPosition().x, getPlayer().getPosition().y);
+    }
     
     public static ArrayList<SteerableEntity> getShips() {
     	return ships;
@@ -745,10 +674,6 @@ public class GameScreen implements Screen {
 		return colleges;
 	}
 
-	public static void setColleges(ArrayList<College> colleges) {
-		GameScreen.colleges = colleges;
-	}
-
 	public static ArrayList<Powerup> getPowerups() {
 		return powerups;
 	}
@@ -760,6 +685,18 @@ public class GameScreen implements Screen {
 	public Float getTempTime() {
 		return TempTime;
 	}
+
+    public static PirateGame getGame() {
+        return game;
+    }
+
+    public static void setPlayer(Player player) {
+        getShips().set(0, player);
+    }
+
+    public static void setColleges(ArrayList<College> colleges) {
+        GameScreen.colleges = colleges;
+    }
 
 	public static void setShips(ArrayList<SteerableEntity> ships) {
 		GameScreen.ships = ships;
@@ -775,19 +712,10 @@ public class GameScreen implements Screen {
 
     public static void setTornadoes(ArrayList<Tornado> tornadoes){ GameScreen.Tornadoes = tornadoes;}
 
-	public void setTempTime(Float tempTime) {
-		TempTime = tempTime;
-	}
-
-	public void setInvalidSpawn(AvailableSpawn invalidSpawn) {
-		this.invalidSpawn = invalidSpawn;
-	}
-
-	public static PirateGame getGame() {
-		return game;
-	}
+	public void setTempTime(Float tempTime) { TempTime = tempTime; }
 
 	public static void setGame(PirateGame game) {
 		GameScreen.game = game;
 	}
+
 }

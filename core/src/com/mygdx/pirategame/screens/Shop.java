@@ -1,6 +1,8 @@
 package com.mygdx.pirategame.screens;
 
 import static com.mygdx.pirategame.configs.Constants.GAME;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.configs.Difficulty;
 
 import java.util.ArrayList;
 
@@ -20,38 +22,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.pirategame.PirateGame;
-import com.mygdx.pirategame.configs.Difficulty;
 
 /**
- * The type for the skill tree screen.
+ * Shop Screen.
  * It is a visual representation for the skills that the game automatically unlocks for the player.
- * Automatically unlocked when a points threshold is reached
+ * They're unlocked when a points' threshold is reached.
  *
  * @author Sam Pearson
- * @version 1.0
+ * @author Benjamin Whitnell
+ * @version 2.0
  */
-public class SkillTree implements Screen {
+public class Shop implements Screen {
 
     private final PirateGame parent;
     private final Stage stage;
 
-    private Texture hp;
-    private Texture boxBackground;
-    private Texture coinPic;
     public static Integer health;
-    private static Label scoreLabel;
-    private static Label healthLabel;
     private static Label coinLabel;
-    private static Label pointsText;
-    private Image hpImg;
-    private com.badlogic.gdx.scenes.scene2d.ui.Image box;
-    private Image coin;
 
 
-    //To store whether buttons are enabled or disabled
-    public static ArrayList<Integer> states = new ArrayList<Integer>();
+    // To store whether buttons are enabled or disabled
+    public static ArrayList<Integer> states = new ArrayList<>();
 
+    // Buttons in the shop
     private static TextButton movement1;
     private static TextButton movement2;
     private static TextButton movement3;
@@ -65,61 +58,54 @@ public class SkillTree implements Screen {
     private static TextButton armour1;
     private static TextButton armour2;
     private static TextButton armour3;
-    private static TextButton cone;
 
 
+    // Cost in points and coins for each upgrade
+    private static final Integer Speed1Cost = 5;
+    private static final Integer Speed1Points = 100;
+    private static final Integer Speed2Cost = 15;
+    private static final Integer Speed2Points = 400;
+    private static final Integer Speed3Cost = 30;
+    private static final Integer Speed3Points = 800;
+
+    private static final Integer Traverse1Cost = 10;
+    private static final Integer Traverse1Points = 400;
+    private static final Integer Traverse2Cost = 25;
+    private static final Integer Traverse2Points = 800;
+
+    private static final Integer Damage1Cost = 5;
+    private static final Integer Damage1Points = 100;
+    private static final Integer Damage2Cost = 15;
+    private static final Integer Damage2Points = 400;
+    private static final Integer Damage3Cost = 30;
+    private static final Integer Damage3Points = 800;
+
+    private static final Integer Gold1Cost = 10;
+    private static final Integer Gold1Points = 500;
+    private static final Integer Gold2Cost = 25;
+    private static final Integer Gold2Points = 1000;
+
+    private static final Integer Armour1Cost = 5;
+    private static final Integer Armour1Points = 200;
+    private static final Integer Armour2Cost = 15;
+    private static final Integer Armour2Points = 500;
+    private static final Integer Armour3Cost = 30;
+    private static final Integer Armour3Points = 1000;
+
+    private static final Integer Cone1Cost = 20;
+    private static final Integer Cone2Points = 1000;
 
 
-
-
-    private static Integer Speed1Cost = 5;
-    private static Integer Speed1Points = 100;
-    private static Integer Speed2Cost = 15;
-    private static Integer Speed2Points = 400;
-    private static Integer Speed3Cost = 30;
-    private static Integer Speed3Points = 800;
-
-    private static Integer Traverse1Cost = 10;
-    private static Integer Traverse1Points = 400;
-    private static Integer Traverse2Cost = 25;
-    private static Integer Traverse2Points = 800;
-
-    private static Integer Damage1Cost = 5;
-    private static Integer Damage1Points = 100;
-    private static Integer Damage2Cost = 15;
-    private static Integer Damage2Points = 400;
-    private static Integer Damage3Cost = 30;
-    private static Integer Damage3Points = 800;
-
-    private static Integer Gold1Cost = 10;
-    private static Integer Gold1Points = 500;
-    private static Integer Gold2Cost = 25;
-    private static Integer Gold2Points = 1000;
-
-    private static Integer Armour1Cost = 5;
-    private static Integer Armour1Points = 200;
-    private static Integer Armour2Cost = 15;
-    private static Integer Armour2Points = 500;
-    private static Integer Armour3Cost = 30;
-    private static Integer Armour3Points = 1000;
-
-    private static Integer Cone1Cost = 20;
-    private static Integer Cone2Points = 1000;
-
-
-
-
-
-    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));;
+    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));
 
 
     /**
-     * Instantiates a new Skill tree.
+     * Instantiates a new Shop.
      *
      * @param pirateGame the main starting body of the game. Where screen swapping is carried out.
      */
-//In the constructor, the parent and stage are set. Also the states list is set
-    public SkillTree(PirateGame pirateGame){
+    public Shop(PirateGame pirateGame){
+
         parent = pirateGame;
         stage = new Stage(new ScreenViewport());
 
@@ -140,43 +126,37 @@ public class SkillTree implements Screen {
         states.add(1);
 
     }
+
     /**
-     * What should be displayed on the skill tree screen
-     *
+     * Display the Shop screen
      */
     @Override
     public void show() {
+
         //Set the input processor
         Gdx.input.setInputProcessor(stage);
+
         // Create a table that fills the screen
         Table table = new Table();
         // Fills the parent
         table.setFillParent(true);
-
-
 
         // Table for the return button
         final Table Other = new Table();
         Other.setFillParent(true);
         stage.addActor(Other);
 
-
         //The skin for the actors
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-        //create skill tree buttons
-        //Sets enabled or disabled
-
-        //TODO Display total coins and points in the shop
-
         //Creates tables
 
-        hp = new Texture("hp.png");
-        boxBackground = new Texture("hudBG.png");
-        coinPic = new Texture("coin.png");
-        coin = new Image(coinPic);
-        hpImg = new Image(hp);
-        box = new Image(boxBackground);
+        Texture hp = new Texture("hp.png");
+        Texture boxBackground = new Texture("hudBG.png");
+        Texture coinPic = new Texture("coin.png");
+        Image coin = new Image(coinPic);
+        Image hpImg = new Image(hp);
+        Image box = new Image(boxBackground);
 
 
         Table table1 = new Table(); //Counters
@@ -190,7 +170,9 @@ public class SkillTree implements Screen {
         table3.top().right();
         table3.setFillParent(true);
 
-        scoreLabel = new Label(String.format("%03d", Hud.score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        // Shop buttons
+        Label scoreLabel = new Label(String.format("%03d", Hud.score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label healthLabel;
         if (GameScreen.getDifficulty() == Difficulty.EASY){
             healthLabel = new Label(String.format("%03d", Hud.health), new Label.LabelStyle(new BitmapFont(), Color.RED));
         }
@@ -198,7 +180,7 @@ public class SkillTree implements Screen {
             healthLabel = new Label(String.format("%02d", Hud.health), new Label.LabelStyle(new BitmapFont(), Color.RED));
         }
         coinLabel = new Label(String.format("%03d", Hud.coins), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
-        pointsText = new Label("Points:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label pointsText = new Label("Points:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         table3.add(box).width(160).height(160).padBottom(15).padLeft(30);
         table2.add(hpImg).width(32).height(32).padTop(16).padRight(90);
@@ -220,10 +202,9 @@ public class SkillTree implements Screen {
         stage.addActor(table2);
         stage.addActor(table1);
 
-        //TODO If brought hide the button?? (kinda done)
 
         movement1 = new TextButton("Speed + 5%", skin);
-        //Gdx.app.log("Movement1", String.valueOf(states.get(0)));
+
         if (states.get(0) == 1 || states.get(0) == 2){
             movement1.setDisabled(true);
         } else if (states.get(0) == 0){
@@ -232,10 +213,10 @@ public class SkillTree implements Screen {
             movement1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseMaxSpeedPercent(5);
+                    GameScreen.getDifficulty().increaseMaxSpeedByPercent(5);
                     states.set(0, 2);
-                    movement1.setDisabled(true);
                     Hud.SubtractCoin(Speed1Cost);
+                    movement1.setDisabled(true);
                     coinLabel.setText(String.format("%03d", Hud.coins));
                 }
             });
@@ -243,6 +224,7 @@ public class SkillTree implements Screen {
 
 
         movement2 = new TextButton("Speed + 10%", skin);
+
         if (states.get(1) == 1 || states.get(1) == 2){
             movement2.setDisabled(true);
         } else if (states.get(1) == 0){
@@ -250,7 +232,7 @@ public class SkillTree implements Screen {
             movement2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseMaxSpeedPercent(10);
+                    GameScreen.getDifficulty().increaseMaxSpeedByPercent(10);
                     states.set(1, 2);
                     Hud.SubtractCoin(Speed2Cost);
                     movement2.setDisabled(true);
@@ -261,6 +243,7 @@ public class SkillTree implements Screen {
 
 
         movement3 = new TextButton("Speed + 15%", skin);
+
         if (states.get(2) == 1 || states.get(2) == 2){
             movement3.setDisabled(true);
         } else if (states.get(2) == 0){
@@ -268,7 +251,7 @@ public class SkillTree implements Screen {
             movement3.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseMaxSpeedPercent(15);
+                    GameScreen.getDifficulty().increaseMaxSpeedByPercent(15);
                     states.set(2, 2);
                     Hud.SubtractCoin(Speed3Cost);
                     movement3.setDisabled(true);
@@ -279,6 +262,7 @@ public class SkillTree implements Screen {
 
 
         traverse1 = new TextButton("Traverse + 10%", skin);
+
         if (states.get(3) == 1 || states.get(3) == 2){
             traverse1.setDisabled(true);
         } else if (states.get(3) == 0){
@@ -286,7 +270,7 @@ public class SkillTree implements Screen {
             traverse1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseTraversePercent(2);
+                    GameScreen.getDifficulty().increaseTraverseByPercent(2);
                     states.set(3, 2);
                     Hud.SubtractCoin(Traverse1Cost);
                     traverse1.setDisabled(true);
@@ -294,7 +278,10 @@ public class SkillTree implements Screen {
                 }
             });
         }
+
+
         traverse2 = new TextButton("Traverse + 20%", skin);
+
         if (states.get(4) == 1 || states.get(4) == 2){
             traverse2.setDisabled(true);
         } else if (states.get(4) == 0){
@@ -302,7 +289,7 @@ public class SkillTree implements Screen {
             traverse2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseTraversePercent(2);
+                    GameScreen.getDifficulty().increaseTraverseByPercent(2);
                     states.set(4, 2);
                     Hud.SubtractCoin(Traverse2Cost);
                     traverse2.setDisabled(true);
@@ -312,6 +299,7 @@ public class SkillTree implements Screen {
         }
 
         damage1 = new TextButton("Damage + 5", skin);
+
         if (states.get(5) == 1 || states.get(5) == 2){
             damage1.setDisabled(true);
         } else if (states.get(5) == 0){
@@ -319,7 +307,7 @@ public class SkillTree implements Screen {
             damage1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseDamageDealtPercent(5);
+                    GameScreen.getDifficulty().increaseDamageDealtByPercent(5);
                     states.set(5, 2);
                     Hud.SubtractCoin(Damage1Cost);
                     damage1.setDisabled(true);
@@ -327,7 +315,10 @@ public class SkillTree implements Screen {
                 }
             });
         }
+
+
         damage2 = new TextButton("Damage + 10", skin);
+
         if (states.get(6) == 1 || states.get(6) == 2){
             damage2.setDisabled(true);
         } else if (states.get(6) == 0){
@@ -335,7 +326,7 @@ public class SkillTree implements Screen {
             damage2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseDamageDealtPercent(10);
+                    GameScreen.getDifficulty().increaseDamageDealtByPercent(10);
                     states.set(6, 2);
                     Hud.SubtractCoin(Damage2Cost);
                     damage2.setDisabled(true);
@@ -343,7 +334,10 @@ public class SkillTree implements Screen {
                 }
             });
         }
+
+
         damage3 = new TextButton("Damage + 20", skin);
+
         if (states.get(7) == 1 || states.get(7) == 2){
             damage3.setDisabled(true);
         } else if (states.get(7) == 0){
@@ -351,7 +345,7 @@ public class SkillTree implements Screen {
             damage3.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseDamageDealtPercent(20);
+                    GameScreen.getDifficulty().increaseDamageDealtByPercent(20);
                     states.set(7, 2);
                     Hud.SubtractCoin(Damage3Cost);
                     damage3.setDisabled(true);
@@ -360,7 +354,9 @@ public class SkillTree implements Screen {
             });
         }
 
+
         armour1 = new TextButton("Armour + 5%", skin);
+
         if (states.get(8) == 1 || states.get(8) == 2){
             armour1.setDisabled(true);
         } else if (states.get(8) == 0){
@@ -368,7 +364,7 @@ public class SkillTree implements Screen {
             armour1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().DecreaseDamageRecievedPercent(14);
+                    GameScreen.getDifficulty().decreaseDamageRecieved(14);
                     states.set(8, 2);
                     Hud.SubtractCoin(Armour1Cost);
                     armour1.setDisabled(true);
@@ -376,7 +372,10 @@ public class SkillTree implements Screen {
                 }
             });
         }
+
+
         armour2 = new TextButton("Armour + 10%", skin);
+
         if (states.get(9) == 1 || states.get(9) == 2){
             armour2.setDisabled(true);
         } else if (states.get(9) == 0){
@@ -384,7 +383,7 @@ public class SkillTree implements Screen {
             armour2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().DecreaseDamageRecievedPercent(12);
+                    GameScreen.getDifficulty().decreaseDamageRecieved(12);
                     states.set(9, 2);
                     Hud.SubtractCoin(Armour2Cost);
                     armour2.setDisabled(true);
@@ -392,7 +391,10 @@ public class SkillTree implements Screen {
                 }
             });
         }
+
+
         armour3 = new TextButton("Armour + 20%", skin);
+
         if (states.get(10) == 1 || states.get(10) == 2){
             armour3.setDisabled(true);
         } else if (states.get(10) == 0){
@@ -400,7 +402,7 @@ public class SkillTree implements Screen {
             armour3.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().DecreaseDamageRecievedPercent(8);
+                    GameScreen.getDifficulty().decreaseDamageRecieved(8);
                     states.set(10, 2);
                     Hud.SubtractCoin(Armour3Cost);
                     armour3.setDisabled(true);
@@ -409,7 +411,9 @@ public class SkillTree implements Screen {
             });
         }
 
+
         GoldMulti1 = new TextButton("Gold Multiplier x2", skin);
+
         if (states.get(11) == 1 || states.get(11) == 2){
             GoldMulti1.setDisabled(true);
         } else if (states.get(11) == 0){
@@ -417,7 +421,7 @@ public class SkillTree implements Screen {
             GoldMulti1.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseCoinMulti(1);
+                    GameScreen.getDifficulty().increaseCoinMulti(1);
                     states.set(11, 2);
                     Hud.SubtractCoin(Gold1Cost);
                     GoldMulti1.setDisabled(true);
@@ -425,7 +429,10 @@ public class SkillTree implements Screen {
                 }
             });
         }
+
+
         GoldMulti2 = new TextButton("Gold Multiplier x3", skin);
+
         if (states.get(12) == 1 || states.get(12) == 2){
             GoldMulti2.setDisabled(true);
         } else if (states.get(12) == 0){
@@ -433,7 +440,7 @@ public class SkillTree implements Screen {
             GoldMulti2.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    GameScreen.getDifficulty().IncreaseCoinMulti(1);
+                    GameScreen.getDifficulty().increaseCoinMulti(1);
                     states.set(12, 2);
                     Hud.SubtractCoin(Gold2Cost);
                     GoldMulti2.setDisabled(true);
@@ -442,7 +449,9 @@ public class SkillTree implements Screen {
             });
         }
 
-        cone = new TextButton("Cone Shot", skin);
+
+        TextButton cone = new TextButton("Cone Shot", skin);
+
         if (states.get(13) == 1 || states.get(13) == 2){
             cone.setDisabled(true);
         } else if (states.get(13) == 0){
@@ -450,8 +459,7 @@ public class SkillTree implements Screen {
             cone.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    //TODO insert cone shoot function
-                    GameScreen.getDifficulty().SetConeMec(true);
+                    GameScreen.getDifficulty().setConeMec(true);
                     states.set(13, 2);
                     Hud.SubtractCoin(Cone1Cost);
                     GoldMulti1.setDisabled(true);
@@ -461,81 +469,67 @@ public class SkillTree implements Screen {
         }
 
 
-
-        //Point unlock labels
-
-
-
-        final Label unlockmovement1 = new Label("Required: " + Integer.toString(Speed1Points) + " points \n Costs: " + Integer.toString(Speed1Cost) + " gold",skin);
-        final Label unlockmovement2 = new Label("Required: " + Integer.toString(Speed2Points) + " points \n Costs: " + Integer.toString(Speed2Cost) + " gold",skin);
-        final Label unlockmovement3 = new Label("Required: " + Integer.toString(Speed3Points) + " points \n Costs: " + Integer.toString(Speed3Cost) + " gold",skin);
-        final Label unlocktraverse1 = new Label("Required: " + Integer.toString(Traverse1Points) + " points \n Costs: " + Integer.toString(Traverse1Cost) + " gold",skin);
-        final Label unlocktraverse2 = new Label("Required: " + Integer.toString(Traverse2Points) + " points \n Costs: " + Integer.toString(Traverse2Cost) + " gold",skin);
-        final Label unlockdamage1 = new Label("Required: " + Integer.toString(Damage1Points) + " points \n Costs: " + Integer.toString(Damage1Cost) + " gold",skin);
-        final Label unlockdamage2 = new Label("Required: " + Integer.toString(Damage2Points) + " points \n Costs: " + Integer.toString(Damage2Cost) + " gold",skin);
-        final Label unlockdamage3 = new Label("Required: " + Integer.toString(Damage3Points) + " points \n Costs: " + Integer.toString(Damage3Cost) + " gold",skin);
-        final Label unlockgoldmulti1 = new Label("Required: " + Integer.toString(Gold1Points) + " points \n Costs: " + Integer.toString(Gold1Cost) + " gold",skin);
-        final Label unlockgoldmulti2 = new Label("Required: " + Integer.toString(Gold2Points) + " points \n Costs: " + Integer.toString(Gold2Cost) + " gold",skin);
-        final Label unlockarmour1 = new Label("Required: " + Integer.toString(Armour1Points) + " points \n Costs: " + Integer.toString(Armour1Cost) + " gold",skin);
-        final Label unlockarmour2 = new Label("Required: " + Integer.toString(Armour2Points) + " points \n Costs: " + Integer.toString(Armour2Cost) + " gold",skin);
-        final Label unlockarmour3 = new Label("Required: " + Integer.toString(Armour3Points) + " points \n Costs: " + Integer.toString(Armour3Cost) + " gold",skin);
-        final Label unlockcone = new Label("Required: " + Integer.toString(Cone2Points) + " points \n Costs: " + Integer.toString(Cone1Cost) + " gold",skin);
+        // Point unlock labels
+        final Label unlockmovement1 = new Label("Required: " + Speed1Points + " points \n Costs: " + Speed1Cost + " gold",skin);
+        final Label unlockmovement2 = new Label("Required: " + Speed2Points + " points \n Costs: " + Speed2Cost + " gold",skin);
+        final Label unlockmovement3 = new Label("Required: " + Speed3Points + " points \n Costs: " + Speed3Cost + " gold",skin);
+        final Label unlocktraverse1 = new Label("Required: " + Traverse1Points + " points \n Costs: " + Traverse1Cost + " gold",skin);
+        final Label unlocktraverse2 = new Label("Required: " + Traverse2Points + " points \n Costs: " + Traverse2Cost + " gold",skin);
+        final Label unlockdamage1 = new Label("Required: " + Damage1Points + " points \n Costs: " + Damage1Cost + " gold",skin);
+        final Label unlockdamage2 = new Label("Required: " + Damage2Points + " points \n Costs: " + Damage2Cost + " gold",skin);
+        final Label unlockdamage3 = new Label("Required: " + Damage3Points + " points \n Costs: " + Damage3Cost + " gold",skin);
+        final Label unlockgoldmulti1 = new Label("Required: " + Gold1Points + " points \n Costs: " + Gold1Cost + " gold",skin);
+        final Label unlockgoldmulti2 = new Label("Required: " + Gold2Points + " points \n Costs: " + Gold2Cost + " gold",skin);
+        final Label unlockarmour1 = new Label("Required: " + Armour1Points + " points \n Costs: " + Armour1Cost + " gold",skin);
+        final Label unlockarmour2 = new Label("Required: " + Armour2Points + " points \n Costs: " + Armour2Cost + " gold",skin);
+        final Label unlockarmour3 = new Label("Required: " + Armour3Points + " points \n Costs: " + Armour3Cost + " gold",skin);
+        final Label unlockcone = new Label("Required: " + Cone2Points + " points \n Costs: " + Cone1Cost + " gold",skin);
 
 
-
-
-        //Return Button
+        // Return Button
         TextButton backButton = new TextButton("Return", skin);
 
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
 
-                parent.changeScreen(GAME, false); //Return to game
+                parent.changeScreen(GAME, false); // Return to game
             }
         });
 
-        //add buttons and labels to main table
+        // Add buttons and labels on the main table
         table.add(movement1);
         table.add(unlockmovement1);
-        //table.row().pad(10, 0, 10, 0);
         table.add(movement2);
         table.add(unlockmovement2);
-        //table.row().pad(10, 0, 10, 0);
         table.add(movement3);
         table.add(unlockmovement3);
         table.row().pad(10, 0, 10, 0);
 
         table.add(traverse1);
         table.add(unlocktraverse1 );
-        //table.row().pad(10, 0, 10, 0);
         table.add(traverse2);
         table.add(unlocktraverse2);
         table.row().pad(10, 0, 10, 0);
 
         table.add(damage1);
         table.add(unlockdamage1);
-        //table.row().pad(10, 0, 10, 0);
         table.add(damage2);
         table.add(unlockdamage2);
-        //table.row().pad(10, 0, 10, 0);
         table.add(damage3);
         table.add(unlockdamage3);
         table.row().pad(10, 0, 10, 0);
 
         table.add(GoldMulti1);
         table.add(unlockgoldmulti1);
-        //table.row().pad(10, 0, 10, 0);
         table.add(GoldMulti2);
         table.add(unlockgoldmulti2);
         table.row().pad(10, 0, 10, 0);
 
         table.add(armour1);
         table.add(unlockarmour1);
-        //table.row().pad(10, 0, 10, 0);
         table.add(armour2);
         table.add(unlockarmour2);
-        //table.row().pad(10, 0, 10, 0);
         table.add(armour3);
         table.add(unlockarmour3);
         table.row().pad(10, 0, 10, 0);
@@ -546,72 +540,74 @@ public class SkillTree implements Screen {
 
         table.toFront();
         stage.addActor(table);
-        //table.top();
 
-        //add return button
+        // Add return button
         Other.add(backButton);
         Other.bottom().left();
+
     }
 
     /**
-     * Allows the game to check whether a points threshold has been reached
+     * Allows the game to check whether a points' threshold has been reached
      *
      * @param points the current amount of points
      */
     public static void pointsCheck(int points, Integer coins){
 
-        //TODO Requires certain amount of gold and then remove that amount of gold
-        //TODO Link items in store... can only buy *3 after buying *2
-        //TODO, if they no longer have enough money, they can't buy items?? or items are no longer visible
-        //states.get(0) == 2 ==== purchased???
-
-
         //States.get() checks whether it has already been unlocked. 1 = not unlocked, 0 = unlocked, 2 = purchased
+
         if(states.get(0) == 1 && points >= Speed1Points && coins >= Speed1Cost ){ // Movement 1 (5% speed)
-            //GameScreen.difficulty.IncreaseMaxSpeedPercent(5);
+            //GameScreen.difficulty.IncreaseMaxSpeedByPercent(5);
             states.set(0, 0);
         }
+
         if(states.get(1) == 1 && states.get(0) == 2 && points >= Speed2Points && coins >= Speed2Cost){ // movement 2 (10% speed)
-            //GameScreen.difficulty.IncreaseMaxSpeedPercent(10);
+            //GameScreen.difficulty.IncreaseMaxSpeedByPercent(10);
             states.set(1, 0);
         }
+
         if(states.get(2) == 1 && states.get(0) == 2 && states.get(1) == 2 && points >= Speed3Points && coins >= Speed3Cost){ // movement 3 (15% speed)
-            //GameScreen.difficulty.IncreaseMaxSpeedPercent(15);
+            //GameScreen.difficulty.IncreaseMaxSpeedByPercent(15);
             states.set(2, 0);
         }
 
         if(states.get(3) == 1 && points >= Traverse1Points && coins >= Traverse1Cost){ // traverse 1 (10% traverse)
-            //GameScreen.difficulty.IncreaseTraversePercent(10);
+            //GameScreen.difficulty.IncreaseTraverseByPercent(10);
             states.set(3, 0);
         }
+
         if(states.get(4) == 1 && states.get(3) == 2 && points >= Traverse2Points && coins >= Traverse2Cost){ // traverse 2 (20% traverse)
-            //GameScreen.difficulty.IncreaseTraversePercent(20);
+            //GameScreen.difficulty.IncreaseTraverseByPercent(20);
             states.set(4, 0);
         }
 
         if(states.get(5) == 1 && points >= Damage1Points && coins >= Damage1Cost){ // damage 1 (5 damage)
-            //GameScreen.difficulty.IncreaseDamageDealtPercent(5);
+            //GameScreen.difficulty.IncreaseDamageDealtByPercent(5);
             states.set(5, 0);
         }
+
         if(states.get(6) == 1 && states.get(5) == 2 && points >= Damage2Points && coins >= Damage2Cost){ // damage 2 (10 damage)
-            //GameScreen.difficulty.IncreaseDamageDealtPercent(10);
+            //GameScreen.difficulty.IncreaseDamageDealtByPercent(10);
             states.set(6, 0);
         }
+
         if(states.get(7) == 1 && states.get(5) == 2 && states.get(6) == 2 && points >= Damage3Points && coins >= Damage3Cost){ // damage 3 (20 damage)
-            //GameScreen.difficulty.IncreaseDamageDealtPercent(20);
+            //GameScreen.difficulty.IncreaseDamageDealtByPercent(20);
             states.set(7, 0);
         }
 
         if(states.get(8) == 1 && points >= Armour1Points && coins >= Armour1Cost){ // armour 1 (5% armour )
-            //GameScreen.difficulty.DecreaseDamageRecievedPercent(14);
+            //GameScreen.difficulty.DecreaseDamageReceivedByPercent(14);
             states.set(8, 0);
         }
+
         if(states.get(9) == 1 && states.get(8) == 2 && points >= Armour2Points && coins >= Armour2Cost){ // armour 2 (10% armour)
-            //GameScreen.difficulty.DecreaseDamageRecievedPercent(12);
+            //GameScreen.difficulty.DecreaseDamageReceivedByPercent(12);
             states.set(9, 0);
         }
+
         if(states.get(10) == 1 && states.get(8) == 2 && states.get(9) == 2 && points >= Armour3Points && coins >= Armour3Cost){ // armour 3 (20% armour)
-            //GameScreen.difficulty.DecreaseDamageRecievedPercent(8);
+            //GameScreen.difficulty.DecreaseDamageReceivedByPercent(8);
             states.set(10, 0);
         }
 
@@ -619,43 +615,34 @@ public class SkillTree implements Screen {
             //GameScreen.difficulty.IncreaseCoinMulti(1); // basically means prevGold * 2
             states.set(11, 0);
         }
+
         if(states.get(12) == 1 && states.get(11) == 2 && points >= Gold2Points && coins >= Gold2Cost){ // gold multiplier 2 (x3 gold)
             //GameScreen.difficulty.IncreaseCoinMulti(1); // basically means num * 2 * 3
             states.set(12, 0);
         }
+
         if(states.get(13) == 1 && points >= Cone2Points && coins >= Cone1Cost){ // coneshot
-            // TODO cone shot ability in shop
             states.set(13, 0);
         }
 
-
-        //Hud.changeCoinsMulti(2);
-        //Change acceleration
-        //GameScreen.changeAcceleration(20F);
-        //Change Max speed
-        //GameScreen.changeMaxSpeed(20F);
-        //GameScreen.changeDamage(5);
     }
 
     /**
      * Renders the visual data for all objects
      * @param delta Delta Time
      */
-
     @Override
     public void render(float delta) {
+
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // tell our stage to do actions and draw itself
+        // Tell our stage to do actions and draw itself
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
         stage.draw();
-
-
-
 
     }
 
@@ -672,37 +659,40 @@ public class SkillTree implements Screen {
         Gdx.app.log("w", String.valueOf(width));
         Gdx.app.log("h", String.valueOf(height));
         stage.draw();
+
     }
 
+    /**
+     * (Not Used)
+     *
+     * Pauses the Shop Screen
+     */
+    @Override
+    public void pause() {}
 
     /**
      * (Not Used)
-     * Pauses game
+     *
+     * Resumes the Shop Screen
      */
     @Override
-    public void pause() {
-    }
+    public void resume() {}
+
     /**
      * (Not Used)
-     * Resumes game
+     * Hides the Shop Screen
      */
     @Override
-    public void resume() {
-    }
+    public void hide() {}
+
     /**
-     * (Not Used)
-     * Hides game
-     */
-    @Override
-    public void hide() {
-    }
-    /**
-     * Disposes game data
+     * Disposes the Shop screen data
      */
     @Override
     public void dispose() {
         stage.dispose();
     }
+
 }
 
 

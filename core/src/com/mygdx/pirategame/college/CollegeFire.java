@@ -1,8 +1,7 @@
 package com.mygdx.pirategame.college;
 
-import static com.mygdx.pirategame.configs.Constants.COLLEGEFIRE_BIT;
-import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
-import static com.mygdx.pirategame.configs.Constants.PPM;
+import static com.mygdx.pirategame.configs.Constants.*;
+import com.mygdx.pirategame.screens.GameScreen;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -12,90 +11,100 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.pirategame.screens.GameScreen;
+
 /**
  * College Fire
  * Defines college attack method
  * Defines college cannonball projectiles
  *
- *@author Ethan Alabaster
- *@version 1.0
+ * @author Ethan Alabaster
+ * @version 1.0
  */
 
 public class CollegeFire extends Sprite {
-    private World world;
-    private Texture cannonBall;
+
+    private final World world;
+    private Body b2body;
+    private final Vector2 playerPos;
+
     private float stateTime;
     private boolean destroyed;
     private boolean setToDestroy;
-    private Body b2body;
-    private Vector2 playerPos;
 
     /**
-     * Defines player position
-     * Defines cannonballs
+     * College Fire constructor
      *
      * @param screen Visual data
      * @param x x position of player
      * @param y y position of player
      */
     public CollegeFire(GameScreen screen, float x, float y) {
+
         this.world = screen.getWorld();
-        playerPos = screen.getPlayerPos();
-        cannonBall = new Texture("cannonBall.png");
-        //Set the position and size of the ball
-        setRegion(cannonBall);
+        playerPos = screen.getPlayerPosition();
+
+        //Set the texture, the position and the size of the ball
+        setRegion( new Texture("cannonBall.png"));
         setBounds(x, y, 10 / PPM, 10 / PPM);
+
         defineCannonBall();
+
     }
 
     /**
-     * Defines cannonball data
-     * Defines cannonball shape
+     * Defines cannonball data, shape and collision logic
      */
     public void defineCannonBall() {
-        //sets the body definitions
+
+        // Sets the body definitions
         BodyDef bDef = new BodyDef();
         bDef.position.set(getX(), getY());
         bDef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bDef);
-        //Sets collision boundaries
-        FixtureDef fDef = new FixtureDef();
+
+        // Sets collision boundaries
+        FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(5 / PPM);
-        // setting BIT identifier
-        fDef.filter.categoryBits = COLLEGEFIRE_BIT;
-        // determining what this BIT can collide with
-        fDef.filter.maskBits = PLAYER_BIT;
+        fdef.shape = shape;
 
-        fDef.shape = shape;
-        b2body.createFixture(fDef).setUserData(this);
+        // Setting BIT identifier
+        fdef.filter.categoryBits = COLLEGEFIRE_BIT;
+        // Determining what this BIT can collide with
+        fdef.filter.maskBits = PLAYER_BIT;
+
+        // Creates the cannonballs fixture
+        b2body.createFixture(fdef).setUserData(this);
 
         // Math for firing the cannonball at the player
         playerPos.sub(b2body.getPosition());
         playerPos.nor();
         float speed = 5f;
         b2body.setLinearVelocity(playerPos.scl(speed));
+
     }
 
     /**
-     * Updates state with delta time
-     * Defines range of cannon fire
+     * Updates state with delta time and also defines when the cannon fire should be destroyed by the game
      *
-     * @param dt Delta time (elapsed time since last game tick)
+     * @param delta Delta time (elapsed time since last game tick)
      */
-    public void update(float dt){
-        stateTime += dt;
-        //If college is set to destroy and isnt, destroy it
+    public void update(float delta){
+
+        stateTime += delta;
         setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
+
+        // If College Fire is set to destroy and isn't, destroy it
         if((setToDestroy) && !destroyed) {
             world.destroyBody(b2body);
             destroyed = true;
         }
-        // determines cannonball range
+
+        // Check to see if the cannonball has been in the game for more than 2 seconds (the limit)
         if(stateTime > 2f) {
             setToDestroy();
         }
+
     }
 
     /**
@@ -105,10 +114,4 @@ public class CollegeFire extends Sprite {
         setToDestroy = true;
     }
 
-    /**
-     * Returns destruction status
-     */
-    public boolean isDestroyed(){
-        return destroyed;
-    }
 }

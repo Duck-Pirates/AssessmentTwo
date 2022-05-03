@@ -1,7 +1,8 @@
 package com.mygdx.pirategame.screens;
 
-import static com.mygdx.pirategame.configs.Constants.GAME;
-import static com.mygdx.pirategame.configs.Constants.MENU;
+import static com.mygdx.pirategame.configs.Constants.*;
+import com.mygdx.pirategame.PirateGame;
+import com.mygdx.pirategame.configs.Difficulty;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -18,19 +19,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.pirategame.PirateGame;
-import com.mygdx.pirategame.configs.Difficulty;
 
 /**
- * Main menu is the first screen the player sees. Allows them to navigate where they want to go to
- * @author Sam Pearson
- * @version 1.1
+ * Loading Menu
+ * This is the menu that the player sees whenever they try to create a new game
+ *
+ * @author Benjamin Whitnell
+ * @version 1.0
  */
 public class LoadingMenu implements Screen {
 
     private final PirateGame parent;
     private final Stage stage;
-    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));;
+    private final TextureRegion background = new TextureRegion(new Texture("map2.png"));
 
     /**
      * Instantiates a new Main menu.
@@ -38,44 +39,41 @@ public class LoadingMenu implements Screen {
      * @param PirateGame the main starting body of the game. Where screen swapping is carried out.
      */
     public LoadingMenu(PirateGame PirateGame){
+
         parent = PirateGame;
         stage = new Stage(new ScreenViewport());
+
     }
 
     /**
-     * What should be displayed on the options screen
-     *
+     * Display the options screen
      */
     @Override
     public void show() {
-        //Set the input processor
-        Gdx.input.setInputProcessor(stage);
-        // Create a table for the buttons
 
+        // Set the input processor
+        Gdx.input.setInputProcessor(stage);
+
+        // Create a table for the buttons
         Table table = new Table();
         Table table2 = new Table();
-        table.setFillParent(true);
         table.setFillParent(true);
         table2.bottom().left();
         stage.addActor(table);
         stage.addActor(table2);
 
-        //The skin for the actors
+        // The skin for the actors
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-        //create buttons
+        // Create buttons
         TextButton EASY = new TextButton("Game Mode: Easy", skin);
         TextButton MEDIUM = new TextButton("Game Mode: Medium", skin);
         TextButton HARD = new TextButton("Game Mode: Hard", skin);
 
-
-
         TextButton exit = new TextButton("Exit", skin);
         TextButton backButton = new TextButton("Return", skin);
 
-        //TODO return button
-
-        //add buttons to table
+        // Add buttons to table
         table.add(EASY).fillX().uniformX();
         table.row();
         table.add(MEDIUM).fillX().uniformX();
@@ -126,7 +124,7 @@ public class LoadingMenu implements Screen {
         table.add(powerupInfo3).padBottom((40));
         table.center();
 
-        //add listeners to the buttons
+        // Add listeners to the buttons
 
         //Set difficulty
         EASY.addListener(new ChangeListener() {
@@ -168,14 +166,16 @@ public class LoadingMenu implements Screen {
                 parent.changeScreen(MENU, false);
             }
         });
+
     }
 
     /**
      * Renders the visual data for all objects
-     * @param delta Delta Time
+     * @param delta Time elapsed
      */
     @Override
     public void render(float delta) {
+
         Gdx.gl.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
@@ -183,10 +183,11 @@ public class LoadingMenu implements Screen {
         stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
         stage.draw();
+
     }
 
     /**
-     * Changes the camera size, Scales the hud to match the camera
+     * Changes the camera size, Scales the loading menu to match the camera
      *
      * @param width the width of the viewable area
      * @param height the height of the viewable area
@@ -198,30 +199,30 @@ public class LoadingMenu implements Screen {
 
     /**
      * (Not Used)
-     * Pauses game
+     *
+     * Pauses the loading menu
      */
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     /**
      * (Not Used)
-     * Resumes game
+     *
+     * Resumes the loading menu
      */
     @Override
-    public void resume() {
-    }
+    public void resume() {}
 
     /**
      * (Not Used)
-     * Hides game
+     *
+     * Hides the loading menu
      */
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     /**
-     * Disposes game data
+     * Disposes the loading menu data
      */
     @Override
     public void dispose() {
