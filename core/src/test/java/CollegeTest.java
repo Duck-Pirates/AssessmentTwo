@@ -25,7 +25,7 @@ public class CollegeTest {
     @Test
     public void testImposingDeletion() {
         College testCollege = new College(this, "Test College", 100 / PPM, 200 / PPM,
-                "alcuin_flag.png", "alcuin_ship.png", 1);
+                1);
 
         // Schedule a destroy
         testCollege.setSetToDestroy(true);
