@@ -76,7 +76,7 @@ public class GameScreen implements Screen {
     private World world;
     private static Difficulty difficulty;
 
-    private static ArrayList<College> colleges = new ArrayList<>();
+    public static ArrayList<College> colleges = new ArrayList<>();
     private static ArrayList<SteerableEntity> ships = new ArrayList<>();
     private static ArrayList<Coin> coins = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();
@@ -87,8 +87,8 @@ public class GameScreen implements Screen {
     private static ArrayList<Tornado> Tornadoes = new ArrayList<>();
 
     private static final int GAME_RUNNING = 0;
-    private static final int GAME_PAUSED = 1;
-    private static int gameStatus;
+    public static final int GAME_PAUSED = 1;
+    public static int gameStatus;
 
     private Table pauseTable;
     private Table table;
