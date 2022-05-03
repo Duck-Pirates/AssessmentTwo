@@ -11,19 +11,17 @@ public class CoinTest {
         Coin testCoin = new Coin(new GameScreen(new PirateGame()), 10, 10);
 
         // Schedule a destroy
-        testCoin.setToDestroyed = true;
+        testCoin.setToDestroy(true);
 
         // Assert that this destroy happens only after an update
-        assertFalse(testCoin.destroyed);
+        assertFalse(testCoin.isDestroyed());
 
         testCoin.update();
 
-        assertTrue(testCoin.destroyed);
+        assertTrue(testCoin.isDestroyed());
 
         Coin testCoin2 = new Coin(new GameScreen(new PirateGame()), 15, 15);
-        assertFalse(testCoin2.setToDestroyed);
-        assertFalse(testCoin2.destroyed);
-        assertEquals(b2body.getPosition().x - getWidth(), testCoin2.getX());
-        assertEquals(b2body.getPosition().y - getHeight(), testCoin2.getY());
+        assertFalse(testCoin2.isSetToDestroy());
+        assertFalse(testCoin2.isDestroyed());
     }
 }
