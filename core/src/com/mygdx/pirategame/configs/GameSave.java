@@ -2,19 +2,27 @@ package com.mygdx.pirategame.configs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.mygdx.pirategame.PirateGame;
-import com.mygdx.pirategame.entities.*;
-import com.mygdx.pirategame.fsm.EnemyStateMachine;
-import com.mygdx.pirategame.screens.*;
+import com.mygdx.pirategame.entities.Coin;
+import com.mygdx.pirategame.entities.College;
+import com.mygdx.pirategame.entities.EnemyShip;
+import com.mygdx.pirategame.entities.Player;
+import com.mygdx.pirategame.entities.Powerup;
+import com.mygdx.pirategame.entities.SteerableEntity;
+import com.mygdx.pirategame.entities.Tornado;
+import com.mygdx.pirategame.screens.GameScreen;
+import com.mygdx.pirategame.screens.Hud;
+import com.mygdx.pirategame.screens.SkillTree;
 import com.mygdx.pirategame.world.AvailableSpawn;
 
 
@@ -82,7 +90,7 @@ public class GameSave {
 
         tempTimeSave = game.getTempTime();
 
-        statesSave = shop.states;
+        statesSave = SkillTree.states;
 
         json.setOutputType(JsonWriter.OutputType.json);
         ArrayList<Object> parameters2Save = new ArrayList<>(Arrays.asList(difficultySave, keys, values, playerSave, collegesSaves, shipsSaves, coinSaves, hudSave, powerUpSaves, tornadoesSaves, tempTimeSave, statesSave));
@@ -260,12 +268,12 @@ public class GameSave {
         public HudSave(Hud hud){
             timeCount = hud.timeCount;
             constantTimeCount = hud.Constant_timeCount;
-            powerUpTimer = hud.PowerupTimer;
-            score = hud.score;
-            health = hud.health;
-            coins = hud.coins;
-            powerUpType = hud.PowerUpType;
-            powerUpTimerBool = hud.PowerupTimerBool;
+            powerUpTimer = Hud.PowerupTimer;
+            score = Hud.score;
+            health = Hud.health;
+            coins = Hud.coins;
+            powerUpType = Hud.PowerUpType;
+            powerUpTimerBool = Hud.PowerupTimerBool;
         }
 
         /**
@@ -283,13 +291,13 @@ public class GameSave {
             Hud oldHud = game.getHud();
             oldHud.timeCount = this.timeCount;
             oldHud.Constant_timeCount = this.constantTimeCount;
-            oldHud.PowerupTimer = this.powerUpTimer;
-            oldHud.score = this.score;
-            oldHud.health = this.health;
-            oldHud.coins = this.coins;
-            oldHud.coinMulti = GameScreen.getDifficulty().getGoldCoinMulti();
-            oldHud.PowerUpType = this.powerUpType;
-            oldHud.PowerupTimerBool = this.powerUpTimerBool;
+            Hud.PowerupTimer = this.powerUpTimer;
+            Hud.score = this.score;
+            Hud.health = this.health;
+            Hud.coins = this.coins;
+            Hud.coinMulti = GameScreen.getDifficulty().getGoldCoinMulti();
+            Hud.PowerUpType = this.powerUpType;
+            Hud.PowerupTimerBool = this.powerUpTimerBool;
         }
     }
 

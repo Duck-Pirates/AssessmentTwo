@@ -6,10 +6,7 @@ import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
 import static com.mygdx.pirategame.configs.Constants.PPM;
 import static com.mygdx.pirategame.configs.Constants.TORNADO_BIT;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,9 +28,7 @@ import com.mygdx.pirategame.screens.Hud;
 public class Tornado extends Entity {
     private float state = 0;
     private Animation<Object> swirl;
-	@SuppressWarnings("unused")
-	private Sound windSound;
-    private SpriteBatch batch;
+	private SpriteBatch batch;
     private boolean inContact;
     private float damage = 1, timeElapsed = 0f;
 

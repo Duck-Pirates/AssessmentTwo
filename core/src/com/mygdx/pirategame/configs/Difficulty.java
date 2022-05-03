@@ -1,7 +1,6 @@
 package com.mygdx.pirategame.configs;
 
 import com.badlogic.gdx.Gdx;
-import com.mygdx.pirategame.entities.SteerableEntity;
 
 public enum Difficulty {
     EASY(0.95f, 10, 15,100, 5, 8, 1, 250.5f, 6),

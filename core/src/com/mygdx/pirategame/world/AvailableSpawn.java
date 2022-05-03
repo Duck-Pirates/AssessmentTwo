@@ -1,15 +1,13 @@
 package com.mygdx.pirategame.world;
 
+import static com.mygdx.pirategame.configs.Constants.PPM;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-
-import static com.mygdx.pirategame.configs.Constants.PPM;
 
 /**
  * Available Spawn

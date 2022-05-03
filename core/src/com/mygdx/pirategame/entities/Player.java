@@ -121,12 +121,18 @@ public class Player extends SteerableEntity {
         getBody().applyTorque(af, true);
         getBody().applyForceToCenter(lf * (float) Math.cos(getBody().getAngle()), lf * (float) Math.sin(getBody().getAngle()), true);
         
-    	if(getBody().getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
+    	if(getBody().getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed && linearDirection == -1) {
+        	getBody().setLinearVelocity(maxLinearSpeed * (float) Math.cos(getBody().getAngle() - Math.PI),
+        								maxLinearSpeed * (float) Math.sin(getBody().getAngle() - Math.PI));
+    	} else if(linearDirection == -1) {
+    		getBody().setLinearVelocity(getBody().getLinearVelocity().len() * (float) Math.cos(getBody().getAngle() - Math.PI),
+										getBody().getLinearVelocity().len() * (float) Math.sin(getBody().getAngle() - Math.PI));
+    	} else if(getBody().getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
     		getBody().setLinearVelocity(maxLinearSpeed * (float) Math.cos(getBody().getAngle()), 
-    							   		maxLinearSpeed * (float) Math.sin(getBody().getAngle()));
+			   							maxLinearSpeed * (float) Math.sin(getBody().getAngle()));
     	} else {
-        	getBody().setLinearVelocity(getBody().getLinearVelocity().len() * (float) Math.cos(getBody().getAngle()),
-    									getBody().getLinearVelocity().len() * (float) Math.sin(getBody().getAngle()));
+    		getBody().setLinearVelocity(getBody().getLinearVelocity().len() * (float) Math.cos(getBody().getAngle()),
+										getBody().getLinearVelocity().len() * (float) Math.sin(getBody().getAngle()));
     	}
     	
         if(getBody().getAngularVelocity() > maxAngularSpeed) {
