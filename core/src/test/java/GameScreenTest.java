@@ -1,6 +1,7 @@
 import com.mygdx.pirategame.PirateGame;
 import com.mygdx.pirategame.entities.College;
 import com.mygdx.pirategame.entities.EnemyShip;
+import com.mygdx.pirategame.world.AvailableSpawn;
 import org.junit.Test;
 
 import static com.mygdx.pirategame.screens.GameScreen.changeDamage;
@@ -18,7 +19,7 @@ public class GameScreenTest {
 
         // Create a new college
         College testCollege = new College(this, "Test College", 100 / PPM, 200 / PPM,
-                "alcuin_flag.png", "alcuin_ship.png", 30, *invalidSpawn*?);
+                "alcuin_flag.png", "alcuin_ship.png", 30);
 
         // Assert that it is correctly created with all the correct attributes generated
         assertEquals((100 / PPM), testCollege.getX());
@@ -36,7 +37,7 @@ public class GameScreenTest {
     @Test
     public void testCollegesDestroy() {
         College testCollege = new College(this, "Test College", 100 / PPM, 200 / PPM,
-                "alcuin_flag.png", "alcuin_ship.png", 30, *invalidSpawn*?);
+                "alcuin_flag.png", "alcuin_ship.png", 30);
 
         // Assert that the college starts with the correct amount of health
         assertEquals(100, testCollege.getHealth());
@@ -56,7 +57,7 @@ public class GameScreenTest {
     @Test
     public void testShipSetup() {
         College testCollege = new College(this, "Test College", 100 / PPM, 200 / PPM,
-                "alcuin_flag.png", "alcuin_ship.png", 1, *invalidSpawn*?);
+                "alcuin_flag.png", "alcuin_ship.png", 1);
 
         EnemyShip ship = testCollege.getFleet().get(0);
 
@@ -68,7 +69,7 @@ public class GameScreenTest {
     @Test
     public void testShipDestroy() {
         College testCollege = new College(this, "Test College", 100 /.PPM, 200 / PPM,
-                "alcuin_flag.png", "alcuin_ship.png", 1, *invalidSpawn*?);
+                "alcuin_flag.png", "alcuin_ship.png", 1);
 
         EnemyShip ship = testCollege.getFleet().get(0);
 
@@ -110,7 +111,7 @@ public class GameScreenTest {
     @Test
     public void testChangeDamage() {
         College testCollege = new College(this, "Test College", 100 / PPM, 200 / PPM,
-                "alcuin_flag.png", "alcuin_ship.png", 5, *invalidSpawn*?);
+                "alcuin_flag.png", "alcuin_ship.png", 5,);
 
         int previousDamage = testCollege.getFleet(0).damage;
 
