@@ -1,31 +1,33 @@
-package com.mygdx.pirategame.college;
+package com.mygdx.pirategame.world;
 
-import static com.mygdx.pirategame.configs.Constants.*;
+import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.pirategame.entities.College;
 import com.mygdx.pirategame.screens.GameScreen;
-import com.mygdx.pirategame.world.InteractiveTileObject;
 
 /**
- * College Walls (Halifax)
+ * College Walls (Alcuin)
  * Checks interaction with walls from map
  *
- *@author Ethan Alabaster, Sam Pearson
+ *@author Ethan Alabaster, Sam Pearson, Alex Davis
  *@version 1.0
  */
-public class CollegeWallsHalifax extends InteractiveTileObject {
+public class CollegeWalls extends InteractiveTileObject {
+	public String college;
     /**
      * Sets bounds of college walls
      *
      * @param screen Visual data
      * @param bounds Wall bounds
      */
-    public CollegeWallsHalifax(GameScreen screen, Rectangle bounds) {
+    public CollegeWalls(GameScreen screen, Rectangle bounds, String college) {
         super(screen, bounds);
         fixture.setUserData(this);
         //Set the category bit
         setCategoryFilter(COLLEGE_BIT);
+        this.college = college;
     }
 
     /**
@@ -33,8 +35,13 @@ public class CollegeWallsHalifax extends InteractiveTileObject {
      */
     @Override
     public void onContact() {
-        Gdx.app.log("wall", "Halifax");
+        Gdx.app.log("wall", college);
+        
         //Deal damage to the assigned college
-        GameScreen.getCollege("Halifax").onContact();
+        GameScreen.getCollege(college).onContact();
+    }
+    
+    public College getCollege() {
+    	return GameScreen.getCollege(college);
     }
 }

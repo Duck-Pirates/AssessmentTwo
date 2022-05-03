@@ -72,18 +72,11 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
     public abstract void update(float delta);
     
     public void fire() {
-		if(!getCollege().equals("unaligned")) {
-			cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x + (30 / PPM) * (float) Math.sin(getOrientation()),
-					getPosition().y - (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() - (float) Math.PI / 2, 5, false));
-			cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x - (30 / PPM) * (float) Math.sin(getOrientation()),
-					getPosition().y + (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() + (float) Math.PI / 2, 5, false));
-			}
-		else if(!getCollege().equals("alcuin")){
-			cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x + (30 / PPM) * (float) Math.sin(getOrientation()),
-					getPosition().y - (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() - (float) Math.PI / 2, 5, false));
-			cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x - (30 / PPM) * (float) Math.sin(getOrientation()),
-					getPosition().y + (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() + (float) Math.PI / 2, 5, false));
-		}
+		cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x + (30 / PPM) * (float) Math.sin(getOrientation()),
+					getPosition().y - (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() - (float) Math.PI / 2));
+		cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x - (30 / PPM) * (float) Math.sin(getOrientation()),
+					getPosition().y + (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() + (float) Math.PI / 2));
+		
 	}
 
     /**

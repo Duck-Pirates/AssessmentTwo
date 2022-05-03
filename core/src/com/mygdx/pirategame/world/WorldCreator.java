@@ -1,22 +1,16 @@
 package com.mygdx.pirategame.world;
 
+import static com.mygdx.pirategame.configs.Constants.PPM;
+
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.GeometryUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import com.mygdx.pirategame.college.*;
 import com.mygdx.pirategame.screens.GameScreen;
-
-import static com.mygdx.pirategame.configs.Constants.*;
 
 /**
  * This is the class where all boundaries and collisions are created for the map.
@@ -48,37 +42,37 @@ public class WorldCreator {
         for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new CollegeWallsAlcuin(screen, rect);
+            new CollegeWalls(screen, rect, "alcuin");
         }
         for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new CollegeWallsGoodricke(screen, rect);
+            new CollegeWalls(screen, rect, "goodricke");
         }
         for(MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new CollegeWallsAnneLister(screen, rect);
+            new CollegeWalls(screen, rect, "anne_lister");
         }
         for(MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new CollegeWallsConstantine(screen, rect);
+            new CollegeWalls(screen, rect, "constantine");
         }
         for(MapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new CollegeWallsHalifax(screen, rect);
+            new CollegeWalls(screen, rect, "halifax");
         }
         for(MapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new CollegeWallsLangwith(screen, rect);
+            new CollegeWalls(screen, rect, "langwith");
         }
         for(MapObject object : map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-            new CollegeWallsVambrugh(screen, rect);
+            new CollegeWalls(screen, rect, "vambrugh");
         }
 
     }

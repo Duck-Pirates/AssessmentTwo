@@ -183,11 +183,11 @@ public class Player extends SteerableEntity {
     @Override
     public void fire() {
         if (GameScreen.getDifficulty().GetConeMec() == true){
-            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI / 4, 5, true));
-            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI / 4, 5, true));
+            cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI / 4));
+            cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI / 4));
 
-            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI * 3 / 4, 5, true));
-            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI * 3 / 4, 5, true));
+            cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI * 3 / 4));
+            cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI * 3 / 4));
         }
         else{
             super.fire();

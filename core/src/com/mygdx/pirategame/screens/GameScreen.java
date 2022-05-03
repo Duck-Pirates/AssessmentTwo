@@ -1,5 +1,15 @@
 package com.mygdx.pirategame.screens;
 
+import static com.mygdx.pirategame.configs.Constants.DEATH;
+import static com.mygdx.pirategame.configs.Constants.MENU;
+import static com.mygdx.pirategame.configs.Constants.PPM;
+import static com.mygdx.pirategame.configs.Constants.SKILL;
+import static com.mygdx.pirategame.configs.Constants.VICTORY;
+import static com.mygdx.pirategame.configs.Constants.xBase;
+import static com.mygdx.pirategame.configs.Constants.xCap;
+import static com.mygdx.pirategame.configs.Constants.yBase;
+import static com.mygdx.pirategame.configs.Constants.yCap;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,7 +26,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -40,8 +49,6 @@ import com.mygdx.pirategame.entities.Tornado;
 import com.mygdx.pirategame.world.AvailableSpawn;
 import com.mygdx.pirategame.world.WorldContactListener;
 import com.mygdx.pirategame.world.WorldCreator;
-
-import static com.mygdx.pirategame.configs.Constants.*;
 
 
 /**
@@ -68,7 +75,6 @@ public class GameScreen implements Screen {
 
     private World world;
     private static Difficulty difficulty;
-    private Box2DDebugRenderer b2dr;
 
     private static ArrayList<College> colleges = new ArrayList<>();
     private static ArrayList<SteerableEntity> ships = new ArrayList<>();
@@ -112,7 +118,6 @@ public class GameScreen implements Screen {
 
         // Initialising box2d physics
         world = new World(new Vector2(0,0), true);
-        b2dr = new Box2DDebugRenderer();
 
         // making the Tiled tmx file render as a map
         maploader = new TmxMapLoader();
@@ -348,8 +353,6 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(46/255f, 204/255f, 113/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.render();
-        // b2dr is the hitbox shapes, can be commented out to hide
-        b2dr.render(world, camera.combined);
 
         getGame().getBatch().setProjectionMatrix(camera.combined);
         getGame().getBatch().begin();
@@ -556,8 +559,7 @@ public class GameScreen implements Screen {
     public void destroyBodies(){
         Array<Body> bodies = new Array<>();
         world.getBodies(bodies);
-        for (Body body:
-                bodies) {
+        for (Body body : bodies) {
             if(!world.isLocked())
                 world.destroyBody(body);
         }
@@ -588,24 +590,26 @@ public class GameScreen implements Screen {
             getGame().changeScreen(DEATH, true);
             destroyBodies();
         }
+        
+        boolean victory = true;
+        for(College college : colleges) {
+        	if(college.getCollege() != "alcuin" && !college.isDestroyed()) {
+        		victory = false;
+        	}
+        }
+        
         //Win game if all colleges destroyed
-        else if (getColleges().size() == 1 && getColleges().get(0).getCollege() == "alcuin"){
+        if (victory){
             getGame().changeScreen(VICTORY, true);
             destroyBodies();
         }
     }
-
 
     //public void IncreaseMaxSpeedPercent(int num){difficulty.IncreaseMaxSpeedPercent(num); } // num increase
     //public void IncreaseTraversePercent(int num){difficulty.IncreaseTraversePercent(num); }
     //public void IncreaseDamageDealtPercent(int num){difficulty.IncreaseDamageDealtPercent(num);}
     // SetGoldCoinMulti
     //public void DecreaseDamageRecievedPercent(int num){difficulty.DecreaseDamageRecievedPercent(num);}
-
-
-
-
-    // TODO delete
     
     public static Player getPlayer() {
     	return (Player) getShips().get(0);
@@ -720,7 +724,6 @@ public class GameScreen implements Screen {
         map.dispose();
         renderer.dispose();
         world.dispose();
-        b2dr.dispose();
         getHud().dispose();
         stage.dispose();
     }

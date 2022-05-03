@@ -1,8 +1,7 @@
 package com.mygdx.pirategame.entities;
 
 import static com.mygdx.pirategame.configs.Constants.COLLEGESENSOR_BIT;
-import static com.mygdx.pirategame.configs.Constants.CANNON_BIT;
-import static com.mygdx.pirategame.configs.Constants.PLAYER_BIT;
+import static com.mygdx.pirategame.configs.Constants.DEFAULT_BIT;
 import static com.mygdx.pirategame.configs.Constants.PPM;
 
 import java.util.ArrayList;
@@ -146,9 +145,7 @@ public class College extends SteerableEntity {
         
         // setting BIT identifier
         fdef.filter.categoryBits = COLLEGESENSOR_BIT;
-        
-        // determining what this BIT can collide with
-        fdef.filter.maskBits = PLAYER_BIT | CANNON_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT;
         fdef.isSensor = true;
         getBody().createFixture(fdef).setUserData(this);
     }
@@ -160,10 +157,8 @@ public class College extends SteerableEntity {
     @Override
     public void onContact() {
         // Damage to college by cannon ball
-        if(!getCollege().equals("alcuin")){
-            setHealth(getHealth() - GameScreen.getDifficulty().getDamageDealt());
-            bar.changeHealth(GameScreen.getDifficulty().getDamageDealt());
-        }
+        setHealth(getHealth() - GameScreen.getDifficulty().getDamageDealt());
+        bar.changeHealth(GameScreen.getDifficulty().getDamageDealt());
     }
     
     /**
@@ -176,8 +171,8 @@ public class College extends SteerableEntity {
     		Vector2 A = getBody().getPosition();
     		Vector2 B = ships.get(0).getPosition();
     		float angle = B.sub(A).angleRad();
-    		cannonBalls.add(new CannonFire(screen, getBody(), getBody().getPosition().x + (70 / PPM) * (float) Math.sin(angle),
-    									   getBody().getPosition().y + (70 / PPM) * (float) Math.sin(angle), angle, 5, false));
+    		cannonBalls.add(new CannonFire(this, screen, getBody(), getBody().getPosition().x,
+    									   getBody().getPosition().y, angle));
     		setTimeFired(GdxAI.getTimepiece().getTime());
     	}
     }

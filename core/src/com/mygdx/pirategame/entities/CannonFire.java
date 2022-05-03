@@ -23,13 +23,14 @@ import static com.mygdx.pirategame.configs.Constants.*;
  *@version 1.0
  */
 public class CannonFire extends Entity {
-    private float stateTime;
+    private SteerableEntity shooter;
+	private float stateTime;
     private float angle;
     private float velocity;
     private Sound fireNoise;
     private Vector2 bodyVel;
     private boolean fired = false;
-    private boolean player;
+    
 
     /**
      * Instantiates cannon fire
@@ -42,10 +43,10 @@ public class CannonFire extends Entity {
      * @param body body of origin
      * @param velocity velocity of the cannon ball
      */
-    public CannonFire(GameScreen screen, Body body, float x, float y, float angle, float velocity, boolean player) {
+    public CannonFire(SteerableEntity shooter, GameScreen screen, Body body, float x, float y, float angle) {
     	super(screen, x, y);
-        this.player = player;
-        this.velocity = velocity;
+    	this.shooter = shooter;
+        this.velocity = 5;
         this.world = screen.getWorld();
         //sets the angle and velocity
         this.angle = angle;
@@ -69,7 +70,6 @@ public class CannonFire extends Entity {
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyDef.BodyType.DynamicBody;
-        setBody(world.createBody(bDef));
 
         //Sets collision boundaries
         FixtureDef fDef = new FixtureDef();
@@ -77,11 +77,14 @@ public class CannonFire extends Entity {
         shape.setRadius(5 / PPM);
 
         // setting BIT identifier
-        fDef.filter.categoryBits = CANNON_BIT;
         // determining what this BIT can collide with
+        fDef.filter.categoryBits = CANNON_BIT;
         fDef.filter.maskBits = ENEMY_BIT | PLAYER_BIT | COLLEGE_BIT;
+        
         fDef.shape = shape;
         fDef.isSensor = true;
+        
+        setBody(world.createBody(bDef));
         getBody().createFixture(fDef).setUserData(this);
     }
 
@@ -121,7 +124,7 @@ public class CannonFire extends Entity {
 		fireNoise.dispose();
 	}
 
-    public boolean getIsPlayer(){
-        return player;
-    }
+	public SteerableEntity getShooter() {
+		return shooter;
+	}
 }
