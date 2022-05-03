@@ -40,7 +40,7 @@ public class CollegeTest {
         // Do the above implicitly...
 
         College testCollege2 = new College(this, "Test College", 100 200,
-                "alcuin_flag.png", "alcuin_ship.png", 1);
+                1);
 
         testCollege.setHealth(0);
 
