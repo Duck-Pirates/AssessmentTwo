@@ -45,7 +45,9 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
     
     protected Array<CannonFire> cannonBalls;
     protected float timeFired;
-
+    
+    private boolean aligenceChange = false;
+    
     /**
      * Instantiates an enemy
      *
@@ -98,6 +100,7 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
         college = alignment;
         texture = new Texture(path);
         setRegion(texture);
+        setAligenceChange(true);
     }
 	
 	public Vector2 getPosition() {
@@ -242,5 +245,13 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
 	public void setTimeFired(float timeFired) {
 		this.timeFired = timeFired;
+	}
+
+	public boolean isAligenceChange() {
+		return aligenceChange;
+	}
+
+	public void setAligenceChange(boolean aligenceChange) {
+		this.aligenceChange = aligenceChange;
 	}
 }

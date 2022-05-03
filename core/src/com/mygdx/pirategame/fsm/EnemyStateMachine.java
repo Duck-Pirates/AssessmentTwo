@@ -110,7 +110,9 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 
 	@Override
 	public void update(EnemyShip entity) {
-		
+		if(entity.isAligenceChange()) {
+			entity.getStateMachine().changeState(SLEEP);
+		}
 	}
 
 	@Override

@@ -37,7 +37,6 @@ import com.mygdx.pirategame.screens.Hud;
 public class EnemyShip extends SteerableEntity {
     
     private StateMachine<EnemyShip, EnemyStateMachine> stateMachine;
-    
     /**
      * Instantiates enemy ship
      *
