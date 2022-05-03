@@ -70,7 +70,7 @@ public class GameScreen implements Screen {
     private static Difficulty difficulty;
     private Box2DDebugRenderer b2dr;
 
-    private static ArrayList<College> colleges = new ArrayList<>();
+    public static ArrayList<College> colleges = new ArrayList<>();
     private static ArrayList<SteerableEntity> ships = new ArrayList<>();
     private static ArrayList<Coin> coins = new ArrayList<>();
     private AvailableSpawn invalidSpawn = new AvailableSpawn();

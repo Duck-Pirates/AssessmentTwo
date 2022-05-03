@@ -5,6 +5,7 @@ import com.mygdx.pirategame.world.AvailableSpawn;
 import org.junit.Test;
 
 import static com.mygdx.pirategame.screens.GameScreen.changeDamage;
+import static com.mygdx.pirategame.screens.GameScreen.colleges;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 import com.mygdx.pirategame.screens.GameScreen;
