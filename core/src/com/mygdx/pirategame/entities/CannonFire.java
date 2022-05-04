@@ -24,13 +24,13 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
  * @version 1.0
  */
 public class CannonFire extends Entity {
-    private float stateTime;
+    private SteerableEntity shooter;
+	private float stateTime;
     private final float angle;
     private final float velocity;
     private final Sound fireNoise;
     private final Vector2 bodyVel;
     private boolean fired = false;
-    private final boolean player;
 
     /**
      * Instantiates cannon fire
@@ -43,12 +43,11 @@ public class CannonFire extends Entity {
      * @param body body of origin
      * @param velocity velocity of the cannonball
      */
-    public CannonFire(GameScreen screen, Body body, float x, float y, float angle, float velocity, boolean player) {
-
+    public CannonFire(SteerableEntity shooter, GameScreen screen, Body body, float x, float y, float angle) {
     	super(screen, x, y);
 
-        this.player = player;
-        this.velocity = velocity;
+        this.shooter = shooter;
+        this.velocity = 5;
         this.world = screen.getWorld();
 
         // Sets the angle and velocity of the body
@@ -80,7 +79,6 @@ public class CannonFire extends Entity {
         BodyDef bDef = new BodyDef();
         bDef.position.set(x, y);
         bDef.type = BodyDef.BodyType.DynamicBody;
-        setBody(world.createBody(bDef));
 
         // Sets collision boundaries
         FixtureDef fdef = new FixtureDef();
@@ -145,8 +143,7 @@ public class CannonFire extends Entity {
 
     }
 
-    public boolean getIsPlayer(){
-        return player;
-    }
-
+	public SteerableEntity getShooter() {
+		return shooter;
+	}
 }

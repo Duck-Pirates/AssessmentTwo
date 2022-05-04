@@ -5,7 +5,6 @@ import com.mygdx.pirategame.screens.GameScreen;
 import com.mygdx.pirategame.screens.Hud;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,8 +24,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 public class Tornado extends Entity {
     private float state = 0;
     private final Animation<Object> swirl;
-	@SuppressWarnings("unused")
-	private Sound windSound;
+    private SpriteBatch batch;
     private boolean inContact;
     private float damage = 1, timeElapsed = 0f;
 
@@ -83,15 +81,14 @@ public class Tornado extends Entity {
         fdef.isSensor = true;
 
         getBody().createFixture(fdef).setUserData(this);
+
     }
 
     /**
      * Defines contact
      */
     @Override
-    public void onContact() {
-        setInContact(true);
-    }
+    public void onContact() { setInContact(true); }
 
     /**
      * Draw the tornadoes on the Game Screen

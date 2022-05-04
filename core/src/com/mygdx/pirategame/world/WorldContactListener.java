@@ -42,58 +42,26 @@ public class WorldContactListener implements ContactListener {
         // Fixes contact to an entity
         switch (cDef){
 
-            case COIN_BIT | PLAYER_BIT:
-                if(fixA.getFilterData().categoryBits == COIN_BIT) {
-                    ((Entity) fixA.getUserData()).onContact();
-                }
-                else {
-                    ((Entity) fixB.getUserData()).onContact();
-                }
-                break;
-
-            case POWERUP_BIT | PLAYER_BIT:
-                if(fixA.getFilterData().categoryBits == POWERUP_BIT) {
-                    ((Entity) fixA.getUserData()).onContact();
-                }
-                else {
-                    ((Entity) fixB.getUserData()).onContact();
-                }
-                break;
-
-            case DEFAULT_BIT | PLAYER_BIT:
-                if(fixA.getFilterData().categoryBits == DEFAULT_BIT) {
-                    if (fixA.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixA.getUserData().getClass())) {
-                        ((InteractiveTileObject) fixA.getUserData()).onContact();
-                        ((Player) fixB.getUserData()).playBreakSound();
-                    }
-                }
-                else {
-                    if (fixB.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixB.getUserData().getClass())) {
-                        ((InteractiveTileObject) fixB.getUserData()).onContact();
-                    }
-                }
-                break;
-
             case ENEMY_BIT | PLAYER_BIT:
-                if(fixA.getFilterData().categoryBits == ENEMY_BIT) {
-                    ((SteerableEntity) fixA.getUserData()).onContact();
-                }
-                else {
-                    ((SteerableEntity) fixB.getUserData()).onContact();
-                }
+                ((SteerableEntity) fixA.getUserData()).onContact();
+                ((SteerableEntity) fixB.getUserData()).onContact();
                 break;
 
             case COLLEGE_BIT | CANNON_BIT:
                 if(fixA.getFilterData().categoryBits == COLLEGE_BIT) {
-                    if (fixA.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixA.getUserData().getClass())) {
-                        ((InteractiveTileObject) fixA.getUserData()).onContact();
-                        ((CannonFire) fixB.getUserData()).setToDestroy(true);
+                    if(fixA.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixA.getUserData().getClass())) {
+                    	if(!((CollegeWalls) fixA.getUserData()).getCollege().equals(((CannonFire) fixB.getUserData()).getShooter())) {
+	                        ((CollegeWalls) fixA.getUserData()).onContact();
+	                        ((CannonFire) fixB.getUserData()).setToDestroy(true);
+                    	}
                     }
                 }
                 else {
-                    if (fixB.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixB.getUserData().getClass())) {
-                        ((InteractiveTileObject) fixB.getUserData()).onContact();
-                        ((CannonFire) fixA.getUserData()).setToDestroy(true);
+                    if(fixB.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixB.getUserData().getClass())) {
+                    	if(!((CollegeWalls) fixB.getUserData()).getCollege().equals(((CannonFire) fixA.getUserData()).getShooter())) {
+	                    	((CollegeWalls) fixB.getUserData()).onContact();
+	                        ((CannonFire) fixA.getUserData()).setToDestroy(true);
+                    	}
                     }
                 }
                 break;
@@ -111,27 +79,62 @@ public class WorldContactListener implements ContactListener {
 
             case ENEMY_BIT | CANNON_BIT:
                 if(fixA.getFilterData().categoryBits == ENEMY_BIT) {
-                    if (((CannonFire) fixB.getUserData()).getIsPlayer()) {
-                        ((SteerableEntity) fixA.getUserData()).onContact();
-                    }
+                    ((SteerableEntity) fixA.getUserData()).onContact();
                     ((CannonFire) fixB.getUserData()).setToDestroy(true);
                 }
                 else {
-                    if (((CannonFire) fixA.getUserData()).getIsPlayer()) {
-                        ((SteerableEntity) fixB.getUserData()).onContact();
-                    }
+                    ((SteerableEntity) fixB.getUserData()).onContact();
                     ((CannonFire) fixA.getUserData()).setToDestroy(true);
                 }
                 break;
 
             case COLLEGEFIRE_BIT | PLAYER_BIT:
-                if(fixA.getFilterData().categoryBits == COLLEGEFIRE_BIT) {
-                    Hud.changeHealth(-GameScreen.getDifficulty().getDamageReceived());
-                    ((CollegeFire) fixA.getUserData()).setToDestroy();
+            	if(fixA.getFilterData().categoryBits == PLAYER_BIT) {
+                    ((SteerableEntity) fixA.getUserData()).onContact();
+                    ((CannonFire) fixB.getUserData()).setToDestroy(true);
                 }
                 else {
-                    Hud.changeHealth(-GameScreen.getDifficulty().getDamageReceived());
-                    ((CollegeFire) fixB.getUserData()).setToDestroy();
+                    ((SteerableEntity) fixB.getUserData()).onContact();
+                    ((CannonFire) fixA.getUserData()).setToDestroy(true);
+                }
+                break;
+            case COLLEGEFIRE_BIT | ENEMY_BIT:
+            	if(fixA.getFilterData().categoryBits == ENEMY_BIT) {
+                    ((SteerableEntity) fixA.getUserData()).onContact();
+                    ((CannonFire) fixB.getUserData()).setToDestroy(true);
+                }
+                else {
+                    ((SteerableEntity) fixB.getUserData()).onContact();
+                    ((CannonFire) fixA.getUserData()).setToDestroy(true);
+                }
+                break;
+            case COIN_BIT | PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == COIN_BIT) {
+                    ((Entity) fixA.getUserData()).onContact();
+                }
+                else {
+                    ((Entity) fixB.getUserData()).onContact();
+                }
+                break;
+            case POWERUP_BIT | PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == POWERUP_BIT) {
+                    ((Entity) fixA.getUserData()).onContact();
+                }
+                else {
+                    ((Entity) fixB.getUserData()).onContact();
+                }
+                break;
+            case DEFAULT_BIT | PLAYER_BIT:
+                if(fixA.getFilterData().categoryBits == DEFAULT_BIT) {
+                    if (fixA.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixA.getUserData().getClass())) {
+                        ((InteractiveTileObject) fixA.getUserData()).onContact();
+                        ((Player) fixB.getUserData()).playBreakSound();
+                    }
+                }
+                else {
+                    if (fixB.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(fixB.getUserData().getClass())) {
+                        ((InteractiveTileObject) fixB.getUserData()).onContact();
+                    }
                 }
                 break;
 

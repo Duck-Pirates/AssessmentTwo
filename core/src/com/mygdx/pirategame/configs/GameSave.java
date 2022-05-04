@@ -9,8 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.steer.SteeringAcceleration;
+import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.*;
 
 
@@ -160,7 +166,6 @@ public class GameSave {
         public College createCollege(GameScreen game){
 
             College result = new College(game, collegeName, this.position.x, this.position.y, collegeName.equals("alcuin") ? 0 : GameScreen.getDifficulty().getMaxCollegeShips());
-
             ArrayList<EnemyShip> newfleet = new ArrayList<>();
             for (ShipSave shipSave : this.fleet) {
                 newfleet.add(shipSave.createEnemyShip(game));

@@ -8,9 +8,10 @@ import com.mygdx.pirategame.screens.Hud;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
-import com.badlogic.gdx.ai.steer.SteeringAcceleration;
+import com.badlogic.gdx.ai.steer.behaviors.Pursue;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -21,13 +22,13 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
  * Generates enemy ship data
  * Instantiates an enemy ship
  *
- * @author Ethan Alabaster, Sam Pearson, Edward Poulter, Alexander Davis
- * @version 3.1
+ *@author Ethan Alabaster, Sam Pearson, Edward Poulter, Alexander Davis
+ *@version like a million
  */
 public class EnemyShip extends SteerableEntity {
     
     private StateMachine<EnemyShip, EnemyStateMachine> stateMachine;
-    
+
     /**
      * Instantiates enemy ship
      *
@@ -80,7 +81,7 @@ public class EnemyShip extends SteerableEntity {
         	getStateMachine().update();
         	if (behavior != null) {
     			behavior.calculateSteering(steerOutput);
-    			applySteering(steerOutput, delta);
+    			applySteering(delta);
     		}
         	
             setRotation((float) Math.toDegrees(getOrientation()) - 90);
@@ -107,25 +108,50 @@ public class EnemyShip extends SteerableEntity {
     /**
      * Applies the steering to the ships, based on their targets
      *
-     * @param steering The new steering that needs to be applied
      * @param delta Time elapsed
      */
-    private void applySteering(SteeringAcceleration<Vector2> steering, float delta) {
+	private void applySteering(float delta) {
 
-    	Vector2 la = steering.linear;
-        float aa = steering.angular;
+    	Vector2 la = steerOutput.linear;
+        float aa = steerOutput.angular;
         
-        getBody().setTransform(getPosition(), getOrientation() + aa * delta);
-        getBody().applyForceToCenter(la, true);
-        getBody().setLinearVelocity((getBody().getLinearVelocity().len()) * (float) Math.cos(getOrientation()),
-        					   		(getBody().getLinearVelocity().len()) * (float) Math.sin(getOrientation()));
+        if(stateMachine.isInState(EnemyStateMachine.WANDER))
+        	setOrientation(getOrientation() + aa * delta);
+        else
+        	setOrientation(la.angleRad());
         
-        if(getBody().getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
-    		getBody().setLinearVelocity(maxLinearSpeed * (float) Math.cos(getBody().getAngle()), 
-    									maxLinearSpeed * (float) Math.sin(getBody().getAngle()));
-    	}
+        if(stateMachine.isInState(EnemyStateMachine.PERSUE)) {
+        	float distanceToTargetSquare = ((Pursue<Vector2>) behavior).getTarget().getPosition().dst2(getPosition());
+        	if(distanceToTargetSquare >= (400 / PPM) * (400 / PPM)) {
+        		velocity = velocity + (maxLinearAcceleration * 0.85f * delta) * (1 - velocity / (maxLinearSpeed * 0.85f));
+            	if (velocity < -0.5f)
+            		velocity = -0.5f;
+
+            	getBody().setLinearVelocity(velocity * MathUtils.cos(getOrientation()), velocity * MathUtils.sin(getOrientation()));
+        	} else {
+        		velocity = velocity * 0.8f;
+        		if(velocity < 10) {
+        			velocity = 0;
+        		}
+        		getBody().setLinearVelocity(velocity * MathUtils.cos(getOrientation()), velocity * MathUtils.sin(getOrientation()));
+
+        		if(velocity == 0) {
+	        		Vector2 A = getBody().getPosition();
+	        		Vector2 B = ((Pursue<Vector2>) behavior).getTarget().getPosition();
+	        		float newOrientation = B.sub(A).angleRad() + MathUtils.HALF_PI;
+	        		setOrientation(newOrientation);
+        		}
+        	}
+        } else {
+
+        	velocity = velocity + (maxLinearAcceleration * 0.85f * delta) * (1 - velocity / (maxLinearSpeed * 0.85f));
+        	if (velocity < -0.5f)
+        		velocity = -0.5f;
+
+        	getBody().setLinearVelocity(velocity * MathUtils.cos(getOrientation()), velocity * MathUtils.sin(getOrientation()));
+        }
         
-        if(getBody().getAngularVelocity() > maxAngularSpeed + 10) {
+        if(getAngularVelocity() > maxAngularSpeed + 10) {
     		getBody().setAngularVelocity(maxAngularSpeed);
     	} else if (getBody().getAngularVelocity() < -maxAngularSpeed - 10) {
     		getBody().setAngularVelocity(-maxAngularSpeed);
@@ -133,7 +159,7 @@ public class EnemyShip extends SteerableEntity {
 	}
 
     /**
-     * Defines the entity
+     * Defines the entity as an enemy
      *
      * @param x value of origin
      * @param y value of origin

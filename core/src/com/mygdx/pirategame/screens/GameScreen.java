@@ -22,7 +22,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -57,7 +56,6 @@ public class GameScreen implements Screen {
 
     private final World world;
     private static Difficulty difficulty;
-    private final Box2DDebugRenderer b2dr;
 
     private static ArrayList<College> colleges = new ArrayList<>();
     private static ArrayList<SteerableEntity> ships = new ArrayList<>();
@@ -104,7 +102,6 @@ public class GameScreen implements Screen {
 
         // Initialising box2d physics
         world = new World(new Vector2(0,0), true);
-        b2dr = new Box2DDebugRenderer();
 
         // Making the Tiled tmx file render as a map
         TmxMapLoader maploader = new TmxMapLoader();
@@ -347,9 +344,6 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.render();
 
-        // b2dr is the hit-box shapes, can be commented out to hide
-        // b2dr.render(world, camera.combined);
-
         getGame().getBatch().setProjectionMatrix(camera.combined);
         getGame().getBatch().begin();
         // Order determines layering
@@ -560,8 +554,7 @@ public class GameScreen implements Screen {
     public void destroyBodies(){
         Array<Body> bodies = new Array<>();
         world.getBodies(bodies);
-        for (Body body:
-                bodies) {
+        for (Body body : bodies) {
             if(!world.isLocked())
                 world.destroyBody(body);
         }
@@ -576,8 +569,16 @@ public class GameScreen implements Screen {
         if (Hud.getHealth() <= 0 || getColleges().get(0).getHealth() <= 0) {
             getGame().changeScreen(DEATH, true);
         }
+
+        boolean victory = true;
+        for(College college : colleges) {
+        	if(college.getCollege() != "alcuin" && !college.isDestroyed()) {
+        		victory = false;
+        	}
+        }
+
         //Win game if all colleges destroyed
-        else if (getColleges().size() == 1 && getColleges().get(0).getCollege().equals("alcuin")){
+        if (victory){
             getGame().changeScreen(VICTORY, true);
         }
     }
@@ -615,7 +616,6 @@ public class GameScreen implements Screen {
         map.dispose();
         renderer.dispose();
         world.dispose();
-        b2dr.dispose();
         getHud().dispose();
         stage.dispose();
     }
@@ -642,7 +642,7 @@ public class GameScreen implements Screen {
     	}
         return getColleges().get(0);
     }
-    
+
     public static Player getPlayer() {
     	return (Player) getShips().get(0);
     }
@@ -650,7 +650,7 @@ public class GameScreen implements Screen {
     public Vector2 getPlayerPosition(){
         return new Vector2(getPlayer().getPosition().x, getPlayer().getPosition().y);
     }
-    
+
     public static ArrayList<SteerableEntity> getShips() {
     	return ships;
     }

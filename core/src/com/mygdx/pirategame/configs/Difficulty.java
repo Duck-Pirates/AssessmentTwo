@@ -7,9 +7,9 @@ package com.mygdx.pirategame.configs;
  */
 public enum Difficulty {
 
-    EASY(0.95f, 10, 15,100, 5, 8, 1, 250.5f, 6),
-    MEDIUM(0.93f, 10, 15,80, 3, 10, 1, 225f, 6),
-    HARD(0.91f, 15, 15,80, 2, 12, 1, 200f, 6);
+    EASY(10, 15,100, 5, 8, 1, 250.5f, 6),
+    MEDIUM(10, 15,80, 3, 10, 1, 225f, 6),
+    HARD(15, 15,80, 2, 12, 1, 200f, 6);
 
     private float speedReduction, maxSpeed, traverseSpeed;
     private int damageReceived, damageDealt, HP, maxGoldXCoin, maxCollegeShips, goldCoinMulti;
@@ -22,7 +22,6 @@ public enum Difficulty {
     /**
      * Difficulty enum constructor, used to set and store variables
      *
-     * @param speedReduction
      * @param damageReceived
      * @param damageDealt
      * @param HP
@@ -32,9 +31,8 @@ public enum Difficulty {
      * @param maxSpeed
      * @param traverseSpeed
      */
-    Difficulty(float speedReduction, int damageReceived, int damageDealt, int HP, int maxGoldXCoin, int maxCollegeShips, int goldCoinMulti, float maxSpeed, int traverseSpeed){
+    Difficulty( int damageReceived, int damageDealt, int HP, int maxGoldXCoin, int maxCollegeShips, int goldCoinMulti, float maxSpeed, int traverseSpeed){
 
-        this.speedReduction = speedReduction;
         this.damageReceived = damageReceived;
         this.damageDealt = damageDealt;
         this.HP = HP;

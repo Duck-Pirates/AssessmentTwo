@@ -12,6 +12,7 @@ import java.util.Random;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -42,7 +43,6 @@ public class College extends SteerableEntity {
      * @param ship_no Number of college ships to produce
      */
     public College(GameScreen screen, String college, float x, float y, int ship_no) {
-
         super(screen, x, y);
 
         this.college = college;
@@ -66,8 +66,8 @@ public class College extends SteerableEntity {
             while (!spawnIsValid){
                 ranX = rand.nextInt(2000) - 1000;
                 ranY = rand.nextInt(2000) - 1000;
-                ranX = (int)Math.floor(x + (ranX / PPM));
-                ranY = (int)Math.floor(y + (ranY / PPM));
+                ranX = (int) MathUtils.floor(x + (ranX / PPM));
+                ranY = (int) MathUtils.floor(y + (ranY / PPM));
                 spawnIsValid = AvailableSpawn.add(ranX, ranY);
             }
             getFleet().add(new EnemyShip(screen, ranX, ranY, college));
@@ -153,9 +153,7 @@ public class College extends SteerableEntity {
         
         // Setting BIT identifier
         fdef.filter.categoryBits = COLLEGESENSOR_BIT;
-        
-        // Determining what this BIT can collide with
-        fdef.filter.maskBits = PLAYER_BIT | CANNON_BIT;
+        fdef.filter.maskBits = DEFAULT_BIT;
         fdef.isSensor = true;
 
         getBody().createFixture(fdef).setUserData(this);
@@ -169,11 +167,9 @@ public class College extends SteerableEntity {
     @Override
     public void onContact() {
 
-        // Damage to college by cannonball
-        if(!getCollege().equals("alcuin")){
-            setHealth(getHealth() - GameScreen.getDifficulty().getDamageDealt());
-            bar.changeHealth(GameScreen.getDifficulty().getDamageDealt());
-        }
+        // Damage to college by cannon ball
+        setHealth(getHealth() - GameScreen.getDifficulty().getDamageDealt());
+        bar.changeHealth(GameScreen.getDifficulty().getDamageDealt());
 
     }
     
@@ -188,8 +184,7 @@ public class College extends SteerableEntity {
     		Vector2 A = getBody().getPosition();
     		Vector2 B = ships.get(0).getPosition();
     		float angle = B.sub(A).angleRad();
-    		cannonBalls.add(new CannonFire(screen, getBody(), getBody().getPosition().x + (70 / PPM) * (float) Math.sin(angle),
-    									   getBody().getPosition().y + (70 / PPM) * (float) Math.sin(angle), angle, 5, false));
+    		cannonBalls.add(new CannonFire(this, screen, getBody(), getBody().getPosition().x, getBody().getPosition().y, angle));
     		setTimeFired(GdxAI.getTimepiece().getTime());
     	}
 

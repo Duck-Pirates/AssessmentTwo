@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -48,8 +49,10 @@ public class Player extends SteerableEntity {
      */
     public void update(float delta) {
 
-    	updateMovement();
-    	
+    	SteerableEntity.maxLinearSpeed = GameScreen.getDifficulty().getMaxSpeed() / PPM;
+
+    	updateMovement(delta);
+
         setRotation((float) Math.toDegrees(getOrientation()) - 90);
         setPosition(getPosition().x - getWidth() / 2f, getPosition().y - getHeight()/2f);
         
@@ -79,7 +82,7 @@ public class Player extends SteerableEntity {
      * 
      * NOTE: this equation is using f = ma as its base assuming m = 1
      */
-    public void updateMovement(){
+    public void updateMovement(float delta){
 
     	int linearDirection = 0;
     	int angularDirection = 0;
@@ -87,7 +90,7 @@ public class Player extends SteerableEntity {
         	linearDirection++;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-        	linearDirection--;
+        	linearDirection -= 5;
         }
     	if (Gdx.input.isKeyPressed(Input.Keys.A)) {
     		angularDirection++;
@@ -96,16 +99,13 @@ public class Player extends SteerableEntity {
         	angularDirection--;
         }
         
-    	float lf;
+    	float la;
         float af;
-
-        setMaxLinearSpeed(GameScreen.getDifficulty().getMaxSpeed()/ PPM);
-        setMaxAngularSpeed((float) Math.PI /GameScreen.getDifficulty().getTraverseSpeed());
         
         if(linearDirection != 0) {
-        	lf  = maxLinearAcceleration * linearDirection;
+        	la  = maxLinearAcceleration * linearDirection;
         } else {
-        	lf = -1f * maxLinearAcceleration * getBody().getLinearVelocity().len() / maxLinearSpeed;
+        	la = -1f * maxLinearAcceleration * velocity / maxLinearSpeed;
         }
         
         if(angularDirection != 0) {
@@ -114,17 +114,15 @@ public class Player extends SteerableEntity {
         	af = -1f * maxAngularAcceleration * getBody().getAngularVelocity() / maxAngularSpeed;
         }
 
+        // Applies forces to body
         getBody().applyTorque(af, true);
-        getBody().applyForceToCenter(lf * (float) Math.cos(getBody().getAngle()), lf * (float) Math.sin(getBody().getAngle()), true);
-        
-    	if(getBody().getLinearVelocity().len2() > maxLinearSpeed * maxLinearSpeed) {
-    		getBody().setLinearVelocity(maxLinearSpeed * (float) Math.cos(getBody().getAngle()), 
-    							   		maxLinearSpeed * (float) Math.sin(getBody().getAngle()));
-    	} else {
-        	getBody().setLinearVelocity(getBody().getLinearVelocity().len() * (float) Math.cos(getBody().getAngle()),
-    									getBody().getLinearVelocity().len() * (float) Math.sin(getBody().getAngle()));
-    	}
+        velocity = velocity + (la * delta) * (1 - velocity / maxLinearSpeed);
+    	if (velocity < -0.5f)
+    		velocity = -0.5f;
+
+    	body.setLinearVelocity(velocity * MathUtils.cos(getOrientation()), velocity * MathUtils.sin(getOrientation()));
     	
+    	// limits angular speed
         if(getBody().getAngularVelocity() > maxAngularSpeed) {
     		getBody().setAngularVelocity(maxAngularSpeed);
     	} else if (getBody().getAngularVelocity() < -maxAngularSpeed) {
@@ -190,8 +188,8 @@ public class Player extends SteerableEntity {
             cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI / 4, 5, true));
             cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI / 4, 5, true));
 
-            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI * 3 / 4, 5, true));
-            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI * 3 / 4, 5, true));
+            cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x, getPosition().y, getOrientation() - MathUtils.PI * 3 / 4));
+            cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x, getPosition().y, getOrientation() + MathUtils.PI * 3 / 4));
         }
         else{
             super.fire();

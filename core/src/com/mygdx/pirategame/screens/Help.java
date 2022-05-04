@@ -77,8 +77,8 @@ public class Help implements Screen {
         Label skillInfo2 = new Label("See your upgrades in the skills tab", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         Label powerupInfo1 = new Label("Collect power-ups along the way to give you temporary abilities", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        Label powerupInfo2 = new Label("Power-ups include: Increased Speed, Health Regeneration,", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        Label powerupInfo3 = new Label("Temporary Immunity, Increased Damage and Increased Coin Earnings", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label powerupInfo2 = new Label("Power-ups include: Increased Speed (Star), Health Regeneration (Wrench and Bolt),", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label powerupInfo3 = new Label("Temporary Immunity (Star), Increased Damage (Ammo) and Increased Coin Earnings (Coins)", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         //Return Button
         TextButton backButton = new TextButton("Return", skin);

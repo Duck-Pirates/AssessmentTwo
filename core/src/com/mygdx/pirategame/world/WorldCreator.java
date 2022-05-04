@@ -12,6 +12,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 
+import com.mygdx.pirategame.screens.GameScreen;
+
 /**
  * This is the class where all boundaries and collisions are created for the map.
  *
@@ -49,43 +51,43 @@ public class WorldCreator {
         for(RectangleMapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = object.getRectangle();
 
-            new CollegeWallsAlcuin(screen, rect);
+            new CollegeWalls(screen, rect, "alcuin");
         }
 
         for(RectangleMapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = object.getRectangle();
 
-            new CollegeWallsGoodricke(screen, rect);
+            new CollegeWalls(screen, rect, "goodricke");
         }
 
         for(RectangleMapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = object.getRectangle();
 
-            new CollegeWallsAnneLister(screen, rect);
+            new CollegeWalls(screen, rect, "anne_lister");
         }
 
         for(RectangleMapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = object.getRectangle();
 
-            new CollegeWallsConstantine(screen, rect);
+            new CollegeWalls(screen, rect, "constantine");
         }
 
         for(RectangleMapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = object.getRectangle();
 
-            new CollegeWallsHalifax(screen, rect);
+            new CollegeWalls(screen, rect, "halifax");
         }
 
         for(RectangleMapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = object.getRectangle();
 
-            new CollegeWallsLangwith(screen, rect);
+            new CollegeWalls(screen, rect, "langwith");
         }
 
         for(RectangleMapObject object : map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = object.getRectangle();
 
-            new CollegeWallsVambrugh(screen, rect);
+            new CollegeWalls(screen, rect, "vambrugh");
         }
 
     }

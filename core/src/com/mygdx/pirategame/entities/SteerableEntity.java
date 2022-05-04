@@ -10,6 +10,7 @@ import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -36,16 +37,20 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
     protected static float zeroLinearSpeedThreshold = 0.01f;
     protected static float maxLinearSpeed = GameScreen.getDifficulty().getMaxSpeed() / PPM;
-    protected static float maxLinearAcceleration = 55f / PPM;
-    protected static float maxAngularSpeed = (float) Math.PI / GameScreen.getDifficulty().getTraverseSpeed();
-    protected static float maxAngularAcceleration = (float) Math.PI / 16;
-    protected static float boundingRadius = 55f / PPM;
+    protected static float maxLinearAcceleration = 30f / PPM;
+    protected static float maxAngularSpeed = MathUtils.PI / GameScreen.getDifficulty().getTraverseSpeed();
+    protected static float maxAngularAcceleration = MathUtils.PI / 16;
+    protected static float boundingRadius = 90f / PPM;
     protected static boolean tagged = false;
     protected SteeringBehavior<Vector2> behavior;
     protected SteeringAcceleration<Vector2> steerOutput;
     
+    protected float velocity = 0;
+
     protected Array<CannonFire> cannonBalls;
     protected float timeFired;
+
+    private boolean aligenceChange = false;
 
     /**
      * Instantiates an enemy
@@ -78,20 +83,13 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 	/**
 	 * This method is used by the ships to fire cannonballs
 	 */
-	public void fire() {
+    public void fire() {
+		cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x + (30 / PPM) * MathUtils.sin(getOrientation()),
+					getPosition().y - (30 / PPM) * MathUtils.cos(getOrientation()), getOrientation() - MathUtils.PI / 2));
+		cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x - (30 / PPM) * MathUtils.sin(getOrientation()),
+					getPosition().y + (30 / PPM) * MathUtils.cos(getOrientation()), getOrientation() + MathUtils.PI / 2));
 
-		if(!getCollege().equals("unaligned")) { // This checks if the ships are unaligned (because these shouldn't be able to shoot)
-			cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x + (30 / PPM) * (float) Math.sin(getOrientation()),
-					getPosition().y - (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() - (float) Math.PI / 2, 5, false));
-			cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x - (30 / PPM) * (float) Math.sin(getOrientation()),
-					getPosition().y + (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() + (float) Math.PI / 2, 5, false));
-			}
-		else if(!getCollege().equals("alcuin")){ // This checks if the ships are not from alcuin
-			cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x + (30 / PPM) * (float) Math.sin(getOrientation()),
-					getPosition().y - (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() - (float) Math.PI / 2, 5, false));
-			cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x - (30 / PPM) * (float) Math.sin(getOrientation()),
-					getPosition().y + (30 / PPM) * (float) Math.cos(getOrientation()), getOrientation() + (float) Math.PI / 2, 5, false));
-		}
+	}
 
 	}
 
@@ -106,6 +104,7 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
         college = alignment;
         texture = new Texture(path);
         setRegion(texture);
+        setAligenceChange(true);
 
     }
 
@@ -136,7 +135,7 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 		hit.dispose();
 
 	}
-	
+
 	public Vector2 getPosition() { return getBody().getPosition(); }
 
 	public String getCollege() { return college; }
@@ -177,7 +176,7 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
 	@Override
 	public boolean isTagged() { return tagged; }
-	
+
 	public void setBehavior(SteeringBehavior<Vector2> behavior) { this.behavior = behavior; }
 
 	public void setHealth(int health) { this.health = health; }
@@ -206,4 +205,19 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 	@Override
 	public void setMaxLinearAcceleration(float maxLinearAcceleration) { SteerableEntity.maxLinearAcceleration = maxLinearAcceleration; }
 
+	public float getTimeFired() {
+		return timeFired;
+	}
+
+	public void setTimeFired(float timeFired) {
+		this.timeFired = timeFired;
+	}
+
+	public boolean isAligenceChange() {
+		return aligenceChange;
+	}
+
+	public void setAligenceChange(boolean aligenceChange) {
+		this.aligenceChange = aligenceChange;
+	}
 }
