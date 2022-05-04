@@ -56,7 +56,8 @@ public class CannonFire extends Entity {
         bodyVel = body.getLinearVelocity();
 
         // Sets cannonBall's texture dimensions and position
-        setRegion(new Texture("cannonBall.png"));
+        texture = new Texture("cannonBall.png");
+        setRegion(texture);
         setBounds(x, y, 10 / PPM, 10 / PPM);
 
         // Sets sound for fire and play if on

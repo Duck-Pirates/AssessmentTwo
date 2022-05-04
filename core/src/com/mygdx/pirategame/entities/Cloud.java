@@ -84,7 +84,7 @@ public class Cloud extends Entity {
         PolygonShape shape = new PolygonShape();
         Random rand = new Random();
         dimension = rand.nextInt(301-200)+200;
-        shape.setAsBox(dimension/2/PPM, dimension * (0.61328125f) /2/PPM);
+        shape.setAsBox(10 + dimension/2/PPM, 10 + dimension * (0.61328125f) /2/PPM);
 
         // Setting BIT identifier
         fdef.filter.categoryBits = CLOUDS_BIT;

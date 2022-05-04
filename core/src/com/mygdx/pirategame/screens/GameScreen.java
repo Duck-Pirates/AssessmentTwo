@@ -309,7 +309,6 @@ public class GameScreen implements Screen {
      * Applies to key "Esc"
      *
      * Caps player velocity
-     *
      */
     public void handleInput() {
 
@@ -576,12 +575,10 @@ public class GameScreen implements Screen {
         //Lose game if ship on 0 health or Alcuin is destroyed
         if (Hud.getHealth() <= 0 || getColleges().get(0).getHealth() <= 0) {
             getGame().changeScreen(DEATH, true);
-            destroyBodies();
         }
         //Win game if all colleges destroyed
         else if (getColleges().size() == 1 && getColleges().get(0).getCollege().equals("alcuin")){
             getGame().changeScreen(VICTORY, true);
-            destroyBodies();
         }
     }
 

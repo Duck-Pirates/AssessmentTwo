@@ -20,10 +20,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class PirateGame extends Game {
 
-	private final SpriteBatch batch = new SpriteBatch();
+	private SpriteBatch batch;
 
 	// Variables for each screen
-	private MainMenu menuScreen = new MainMenu(this);
+	private MainMenu menuScreen;
 	private GameScreen gameScreen;
 	private Shop shopScreen;
 	private DeathScreen deathScreen;

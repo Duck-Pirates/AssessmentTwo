@@ -59,9 +59,7 @@ public abstract class Entity extends Sprite implements Location<Vector2> {
      */
     public abstract void onContact();
 
-	public void dispose() {
-		texture.dispose();
-	}
+	public void dispose() { texture.dispose(); }
 
 	public Vector2 getPosition() {
 		return getBody().getPosition();
