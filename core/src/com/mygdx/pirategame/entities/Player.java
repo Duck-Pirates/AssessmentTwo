@@ -185,8 +185,8 @@ public class Player extends SteerableEntity {
     public void fire() {
 
         if (GameScreen.getDifficulty().getConeMec()){
-            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI / 4, 5, true));
-            cannonBalls.add(new CannonFire(screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI / 4, 5, true));
+            cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x, getPosition().y, getOrientation() - (float) Math.PI / 4));
+            cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x, getPosition().y, getOrientation() + (float) Math.PI / 4));
 
             cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x, getPosition().y, getOrientation() - MathUtils.PI * 3 / 4));
             cannonBalls.add(new CannonFire(this, screen, getBody(), getPosition().x, getPosition().y, getOrientation() + MathUtils.PI * 3 / 4));

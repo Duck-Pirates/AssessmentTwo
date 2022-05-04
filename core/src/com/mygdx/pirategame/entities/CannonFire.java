@@ -41,7 +41,6 @@ public class CannonFire extends Entity {
      * @param x x value of origin
      * @param y y value of origin
      * @param body body of origin
-     * @param velocity velocity of the cannonball
      */
     public CannonFire(SteerableEntity shooter, GameScreen screen, Body body, float x, float y, float angle) {
     	super(screen, x, y);

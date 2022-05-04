@@ -66,9 +66,7 @@ public enum EnemyStateMachine implements State<EnemyShip> {
 		}
 	},
 	
-	PERSUE() {
-		// Finds the nearest ship to the entity and persues it (note the player is the 0th item in the array so will always be prioritized)
-	PURSUE() {
+	PERSUE() { // Finds the nearest ship to the entity and persues it (note the player is the 0th item in the array so will always be prioritized)
 
 		/**
 		 * Creates a Pursue behaviour's steering vector

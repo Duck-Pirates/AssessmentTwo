@@ -91,8 +91,6 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
 	}
 
-	}
-
     /**
      * Updates the ship image. Particularly change texture on college destruction
      *
@@ -204,14 +202,6 @@ public abstract class SteerableEntity extends Entity implements Steerable<Vector
 
 	@Override
 	public void setMaxLinearAcceleration(float maxLinearAcceleration) { SteerableEntity.maxLinearAcceleration = maxLinearAcceleration; }
-
-	public float getTimeFired() {
-		return timeFired;
-	}
-
-	public void setTimeFired(float timeFired) {
-		this.timeFired = timeFired;
-	}
 
 	public boolean isAligenceChange() {
 		return aligenceChange;
