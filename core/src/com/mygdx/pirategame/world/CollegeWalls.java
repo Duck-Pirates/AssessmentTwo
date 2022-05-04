@@ -1,6 +1,8 @@
 package com.mygdx.pirategame.world;
 
 import static com.mygdx.pirategame.configs.Constants.COLLEGE_BIT;
+
+import com.mygdx.pirategame.entities.College;
 import com.mygdx.pirategame.screens.GameScreen;
 
 import com.badlogic.gdx.math.Rectangle;

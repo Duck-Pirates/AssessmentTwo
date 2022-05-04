@@ -43,7 +43,10 @@ public class PirateGame extends Game {
 	@Override
 	public void create () {
 
+		batch = new SpriteBatch();
+
 		// Set starting screen
+		menuScreen = new MainMenu(this);
 		setScreen(menuScreen);
 
 		// Create options
